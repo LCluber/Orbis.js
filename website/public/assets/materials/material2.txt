@@ -1,0 +1,18 @@
+{
+"shaders"	: [
+		{	"name"  : "billboardBullets",
+			"blend"	: 
+				{	"enable" 		: 1,
+					"equation"		: "FUNC_ADD",
+					"source" 		: "SRC_ALPHA",
+					"destination"	: "ONE"
+				},
+			"depth" : 0
+		}
+		],
+"buffers"	: "defaultBullets",
+"data" 		: {
+		"emissive"	: [0,1,1],
+		"emissive2"	: [1,0.7,0.3]
+	}
+}

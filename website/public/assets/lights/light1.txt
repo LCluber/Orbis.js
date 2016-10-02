@@ -1,0 +1,11 @@
+{	"position"	:[0.0,400.0,0.0],
+	"rotation"	:[0.0,0.0,0.0],
+	"ambient"	:[0.7,0.7,0.7],
+	"diffuse"	:[1.0,1.0,1.0],
+	"specular"	:[1.0,1.0,1.0],
+	"attenuation"	:[0.0,0.0,0.0],
+	"type"		:"directional",
+	"angle"		:0.0,
+	"exponent"	:0.0,
+	"intensity"	:0.0
+}

@@ -1,0 +1,103 @@
+{
+  "shaders":{
+    "folder": "shaders",
+    "files"	: [
+      "shader1.txt",
+      "shader2.txt"
+    ]
+  },
+
+  "materials":{
+    "folder": "materials",
+    "files" :[
+      "material1.txt",
+      "material2.txt",
+      "material3.doc"
+    ]
+  },
+
+  "textures":{
+    "folder": "textures",
+    "files" :[
+      "texture1.png",
+      "texture2.png",
+      "texture3.png",
+      "texture4.png",
+      "texture5.png",
+      "texture6.png",
+      "texture7.png"
+    ]
+  },
+
+  "meshes":{
+    "folder": "meshes",
+    "files" :[
+      "mesh1.json",
+      "mesh2.txt"
+    ]
+  },
+
+  "cameras":{
+    "folder": "cameras",
+    "files" :[
+      "cam1.txt"
+    ]
+  },
+
+  "lights":{
+    "folder": "lights",
+    "files" :[
+      "light1.txt"
+    ]
+  },
+
+  "sprites": {
+    "folder": "sprites",
+    "files" :[
+      {
+        "file":"sprite1.png",
+        "texSize":[124,70],
+        "frameSize":[62,70]
+      },
+      {
+        "file":"sprite3.png",
+        "texSize":[540,30],
+        "frameSize":[30,30]
+      },
+      {
+        "file":"sprite4.png",
+        "texSize":[540,30],
+        "frameSize":[30,30]
+      },
+      {
+        "file":"sprite5.png",
+        "texSize":[540,30],
+        "frameSize":[30,30]
+      }
+    ]
+  },
+
+  "sounds": {
+    "folder": "sounds",
+    "files" : [
+      {
+        "file":"sound1.mp3",
+        "volume":0.2,
+        "loop":0,
+        "type":0
+      },
+      {
+        "file":"sound2.mp3",
+        "volume":0.3,
+        "loop":0,
+        "type":0
+      },
+      {
+        "file":"sound3.mp3",
+        "volume":0.7,
+        "loop":0,
+        "type":0
+      }
+    ]
+  }
+}

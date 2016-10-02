@@ -1,0 +1,24 @@
+{
+"shaders"	: [
+		{	"name"  : "phong",
+			"blend"	: 
+				{	"enable" 		: 0,
+					"equation"		: "",
+					"source" 		: "",
+					"destination"	: ""
+				},
+			"depth" : 1 
+		}
+		],
+"buffers"	: "default",
+"data" 		: {
+		"ambient"			: [0.7,0.7,0.7],
+		"diffuse"			: [0.7,0.7,0.7],
+		"specular"			: [0.8,0.8,0.8],
+		"emissive"			: [0,1,1],
+		"emissive2"			: [1,0.7,0.3],
+		"specularPower"		: 80,
+		"alpha"				: 0,
+		"backFaceCulling"	:true
+	}
+}

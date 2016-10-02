@@ -1,0 +1,38 @@
+@import "variables";
+@import "mixins";
+
+pre{
+  text-align:left;;
+}
+
+progress{
+  /*transition: 0.4s linear;*/
+}
+progress::-webkit-progress-bar {
+  /* style rules */
+}
+progress::-webkit-progress-value {
+  /* style rules */
+}
+progress::-moz-progress-bar {
+  /* style rules */
+}
+
+#launcher, #progressBar, #progressPercentage {
+  margin-right: 8px;
+}
+
+#progressPanel{
+  margin-top: 40px;
+}
+
+#warning{
+  margin-top: 40px;
+  font-size: 13px;
+}
+
+#progressConsole{
+  margin-top: 20px;
+  font-size: 10px;
+  font-style: italic;
+}
