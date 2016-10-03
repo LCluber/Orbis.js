@@ -168,7 +168,7 @@ var ORBIS = {
     if(this.pending > 0)
       this.pending--;
 
-    this.logs.add('progress ' + this.progress.percentage + '%');
+    this.logs.add('progress ' + this.progress.target + '%');
     this.onProgress( this.progress.percentage, response );
     if (!progress){
       this.logs.add('loading complete');

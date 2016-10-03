@@ -33,6 +33,7 @@ var FRAMERAT = {
     nbFrame: 0,
     fps: 0,
     fsm: {},
+    frame: function() {},
     create: function(onProgress) {
         var _this = Object.create(this);
         _this.onProgress = onProgress;
@@ -40,44 +41,31 @@ var FRAMERAT = {
         return _this;
     },
     createFSM: function() {
-        this.fsm = FSM.create([ {
-            name: "start",
-            from: "idle",
-            to: "running"
-        }, {
-            name: "pause",
-            from: "running",
-            to: "paused"
-        }, {
-            name: "continue",
+        this.fsm = TAIPAN.create([ {
+            name: "play",
             from: "paused",
             to: "running"
         }, {
             name: "stop",
-            from: "paused",
-            to: "stopped"
+            from: "running",
+            to: "paused"
         } ]);
     },
-    start: function() {
-        if (this.fsm.start()) {
-            this.reset();
-            this.play();
+    play: function(scope) {
+        if (this.fsm.play()) {
+            this.oldTime = new Date().getTime();
+            this.requestNewFrame(scope);
         }
         return this.fsm.getStatus();
     },
-    pause: function() {
-        if (this.fsm.pause()) this.cancelAnimation(); else if (this.fsm.continue()) this.play();
-        return this.fsm.getStatus();
-    },
     stop: function() {
-        if (this.fsm.stop()) this.cancelAnimation();
+        if (this.fsm.stop()) {
+            this.cancelAnimation();
+        }
         return this.fsm.getStatus();
-    },
-    play: function() {
-        this.oldTime = new Date().getTime();
-        this.requestNewFrame();
     },
     reset: function() {
+        this.stop();
         this.nbFrame = 0;
         this.totalTime = 0;
         this.second = this.millisecond * .001;
@@ -86,8 +74,8 @@ var FRAMERAT = {
     getTotalTime: function() {
         return this.totalTime;
     },
-    newFrame: function() {
-        this.requestNewFrame();
+    newFrame: function(scope) {
+        this.requestNewFrame(scope);
         this.newTime = new Date().getTime();
         this.computeDelta();
         this.oldTime = this.newTime;
@@ -95,13 +83,12 @@ var FRAMERAT = {
         this.totalTime += this.second;
         this.computeFPS();
     },
-    requestNewFrame: function() {
-        this.animationFrame = window.requestAnimationFrame(this.callback);
+    requestNewFrame: function(scope) {
+        window.requestAnimationFrame(this.onProgress.bind(scope));
         this.nbFrame++;
     },
     cancelAnimation: function() {
-        window.cancelAnimationFrame(this.animationFrame);
-        this.play = 0;
+        window.cancelAnimationFrame(this.frame);
     },
     computeDelta: function() {
         this.delta = this.newTime - this.oldTime;

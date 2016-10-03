@@ -220,7 +220,7 @@ module.exports = function(grunt){
           stripBanners: false,
           banner: banner
         },
-        src: ['dist/orbis.js','libs/taipanjs/taipan.js'],
+        src: ['dist/orbis.js','libs/frameratjs/framerat.js'],
         dest: 'dist/orbis.js'
       },
       libmin: {
@@ -229,7 +229,7 @@ module.exports = function(grunt){
           stripBanners: true,
           banner: banner
         },
-        src: ['dist/orbis.min.js','libs/taipanjs/taipan.min.js'],
+        src: ['dist/orbis.min.js','libs/frameratjs/framerat.min.js'],
         dest: 'dist/orbis.min.js'
       },
       webjs: {
