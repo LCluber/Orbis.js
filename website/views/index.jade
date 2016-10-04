@@ -48,8 +48,9 @@ block content
         div( id='progressPanel' )
           button( id='launcher' type='button' class='btn btn-default' onclick='loadAssets()' ) LOAD ASSETS
           progress( id='progressBar' value='0' max='100' )
-          span( id='progressPercentage' ) 0%
-          span( id='progressFile' )
+          div
+            span( id='progressPercentage' ) 0%
+            span( id='progressFile' )
           
           div( id='progressConsole' )
 

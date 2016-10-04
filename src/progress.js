@@ -2,15 +2,17 @@ ORBIS.Progress = {
   rate       : 0.0,
   percentage : 0.0,
   target     : 0,
-  speed      : 0.2,
+  speed      : 40,//pixels per seconds
   success    : 0,
   error      : 0,
   total      : 0,
   animation  : {},
+  onAnimate  : function(){},
 
-  create : function(){
+  create : function(onAnimate){
     var _this = Object.create(this);
     _this.animation = FRAMERAT.create(_this.animate);
+    _this.onAnimate = onAnimate;
     return _this;
   },
 
@@ -45,14 +47,15 @@ ORBIS.Progress = {
 
   animate : function(){
     //if (this.percentage < this.target){
-    console.log(this);
-      this.percentage += this.speed;
+      this.percentage += this.speed * this.animation.second;
+      console.log(this.percentage);
       if (this.percentage >= this.target){
         this.percentage = this.target;
         this.animation.stop();
       }else
         this.animation.newFrame(this);
     //}
+    this.onAnimate(this.percentage);
   },
 
   onSuccess : function(){

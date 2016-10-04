@@ -59,11 +59,11 @@ var ORBIS = {
   * @param {integer} [maxPending = 6] The maximum pending requests. Once reached new requests will not start before a previous one completes. Six being the maximum on most browsers.
   * @returns {Loader}  The new Loader
   */
-  create : function(onProgress, onComplete, tick, maxPending) {
+  create : function(onProgress, onAnimate, onComplete, tick, maxPending) {
     var _this = Object.create(this);
     _this.onProgress = onProgress;
     _this.onComplete = onComplete;
-    _this.progress   = ORBIS.Progress.create();
+    _this.progress   = ORBIS.Progress.create(onAnimate);
     _this.logs       = ORBIS.Logger.create();
     _this.setTick(tick);
     _this.setMaxPending(maxPending);
@@ -169,7 +169,7 @@ var ORBIS = {
       this.pending--;
 
     this.logs.add('progress ' + this.progress.target + '%');
-    this.onProgress( this.progress.percentage, response );
+    this.onProgress( this.progress.target, response );
     if (!progress){
       this.logs.add('loading complete');
       this.onComplete( this.getLogs() );

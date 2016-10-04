@@ -1,5 +1,5 @@
 
-var loader             = ORBIS.create(updateProgress, complete, 0, 0);
+var loader             = ORBIS.create(updateProgress, animateProgress, complete, 0, 0);
 var button             = findById('launcher');
 var progressBar        = findById('progressBar');
 var progressPercentage = findById('progressPercentage');
@@ -15,9 +15,12 @@ function loadAssets(){
 function updateProgress( progress, file ) {
   //console.log(file);
   progressConsole.innerHTML   += progress + '% / ' + file.name + '<br/>';
-  progressBar.value            = progress;
   progressPercentage.innerHTML = progress + '%';
   progressFile.innerHTML       = file.name;
+}
+
+function animateProgress(percentage){
+  progressBar.value = percentage;
 }
 
 function complete( logs ) {

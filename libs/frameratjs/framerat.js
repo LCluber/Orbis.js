@@ -84,7 +84,7 @@ var FRAMERAT = {
         this.computeFPS();
     },
     requestNewFrame: function(scope) {
-        window.requestAnimationFrame(this.onProgress.bind(scope));
+        this.frame = window.requestAnimationFrame(this.onProgress.bind(scope));
         this.nbFrame++;
     },
     cancelAnimation: function() {
