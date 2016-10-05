@@ -12,7 +12,8 @@ ORBIS.Progress = {
   create : function(onAnimate){
     var _this = Object.create(this);
     _this.animation = FRAMERAT.create(_this.animate);
-    _this.onAnimate = onAnimate;
+    if ( ORBIS.Utils.isFunction(onAnimate) )
+      _this.onAnimate = onAnimate;
     return _this;
   },
 
@@ -40,20 +41,13 @@ ORBIS.Progress = {
     return this.checkComplete();
   },
 
-  // startAnimation : function(){
-  //
-  //   this.animation.start();
-  // },
-
   animate : function(){
-    //if (this.percentage < this.target){
-      this.percentage += this.speed * this.animation.second;
-      if (this.percentage >= this.target){
-        this.percentage = this.target;
-        this.animation.stop();
-      }else
-        this.animation.newFrame(this);
-    //}
+    this.percentage += this.speed * this.animation.second;
+    if (this.percentage >= this.target){
+      this.percentage = this.target;
+      this.animation.stop();
+    }else
+      this.animation.newFrame(this);
     this.onAnimate(this.percentage);
   },
 

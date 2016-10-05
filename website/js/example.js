@@ -13,7 +13,6 @@ function loadAssets(){
 }
 
 function updateProgress( progress, file ) {
-  //console.log(file);
   progressConsole.innerHTML   += progress + '% / ' + file.name + '<br/>';
   progressPercentage.innerHTML = progress + '%';
   progressFile.innerHTML       = file.name;
@@ -27,7 +26,7 @@ function complete( logs ) {
   console.log(logs);
   progressFile.innerHTML     = 'loading complete';
   progressConsole.innerHTML += 'loading complete<br/>You can check logs in the console.';
-  button.disabled = false;
+  //button.disabled = false;
 }
 
 function findById( id ) {
