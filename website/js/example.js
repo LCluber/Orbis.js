@@ -18,7 +18,7 @@ function updateProgress( progress, file ) {
   progressFile.innerHTML       = file.name;
 }
 
-function animateProgress(percentage){
+function animateProgress( percentage ){
   progressBar.value = percentage;
 }
 

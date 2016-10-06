@@ -142,7 +142,7 @@ block content
         h3 Javascript (main.js)
         
         p instantiate a loader with your onProgress and onComplete callback functions.
-        pre var loader = ORBIS.create(updateProgress, complete, null, null);
+        pre var loader = ORBIS.create(updateProgress, animateProgress, complete, null, null);
         
         p Launches the asynchronous loading with the assets file and the assets folder in parameters.
         pre loader.launch('../public/assets.json', '../public/assets/');
@@ -150,9 +150,14 @@ block content
         p onProgress callback. With progress data and last file loaded in parameters.
         pre.
           function updateProgress( progress, file ) {
-            document.getElementById('progressBar').value            = progress;
             document.getElementById('progressPercentage').innerHTML = progress + '%';
             document.getElementById('progressFile').innerHTML       = file.name;
+          }
+        
+        p onAnimate callback. Returns the loaded percentage at each frame.
+        pre. 
+          function animateProgress(percentage){
+            document.getElementById('progressBar').value = percentage;
           }
         
         p onComplete callback. With every loaded assets in parameter.
