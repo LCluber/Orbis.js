@@ -30,7 +30,7 @@ var ORBIS = {
   *
   */
 
-  revision: '0.2.0',
+  revision: '0.3.0',
 
   assets: {}, //data from the assets file
   assetsPath      : '',
@@ -59,16 +59,37 @@ var ORBIS = {
   * @param {integer} [maxPending = 6] The maximum pending requests. Once reached new requests will not start before a previous one completes. Six being the maximum on most browsers.
   * @returns {Loader}  The new Loader
   */
-  create : function(onProgress, onComplete, tick, maxPending) {
+  create : function(onProgress, onAnimate, onComplete, tick, maxPending) {
     var _this = Object.create(this);
-    _this.onProgress = onProgress;
-    _this.onComplete = onComplete;
-    _this.progress   = ORBIS.Progress.create();
-    _this.logs       = ORBIS.Logger.create();
+    _this.logs     = ORBIS.Logger.create();
+    _this.logs.init();
+
+    //_this.checkCallback(onProgress);
+    //_this.checkCallback(onComplete);
+    if ( ORBIS.Utils.isFunction(onProgress) )
+      _this.onProgress = onProgress;
+    else
+      _this.logs.add('onProgress Parameter is not a function');
+
+    if ( ORBIS.Utils.isFunction(onComplete) )
+      _this.onComplete = onComplete;
+    else
+      _this.logs.add('onComplete Parameter is not a function');
+
+    _this.progress = ORBIS.Progress.create(onAnimate);
+
     _this.setTick(tick);
     _this.setMaxPending(maxPending);
     return _this;
   },
+
+  // checkCallback : function(callback){
+  //   console.log(callback.name);
+  //   if ( ORBIS.Utils.isFunction(callback) )
+  //     this[callback.name] = callback;
+  //   else
+  //     this.logs.add(callback.name + ' parameter is not a function');
+  // },
 
   /**
   * Start the loader.
@@ -79,7 +100,7 @@ var ORBIS = {
   */
   launch : function( assetsFilePath, assetsPath ){
     this.progress.init();
-    this.logs.init();
+
     this.assetsPath = ORBIS.Utils.removeTrailingSlash(assetsPath);
     //check if assets file exists
     // if(){
@@ -168,8 +189,8 @@ var ORBIS = {
     if(this.pending > 0)
       this.pending--;
 
-    this.logs.add('progress ' + this.progress.percentage + '%');
-    this.onProgress( this.progress.percentage, response );
+    this.logs.add('progress ' + this.progress.target + '%');
+    this.onProgress( this.progress.target, response );
     if (!progress){
       this.logs.add('loading complete');
       this.onComplete( this.getLogs() );
