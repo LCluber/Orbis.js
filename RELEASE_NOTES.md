@@ -6,7 +6,7 @@ Version 0.3.0 (October 7th 2016)
 
  * New animation feature :
   * Added **FrameRat.js** library
-  * Added OnAnimate callback returning animated progress in needed
+  * Added OnAnimate callback returning animated progress if needed
  * Callback functions checked
  * Updated example on the website
 
