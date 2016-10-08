@@ -167,15 +167,16 @@ var ORBIS = {
     }
 
     if (this.sentRequests < this.requestsLength){
-      var _this = this;
-      setTimeout( function(){
-        _this.loadAnotherFile(_this);
-      }, this.tick );
+      // var _this = this;
+      // setTimeout( function(){
+      //   _this.loadAnotherFile(_this);
+      // }, this.tick );
+      setTimeout( this.loadAnotherFile.bind(this), this.tick );
     }
   },
 
-  loadAnotherFile : function(_this){ //start loading
-    _this.sendRequest();
+  loadAnotherFile : function(){ //start loading
+    this.sendRequest();
   },
 
   //callback
