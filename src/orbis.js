@@ -30,7 +30,7 @@ var ORBIS = {
   *
   */
 
-  revision: '0.3.0',
+  revision: '0.4.0',
 
   assets: {}, //data from the assets file
   assetsPath      : '',
@@ -61,7 +61,7 @@ var ORBIS = {
   */
   create : function(onProgress, onAnimate, onComplete, tick, maxPending) {
     var _this = Object.create(this);
-    _this.logs     = ORBIS.Logger.create();
+    _this.logs = ORBIS.Logger.create();
     _this.logs.init();
 
     //_this.checkCallback(onProgress);
@@ -102,10 +102,6 @@ var ORBIS = {
     this.progress.init();
 
     this.assetsPath = ORBIS.Utils.removeTrailingSlash(assetsPath);
-    //check if assets file exists
-    // if(){
-    //
-    // }
     //check if assetsFile already loaded
     if( this.assets.fsm && this.assets.fsm.getStatus() === 'success' ){
       this.logs.add( assetsFilePath + ' already loaded.');
@@ -228,6 +224,21 @@ var ORBIS = {
     if( this.requests[name] && this.requests[name].fsm.getStatus() === 'success' )
       return this.requests[name];
     else
+      return false;
+  },
+
+  /**
+  * Set the scope used by onProgress, onAnimate, onComplete callbacks.
+  * @since 0.4.0
+  * @method
+  * @param {object} The scope of the callbacks.
+  */
+  setScope : function(scope){
+    if ( ORBIS.Utils.isObject(scope) ){
+      this.onProgress = this.onProgress.bind(scope);
+      this.progress.onAnimate = this.progress.onAnimate.bind(scope);
+      this.onComplete = this.onComplete.bind(scope);
+    }else
       return false;
   },
 

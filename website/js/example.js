@@ -9,6 +9,7 @@ var progressConsole    = findById('progressConsole');
 function loadAssets(){
   button.disabled = true;
   progressConsole.innerHTML = '';
+  loader.setScope(this);
   loader.launch('../public/assets.json', '../public/assets/');
 }
 

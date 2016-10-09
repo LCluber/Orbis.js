@@ -1,6 +1,12 @@
-Version 0.3.1 (incoming)
+Version 0.4.1 (incoming)
 
  * documentation update
+
+Version 0.4.0 (October 9th 2016)
+
+ * New scope feature. Gives the ability to set a scope for onProgress, onAnimate and onComplete callbacks. Useful when using Orbis.js into a class.
+ * setTimeout for requests sending now uses bind function to set the scope.
+ * added isObject utility function
 
 Version 0.3.0 (October 7th 2016)
 
