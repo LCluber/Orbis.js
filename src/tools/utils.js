@@ -23,9 +23,13 @@ ORBIS.Utils = {
     return json;
   },
 
-  isFunction : function(functionToCheck) {
+  isFunction : function(func) {
     var getType = {};
-    return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+    return func && getType.toString.call(func) === '[object Function]';
+  },
+
+  isObject : function(object){
+    return ( object !== null && ( this.isFunction(object) || typeof object === 'object' ) );
   }
 
 };
