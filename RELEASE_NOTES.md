@@ -1,6 +1,10 @@
-Version 0.4.1 (incoming)
+Version 0.4.2 (incoming)
 ------------------------------
  * documentation update
+
+Version 0.4.1 (October 13th 2016)
+ ------------------------------
+  * getAsset and getList now return false if the parameter does not exist
 
 Version 0.4.0 (October 9th 2016)
 ------------------------------
