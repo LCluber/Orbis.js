@@ -30,7 +30,7 @@ var ORBIS = {
   *
   */
 
-  revision: '0.4.0',
+  revision: '0.4.1',
 
   assets: {}, //data from the assets file
   assetsPath      : '',
