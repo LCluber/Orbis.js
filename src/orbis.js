@@ -200,7 +200,7 @@ var ORBIS = {
   * @since 0.1.0
   * @method
   * @param {string} property The name of a type of assets given in the assets file.
-  * @returns {array}  the list of assets as an array or an error message if property not found
+  * @returns {array}  the list of assets as an array or false if property not found
   */
   getList : function(property){
     if( this.assets.response.json.hasOwnProperty(property) ){
@@ -210,7 +210,7 @@ var ORBIS = {
         array.push(this.getAsset(assets[i]));
       return array;
     }
-    return 'property not found';
+    return false;
   },
 
   /**
@@ -218,7 +218,7 @@ var ORBIS = {
   * @since 0.1.0
   * @method
   * @param {string} name The name of the asset you need.
-  * @returns {asset}  The asset you asked for or an error message if no asset with this name found
+  * @returns {asset}  The asset you asked for or false if no asset with this name found
   */
   getAsset : function(name){
     if( this.requests[name] && this.requests[name].fsm.getStatus() === 'success' )
