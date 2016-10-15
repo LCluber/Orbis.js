@@ -21,23 +21,18 @@
 * http://www.frameratjs.lcluber.com
 */
 var FRAMERAT = {
-    revision: "0.2.0",
+    revision: "0.2.1",
     id: null,
     onProgress: function() {},
-    millisecond: 16,
-    second: 16 * .001,
-    oldTime: new Date().getTime(),
-    newTime: new Date().getTime(),
-    totalTime: 0,
-    delta: 0,
     nbFrame: 0,
-    fps: 0,
     fsm: {},
+    clock: {},
     frame: function() {},
     create: function(onProgress) {
         var _this = Object.create(this);
         _this.onProgress = onProgress;
         _this.createFSM();
+        _this.clock = FRAMERAT.Clock.create();
         return _this;
     },
     createFSM: function() {
@@ -53,7 +48,7 @@ var FRAMERAT = {
     },
     play: function(scope) {
         if (this.fsm.play()) {
-            this.oldTime = new Date().getTime();
+            this.clock.start();
             this.requestNewFrame(scope);
         }
         return this.fsm.getStatus();
@@ -66,22 +61,19 @@ var FRAMERAT = {
     },
     reset: function() {
         this.stop();
+        this.clock.reset();
         this.nbFrame = 0;
-        this.totalTime = 0;
-        this.second = this.millisecond * .001;
-        this.fps = 0;
     },
     getTotalTime: function() {
-        return this.totalTime;
+        return this.clock.getTotal();
+    },
+    getDelta: function(unit) {
+        return this.clock.getDelta(unit);
     },
     newFrame: function(scope) {
         this.requestNewFrame(scope);
-        this.newTime = new Date().getTime();
-        this.computeDelta();
-        this.oldTime = this.newTime;
-        this.second = this.delta * .001;
-        this.totalTime += this.second;
-        this.computeFPS();
+        this.clock.tick();
+        if (!this.nbFrame % 30) this.clock.getFramePerSecond();
     },
     requestNewFrame: function(scope) {
         this.frame = window.requestAnimationFrame(this.onProgress.bind(scope));
@@ -89,15 +81,80 @@ var FRAMERAT = {
     },
     cancelAnimation: function() {
         window.cancelAnimationFrame(this.frame);
-    },
-    computeDelta: function() {
-        this.delta = this.newTime - this.oldTime;
-        if (this.delta < this.millisecond) this.delta = this.millisecond;
-    },
-    computeFPS: function() {
-        if (!this.nbFrame % 30) this.fps = Math.round(1e3 / this.delta);
     }
 };
+
+FRAMERAT.Clock = {
+    revision: "0.1.0",
+    target: {
+        millisecond: 16,
+        second: 16 * .001
+    },
+    old: performance.now(),
+    "new": performance.now(),
+    total: 0,
+    fps: 0,
+    delta: {
+        millisecond: 0,
+        second: 0
+    },
+    create: function() {
+        var _this = Object.create(this);
+        _this.init();
+        return _this;
+    },
+    init: function() {
+        this.total = 0;
+        this.fps = 0;
+        this.delta.second = this.target.second;
+        this.delta.millisecond = this.target.millisecond;
+    },
+    start: function() {
+        this.old = performance.now();
+    },
+    tick: function() {
+        this.new = performance.now();
+        this.computeDelta();
+        this.old = this.new;
+        this.delta.second = this.millisecondToSecond(this.delta.millisecond);
+        this.total += this.delta.second;
+    },
+    getTotal: function() {
+        return this.total;
+    },
+    getDelta: function(unit) {
+        if (this.delta.hasOwnProperty(unit)) return this.delta[unit];
+        return false;
+    },
+    computeDelta: function() {
+        this.delta.millisecond = this.new - this.old;
+        if (this.delta.millisecond < this.target.millisecond) this.delta.millisecond = this.target.millisecond;
+    },
+    getFramePerSecond: function() {
+        this.fps = Math.round(1e3 / this.delta.millisecond);
+    },
+    millisecondToSecond: function(millisecond) {
+        return millisecond * .001;
+    }
+};
+
+(function() {
+    if ("performance" in window === false) {
+        window.performance = {};
+    }
+    Date.now = Date.now || function() {
+        return new Date().getTime();
+    };
+    if ("now" in window.performance === false) {
+        var nowOffset = Date.now();
+        if (performance.timing && performance.timing.navigationStart) {
+            nowOffset = performance.timing.navigationStart;
+        }
+        window.performance.now = function now() {
+            return Date.now() - nowOffset;
+        };
+    }
+})();
 
 (function() {
     var lastTime = 0;

@@ -42,7 +42,7 @@ ORBIS.Progress = {
   },
 
   animate : function(){
-    this.percentage += this.speed * this.animation.second;
+    this.percentage += this.speed * this.animation.getDelta('second');
     if (this.percentage >= this.target){
       this.percentage = this.target;
       this.animation.stop();
