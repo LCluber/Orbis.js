@@ -30,7 +30,7 @@ var ORBIS = {
   *
   */
 
-  revision: '0.4.1',
+  revision: '0.4.3',
 
   assets: {}, //data from the assets file
   assetsPath      : '',
@@ -206,8 +206,11 @@ var ORBIS = {
     if( this.assets.response.json.hasOwnProperty(property) ){
       var array  = [];
       var assets = this.assets.response.json[property].files;
-      for( var i = 0 ; i < assets.length ; i++ )
-        array.push(this.getAsset(assets[i]));
+      for( var i = 0 ; i < assets.length ; i++ ){
+        var asset = this.getAsset(assets[i]);
+        if ( asset )
+          array.push(asset);
+      }
       return array;
     }
     return false;

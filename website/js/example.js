@@ -28,6 +28,11 @@ function complete( logs ) {
   progressFile.innerHTML     = 'loading complete';
   progressConsole.innerHTML += 'loading complete<br/>You can check logs in the console.';
   //button.disabled = false;
+  //getAssets('textures');
+}
+
+function getAssets(type){
+  console.log(loader.getList(type));
 }
 
 function findById( id ) {

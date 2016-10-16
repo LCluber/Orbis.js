@@ -1,6 +1,10 @@
-Version 0.4.3 (incoming)
+Version 0.4.4 (incoming)
 ------------------------------
  * documentation update
+
+Version 0.4.3 (October 16th 2016)
+------------------------------
+ * getList() returns successfully loaded files only
 
 Version 0.4.2 (October 15th 2016)
 ------------------------------
@@ -8,12 +12,12 @@ Version 0.4.2 (October 15th 2016)
 
 Version 0.4.1 (October 13th 2016)
 ------------------------------
-  * getAsset and getList now return false if the parameter does not exist
+ * getAsset and getList now return false if the parameter does not exist
 
 Version 0.4.0 (October 9th 2016)
 ------------------------------
  * New scope feature. Gives the ability to set a scope for onProgress, onAnimate and onComplete callbacks. Useful when using Orbis.js into a class.
- * setTimeout for requests sending now uses bind function to set the scope.
+ * setTimeout for requests sending now uses bind function to set the scope
  * added isObject utility function to test the scope in parameter
 
 Version 0.3.0 (October 7th 2016)
