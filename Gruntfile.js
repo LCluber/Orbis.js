@@ -17,14 +17,16 @@ module.exports = function(grunt){
   var webDir    = 'website/';
   var publicDir = webDir + 'public/';
   var nodeDir   = 'node_modules/';
-  var banner    = '/** Copyright (c) 2011 Ludovic Cluber.\n' +
-    '*\n' +
+  var banner    = '/** MIT License\n' +
+    '* \n' +
+    '* Copyright (c) 2011 Ludovic CLUBER \n' +
+    '* \n' +
     '* Permission is hereby granted, free of charge, to any person obtaining a copy\n' +
     '* of this software and associated documentation files (the "Software"), to deal\n' +
     '* in the Software without restriction, including without limitation the rights\n' +
-    '* to use, copy, modify, merge, publish, distribute copies of the Software,\n' +
-    '* and to permit persons to whom the Software is furnished to do so, \n' +
-    '* subject to the following conditions:\n' +
+    '* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n' +
+    '* copies of the Software, and to permit persons to whom the Software is\n' +
+    '* furnished to do so, subject to the following conditions:\n' +
     '*\n' +
     '* The above copyright notice and this permission notice shall be included in all\n' +
     '* copies or substantial portions of the Software.\n' +
