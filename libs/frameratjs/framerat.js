@@ -1,11 +1,13 @@
-/** Copyright (c) 2011 Ludovic Cluber.
-*
+/** MIT License
+* 
+* Copyright (c) 2011 Ludovic CLUBER 
+* 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute copies of the Software,
-* and to permit persons to whom the Software is furnished to do so, 
-* subject to the following conditions:
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
 *
 * The above copyright notice and this permission notice shall be included in all
 * copies or substantial portions of the Software.
@@ -23,14 +25,14 @@
 var FRAMERAT = {
     revision: "0.2.1",
     id: null,
-    onProgress: function() {},
-    nbFrame: 0,
+    onAnimate: function() {},
+    frameNumber: 0,
     fsm: {},
     clock: {},
-    frame: function() {},
-    create: function(onProgress) {
+    frameId: 0,
+    create: function(onAnimate) {
         var _this = Object.create(this);
-        _this.onProgress = onProgress;
+        _this.onAnimate = onAnimate;
         _this.createFSM();
         _this.clock = FRAMERAT.Clock.create();
         return _this;
@@ -41,7 +43,7 @@ var FRAMERAT = {
             from: "paused",
             to: "running"
         }, {
-            name: "stop",
+            name: "pause",
             from: "running",
             to: "paused"
         } ]);
@@ -53,51 +55,80 @@ var FRAMERAT = {
         }
         return this.fsm.getStatus();
     },
-    stop: function() {
-        if (this.fsm.stop()) {
-            this.cancelAnimation();
-        }
+    pause: function() {
+        if (this.fsm.pause()) this.cancelAnimation();
         return this.fsm.getStatus();
     },
-    reset: function() {
-        this.stop();
-        this.clock.reset();
-        this.nbFrame = 0;
+    stop: function() {
+        this.pause();
+        this.clock.init();
+        this.frameNumber = 0;
     },
-    getTotalTime: function() {
-        return this.clock.getTotal();
+    getTotalTime: function(decimals) {
+        return this.clock.getTotal(decimals);
     },
-    getDelta: function(unit) {
-        return this.clock.getDelta(unit);
+    getFrameNumber: function() {
+        return this.frameNumber;
+    },
+    getRoundedDelta: function(refreshRate, decimals) {
+        this.computeRoundedDelta(refreshRate, decimals);
+        return this.clock.getRoundedDelta();
+    },
+    computeRoundedDelta: function(refreshRate, decimals) {
+        if (this.frameNumber % refreshRate === 0) this.clock.computeRoundedDelta(decimals);
+    },
+    getDelta: function() {
+        return this.clock.getDelta();
+    },
+    getFramePerSecond: function(refreshRate, decimals) {
+        if (this.frameNumber % refreshRate === 0) this.clock.computeFramePerSecond(decimals);
+        return this.clock.getFramePerSecond();
     },
     newFrame: function(scope) {
         this.requestNewFrame(scope);
         this.clock.tick();
-        if (!this.nbFrame % 30) this.clock.getFramePerSecond();
     },
     requestNewFrame: function(scope) {
-        this.frame = window.requestAnimationFrame(this.onProgress.bind(scope));
-        this.nbFrame++;
+        if (!scope) this.frameId = window.requestAnimationFrame(this.onAnimate); else this.frameId = window.requestAnimationFrame(this.onAnimate.bind(scope));
+        this.frameNumber++;
     },
     cancelAnimation: function() {
-        window.cancelAnimationFrame(this.frame);
+        window.cancelAnimationFrame(this.frameId);
+    }
+};
+
+FRAMERAT.Time = {
+    millisecond: 0,
+    second: 0,
+    create: function(millisecond) {
+        var _this = Object.create(this);
+        _this.set(millisecond, 0);
+        return _this;
+    },
+    set: function(x, min) {
+        this.millisecond = Math.max(x, min);
+        this.second = this.millisecondToSecond(this.millisecond);
+    },
+    getSecond: function() {
+        return this.second;
+    },
+    getMillisecond: function() {
+        return this.millisecond;
+    },
+    millisecondToSecond: function(millisecond) {
+        return millisecond * .001;
     }
 };
 
 FRAMERAT.Clock = {
     revision: "0.1.0",
-    target: {
-        millisecond: 16,
-        second: 16 * .001
-    },
+    minimumTick: 16,
     old: performance.now(),
     "new": performance.now(),
     total: 0,
     fps: 0,
-    delta: {
-        millisecond: 0,
-        second: 0
-    },
+    delta: FRAMERAT.Time.create(0),
+    roundedDelta: FRAMERAT.Time.create(0),
     create: function() {
         var _this = Object.create(this);
         _this.init();
@@ -106,35 +137,39 @@ FRAMERAT.Clock = {
     init: function() {
         this.total = 0;
         this.fps = 0;
-        this.delta.second = this.target.second;
-        this.delta.millisecond = this.target.millisecond;
+        this.delta.set(0, this.minimumTick);
     },
     start: function() {
         this.old = performance.now();
     },
     tick: function() {
         this.new = performance.now();
-        this.computeDelta();
+        this.delta.set(this.new - this.old, this.minimumTick);
         this.old = this.new;
-        this.delta.second = this.millisecondToSecond(this.delta.millisecond);
         this.total += this.delta.second;
     },
-    getTotal: function() {
-        return this.total;
+    getTotal: function(decimals) {
+        return this.round(this.total, decimals);
     },
-    getDelta: function(unit) {
-        if (this.delta.hasOwnProperty(unit)) return this.delta[unit];
-        return false;
+    computeRoundedDelta: function(decimals) {
+        this.roundedDelta.second = this.delta.second ? this.round(this.delta.second, decimals) : 0;
+        this.roundedDelta.millisecond = this.delta.millisecond ? this.round(this.delta.millisecond, decimals) : 0;
     },
-    computeDelta: function() {
-        this.delta.millisecond = this.new - this.old;
-        if (this.delta.millisecond < this.target.millisecond) this.delta.millisecond = this.target.millisecond;
+    getRoundedDelta: function() {
+        return this.roundedDelta;
+    },
+    getDelta: function() {
+        return this.delta;
+    },
+    computeFramePerSecond: function(decimals) {
+        this.fps = this.round(1e3 / this.delta.millisecond, decimals);
     },
     getFramePerSecond: function() {
-        this.fps = Math.round(1e3 / this.delta.millisecond);
+        return this.fps;
     },
-    millisecondToSecond: function(millisecond) {
-        return millisecond * .001;
+    round: function(x, decimals) {
+        decimals = Math.pow(10, decimals);
+        return Math.round(x * decimals) / decimals;
     }
 };
 
