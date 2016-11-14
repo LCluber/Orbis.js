@@ -173,7 +173,7 @@ module.exports = function(grunt){
       libmin: {
         options: {
           sourceMap: false,
-          sourceMapName: 'src/sourcemap.map',
+          sourceMapName: srcDir + 'sourcemap.map',
           banner: '',
           mangle: {
             except: [projectName.toUpperCase()]
@@ -204,7 +204,7 @@ module.exports = function(grunt){
       web: {
         options: {
           sourceMap: false,
-          sourceMapName: 'src/sourcemap.map',
+          sourceMapName: srcDir + 'sourcemap.map',
           mangle: {
             except: ['jQuery']
           },
