@@ -14,6 +14,7 @@ module.exports = function(grunt){
                     'src/request.js',
 
                   ];
+  var distDir   = 'dist/';
   var webDir    = 'website/';
   var publicDir = webDir + 'public/';
   var nodeDir   = 'node_modules/';
@@ -46,7 +47,7 @@ module.exports = function(grunt){
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
-      dist     : 'dist/',
+      dist     : distDir + ,
       doc      : 'doc/',
       static   : webDir + 'static/',
       js       : publicDir + 'js/',
@@ -222,8 +223,8 @@ module.exports = function(grunt){
           stripBanners: false,
           banner: banner
         },
-        src: ['dist/orbis.js','libs/frameratjs/framerat.js'],
-        dest: 'dist/orbis.js'
+        src: [distDir + 'orbis.js','libs/frameratjs/framerat.js'],
+        dest: distDir + 'orbis.js'
       },
       libmin: {
         options: {
@@ -231,8 +232,8 @@ module.exports = function(grunt){
           stripBanners: true,
           banner: banner
         },
-        src: ['dist/orbis.min.js','libs/frameratjs/framerat.min.js'],
-        dest: 'dist/orbis.min.js'
+        src: [distDir + 'orbis.min.js','libs/frameratjs/framerat.min.js'],
+        dest: distDir + 'orbis.min.js'
       },
       webjs: {
         options: {
@@ -242,6 +243,8 @@ module.exports = function(grunt){
         },
         src: [nodeDir + 'jquery/dist/jquery.min.js',
               nodeDir + 'bootstrap/dist/js/bootstrap.min.js',
+              // distDir + 'orbis.js',
+              distDir + 'orbis.min.js',
               publicDir + 'js/main.min.js'
             ],
         dest: publicDir + 'js/main.min.js'
@@ -265,7 +268,7 @@ module.exports = function(grunt){
           archive: 'zip/orbisjs.zip'
         },
         files: [
-          {src: ['dist/*'], dest: '/', filter: 'isFile'},
+          {src: [distDir + '*'], dest: '/', filter: 'isFile'},
           {src: ['doc/**'], dest: '/', filter: 'isFile'},
           {expand: true, cwd: webDir + 'static/', src: '**', dest: '/'},
           {expand: true, cwd: publicDir, src: '**', dest: '/public'},
