@@ -1,0 +1,112 @@
+section( id='source' class='container content-section text-center' )
+  div( class='row' )
+    div( class='col-lg-8 col-lg-offset-2' )
+      h2 Code
+
+      h3 HTML (index.html)
+
+      pre.
+        &lt;button id="launcher" type="button" onclick="loadAssets()"&gt; LOAD ASSETS &lt;/button&gt;
+
+        &lt;progress id="progressBar" value="0" max="100"&gt;&lt;/progress&gt;
+        &lt;span id="progressPercentage"&gt;0%&lt;/span&gt;
+        &lt;span id="progressFile"&gt;&lt;/span&gt;
+
+      h3 Json config (assets.json)
+
+      p
+        strong basic
+
+      pre( class='col-md-6').
+        {
+          "type":{
+            "folder": "folder_name",
+            "files" : [
+              "file1.txt",
+              "file2.txt"
+            ]
+          },
+        }
+      pre( class='col-md-6').
+        {
+          "shaders":{
+            "folder": "shaders",
+            "files"	: [
+              "shader1.txt",
+              "shader2.txt"
+            ]
+          }
+        }
+      p
+        strong advanced
+
+      pre( class='col-md-6').
+        {
+          "type": {
+            "folder": "folder_name",
+            "files" : [
+              {
+                "file":"file1.png",
+                "option1":{},
+                "option2":[],
+                "option3":"string",
+                "option4":bool
+              }
+            ]
+          }
+        }
+      pre( class='col-md-6').
+        {
+          "sprites": {
+            "folder": "sprites",
+            "files" :[
+              {
+                "file":"sprite1.png",
+                "texSize":[124,70],
+                "frameSize":[62,70]
+              }
+            ]
+          },
+          "sounds": {
+            "folder": "sounds",
+            "files" : [
+              {
+                "file":"sound1.mp3",
+                "volume":0.2,
+                "loop":false,
+                "type":"sfx"
+              }
+            ]
+          }
+        }
+      h3 Javascript (main.js)
+
+      p instantiate a loader with your onProgress and onComplete callback functions.
+      pre var loader = ORBIS.create(updateProgress, animateProgress, complete, null, null);
+
+      p Launches the asynchronous loading with the assets file and the assets folder in parameters.
+      pre loader.launch('../public/assets.json', '../public/assets/');
+
+      p onProgress callback. With progress data and last file loaded in parameters.
+      pre.
+        function updateProgress( progress, file ) {
+          document.getElementById('progressPercentage').innerHTML = progress + '%';
+          document.getElementById('progressFile').innerHTML       = file.name;
+        }
+
+      p onAnimate callback. Returns the loaded percentage at each frame.
+      pre.
+        function animateProgress(percentage){
+          document.getElementById('progressBar').value = percentage;
+        }
+
+      p onComplete callback. With every loaded assets in parameter.
+      pre.
+        function complete( assets ) {
+          document.getElementById('progressFile').innerHTML = 'complete';
+        }
+
+      p Once the loading is complete, you can call any asset in your program like this.
+      pre.
+        var shader1     = loader.getAsset('shader1.txt'); //get a loaded asset by name.
+        var spritesList = loader.getList('sprites'); //get a list of a specific type of assets.

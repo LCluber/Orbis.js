@@ -2,21 +2,26 @@ module.exports = function(grunt){
 
   require('time-grunt')(grunt);
 
-  var src       = [ 'src/orbis.js',
-                    'src/tools/logger.js',
-                    'src/tools/file.js',
-                    'src/tools/ajax.js',
-                    'src/tools/utils.js',
-                    'src/loaders/img.js',
-                    'src/loaders/snd.js',
-                    'src/loaders/file.js',
-                    'src/progress.js',
-                    'src/request.js',
-
-                  ];
+  var projectName = 'Orbis';
+  
+  var srcDir    = 'src/';
+  var distDir   = 'dist/';
   var webDir    = 'website/';
   var publicDir = webDir + 'public/';
   var nodeDir   = 'node_modules/';
+
+  var src       = [ srcDir + projectName.toLowerCase() + '.js',
+                    srcDir + 'tools/logger.js',
+                    srcDir + 'tools/file.js',
+                    srcDir + 'tools/ajax.js',
+                    srcDir + 'tools/utils.js',
+                    srcDir + 'loaders/img.js',
+                    srcDir + 'loaders/snd.js',
+                    srcDir + 'loaders/file.js',
+                    srcDir + 'progress.js',
+                    srcDir + 'request.js'
+                  ];
+
   var banner    = '/** MIT License\n' +
     '* \n' +
     '* Copyright (c) 2011 Ludovic CLUBER \n' +
@@ -39,14 +44,14 @@ module.exports = function(grunt){
     '* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n' +
     '* SOFTWARE.\n' +
     '*\n' +
-    '* http://orbisjs.lcluber.com\n' +
+    '* http://' + projectName.toLowerCase() + '.lcluber.com\n' +
     '*/\n';
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
-      dist     : 'dist/',
+      dist     : distDir,
       doc      : 'doc/',
       static   : webDir + 'static/',
       js       : publicDir + 'js/',
@@ -77,7 +82,7 @@ module.exports = function(grunt){
       options: {
         jshintrc: 'config/.jshintrc'
       },
-      lib: [ 'Gruntfile.js', 'src/**/*.js'],
+      lib: [ 'Gruntfile.js', srcDir + '**/*.js' ],
       web: [ webDir + 'js/**/*.js'],
     },
     sass: {
@@ -92,6 +97,14 @@ module.exports = function(grunt){
           dest: webDir + 'sass/build/',
           ext: '.css'
         }]
+      }
+    },
+    csslint: {
+      dist: {
+        options: {
+          import: false
+        },
+        src: [webDir + 'sass/build/**/*.css']
       }
     },
     cssmin:{
@@ -112,7 +125,7 @@ module.exports = function(grunt){
         config: 'config/jsdoc-conf.json'
       }
     },
-    jade: {
+    pug: {
       compile: {
         options: {
           namespace   : 'JST',
@@ -127,11 +140,23 @@ module.exports = function(grunt){
         },
         files: [ {
           cwd: webDir + 'views',
-          src: ['**/*.jade', '!**/_*.jade'],
+          src: ['**/*.pug', '!**/_*.pug'],
           dest: webDir + 'static',
           expand: true,
           ext: '.htm'
         } ]
+      }
+    },
+    htmlmin: {
+      static: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        expand: true,
+        cwd: webDir + 'static',
+        src: ['**/*.htm'],
+        dest: webDir + 'static/'
       }
     },
     uglify: {
@@ -140,11 +165,10 @@ module.exports = function(grunt){
           beautify: true,
           banner: '',
           mangle: false,
-          compress:false,
+          compress:false
         },
-        files: {
-          'dist/orbis.js': src
-        }
+        src: src,
+        dest: distDir + projectName.toLowerCase() + '.js'
       },
       libmin: {
         options: {
@@ -152,7 +176,7 @@ module.exports = function(grunt){
           sourceMapName: 'src/sourcemap.map',
           banner: '',
           mangle: {
-            except: ['ORBIS'],
+            except: [projectName.toUpperCase()]
           },
           compress: {
             sequences: true,
@@ -174,9 +198,8 @@ module.exports = function(grunt){
             keep_fnames: false
           }
         },
-        files: {
-          'dist/orbis.min.js': src
-        }
+        src: src,
+        dest: distDir + projectName.toLowerCase() + '.min.js'
       },
       web: {
         options: {
@@ -222,8 +245,8 @@ module.exports = function(grunt){
           stripBanners: false,
           banner: banner
         },
-        src: ['dist/orbis.js','libs/frameratjs/framerat.js'],
-        dest: 'dist/orbis.js'
+        src: [distDir + projectName.toLowerCase() + '.js','libs/frameratjs/framerat.js'],
+        dest: distDir + projectName.toLowerCase() + '.js'
       },
       libmin: {
         options: {
@@ -231,8 +254,8 @@ module.exports = function(grunt){
           stripBanners: true,
           banner: banner
         },
-        src: ['dist/orbis.min.js','libs/frameratjs/framerat.min.js'],
-        dest: 'dist/orbis.min.js'
+        src: [distDir + projectName.toLowerCase() + '.min.js','libs/frameratjs/framerat.min.js'],
+        dest: distDir + projectName.toLowerCase() + '.min.js'
       },
       webjs: {
         options: {
@@ -242,6 +265,8 @@ module.exports = function(grunt){
         },
         src: [nodeDir + 'jquery/dist/jquery.min.js',
               nodeDir + 'bootstrap/dist/js/bootstrap.min.js',
+              // distDir + 'orbis.js',
+              distDir + projectName.toLowerCase() + '.min.js',
               publicDir + 'js/main.min.js'
             ],
         dest: publicDir + 'js/main.min.js'
@@ -259,19 +284,37 @@ module.exports = function(grunt){
         dest: publicDir + 'css/style.min.css'
       }
     },
+    symlink: {
+      options: {
+        overwrite: false,
+        force: false
+      },
+      public: {
+        expand: true,
+        cwd: publicDir,
+        src: ['**/*'],
+        dest: webDir + 'static/public/'
+      },
+      doc: {
+        expand: true,
+        cwd: 'doc/',
+        src: ['**/*'],
+        dest: webDir + 'static/doc/'
+      }
+    },
     compress: {
       main: {
         options: {
-          archive: 'zip/orbisjs.zip'
+          archive: 'zip/' + projectName.toLowerCase() + 'js.zip'
         },
         files: [
-          {src: ['dist/*'], dest: '/', filter: 'isFile'},
+          {src: [distDir + '*'], dest: '/', filter: 'isFile'},
           {src: ['doc/**'], dest: '/', filter: 'isFile'},
           {expand: true, cwd: webDir + 'static/', src: '**', dest: '/'},
           {expand: true, cwd: publicDir, src: '**', dest: '/public'},
           {src: ['LICENCE.txt'], dest: '/'},
           {src: ['README.md'], dest: '/'},
-          {src: ['RELEASE_NOTES.md'], dest: '/'},
+          {src: ['RELEASE_NOTES.md'], dest: '/'}
         ]
       }
     }
@@ -281,22 +324,27 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-csslint');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-pug');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-symlink');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'jsdoc', 'sass', 'cssmin', 'jade', 'uglify', 'concat', 'compress' ]); //build all
-
+  grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify', 'concat', 'symlink', 'compress' ]); //build all
+  
+  grunt.registerTask('prod', [ 'clean', 'copy', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify', 'concat', 'htmlmin', 'compress' ]); //build all
+  
   grunt.registerTask('doc', [ 'jsdoc' ]); //build jsdoc into /doc
-  grunt.registerTask('src', [ 'jshint:lib', 'uglify:lib', 'uglify:libmin', 'concat:lib', 'concat:libmin' ]); //build orbis into /dist
+  grunt.registerTask('src', [ 'jshint:lib', 'uglify:lib', 'uglify:libmin' ]); //build orbis into /dist
   //website
   grunt.registerTask('js', [ 'jshint:web', 'uglify:web', 'concat:webjs' ]); //build js into /website/public/js
-  grunt.registerTask('css', [ 'sass', 'cssmin', 'concat:webcss' ]); //build sass into /website/public/css
-  grunt.registerTask('static', [ 'jade' ]); //build static site into /website/static
-
-  grunt.registerTask('zip', ['compress']); //compress the project in a downloadable static package
+  grunt.registerTask('css', [ 'sass', 'csslint', 'cssmin', 'concat:webcss' ]); //build sass into /website/public/css
+  grunt.registerTask('static', [ 'pug', 'htmlmin', 'symlink' ]); //build static website into /website/static
+  
+  grunt.registerTask('zip', [ 'compress' ]); //compress the project in a downloadable static package
 
 };

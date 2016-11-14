@@ -1,0 +1,18 @@
+section( id='example' class='container content-section text-center' )
+  div( class='row' )
+    div( class='col-lg-8 col-lg-offset-2' )
+      h2 Example
+
+      div( id='progressPanel' )
+        button( id='launcher' type='button' class='btn btn-default' onclick='loadAssets()' ) LOAD ASSETS
+        progress( id='progressBar' value='0' max='100' )
+        div
+          span( id='progressPercentage' ) 0%
+          span( id='progressFile' )
+
+        div( id='progressConsole' )
+
+        p( id='warning')
+          em Please note the loader must be launched on a web server in order to avoid "Cross origin requests" errors.
+            br/
+            a( href='http://stackoverflow.com/questions/10752055/cross-origin-requests-are-only-supported-for-http-error-when-loading-a-local' target='_blank' ) Follow this link to learn more.
