@@ -3,23 +3,24 @@ module.exports = function(grunt){
   require('time-grunt')(grunt);
 
   var projectName = 'Orbis';
-
-  var src       = [ 'src/' + projectName.toLowerCase() + '.js',
-                    'src/tools/logger.js',
-                    'src/tools/file.js',
-                    'src/tools/ajax.js',
-                    'src/tools/utils.js',
-                    'src/loaders/img.js',
-                    'src/loaders/snd.js',
-                    'src/loaders/file.js',
-                    'src/progress.js',
-                    'src/request.js',
-
-                  ];
+  
+  var srcDir    = 'src/';
   var distDir   = 'dist/';
   var webDir    = 'website/';
   var publicDir = webDir + 'public/';
   var nodeDir   = 'node_modules/';
+
+  var src       = [ srcDir + projectName.toLowerCase() + '.js',
+                    srcDir + 'tools/logger.js',
+                    srcDir + 'tools/file.js',
+                    srcDir + 'tools/ajax.js',
+                    srcDir + 'tools/utils.js',
+                    srcDir + 'loaders/img.js',
+                    srcDir + 'loaders/snd.js',
+                    srcDir + 'loaders/file.js',
+                    srcDir + 'progress.js',
+                    srcDir + 'request.js'
+                  ];
 
   var banner    = '/** MIT License\n' +
     '* \n' +
@@ -50,7 +51,7 @@ module.exports = function(grunt){
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
-      dist     : distDir + ,
+      dist     : distDir,
       doc      : 'doc/',
       static   : webDir + 'static/',
       js       : publicDir + 'js/',
@@ -81,7 +82,7 @@ module.exports = function(grunt){
       options: {
         jshintrc: 'config/.jshintrc'
       },
-      lib: [ 'Gruntfile.js', 'src/**/*.js'],
+      lib: [ 'Gruntfile.js', srcDir + '**/*.js' ],
       web: [ webDir + 'js/**/*.js'],
     },
     sass: {
@@ -164,7 +165,7 @@ module.exports = function(grunt){
           beautify: true,
           banner: '',
           mangle: false,
-          compress:false,
+          compress:false
         },
         src: src,
         dest: distDir + projectName.toLowerCase() + '.js'
@@ -175,7 +176,7 @@ module.exports = function(grunt){
           sourceMapName: 'src/sourcemap.map',
           banner: '',
           mangle: {
-            except: [projectName.toUpperCase()],
+            except: [projectName.toUpperCase()]
           },
           compress: {
             sequences: true,
@@ -313,7 +314,7 @@ module.exports = function(grunt){
           {expand: true, cwd: publicDir, src: '**', dest: '/public'},
           {src: ['LICENCE.txt'], dest: '/'},
           {src: ['README.md'], dest: '/'},
-          {src: ['RELEASE_NOTES.md'], dest: '/'},
+          {src: ['RELEASE_NOTES.md'], dest: '/'}
         ]
       }
     }
