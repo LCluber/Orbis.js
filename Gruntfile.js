@@ -2,7 +2,7 @@ module.exports = function(grunt){
 
   require('time-grunt')(grunt);
 
-    var projectName = 'Orbis';
+  var projectName = 'Orbis';
 
   var src       = [ 'src/' + projectName.toLowerCase() + '.js',
                     'src/tools/logger.js',
@@ -98,6 +98,14 @@ module.exports = function(grunt){
         }]
       }
     },
+    csslint: {
+      dist: {
+        options: {
+          import: false
+        },
+        src: [webDir + 'sass/build/**/*.css']
+      }
+    },
     cssmin:{
       options: {
         shorthandCompacting: false,
@@ -136,6 +144,18 @@ module.exports = function(grunt){
           expand: true,
           ext: '.htm'
         } ]
+      }
+    },
+    htmlmin: {
+      static: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        expand: true,
+        cwd: webDir + 'static',
+        src: ['**/*.htm'],
+        dest: webDir + 'static/'
       }
     },
     uglify: {
@@ -263,6 +283,24 @@ module.exports = function(grunt){
         dest: publicDir + 'css/style.min.css'
       }
     },
+    symlink: {
+      options: {
+        overwrite: false,
+        force: false
+      },
+      public: {
+        expand: true,
+        cwd: publicDir,
+        src: ['**/*'],
+        dest: webDir + 'static/public/'
+      },
+      doc: {
+        expand: true,
+        cwd: 'doc/',
+        src: ['**/*'],
+        dest: webDir + 'static/doc/'
+      }
+    },
     compress: {
       main: {
         options: {
@@ -285,22 +323,27 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-csslint');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-pug');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-symlink');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify', 'concat', 'compress' ]); //build all
-
+  grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify', 'concat', 'symlink', 'compress' ]); //build all
+  
+  grunt.registerTask('prod', [ 'clean', 'copy', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify', 'concat', 'htmlmin', 'compress' ]); //build all
+  
   grunt.registerTask('doc', [ 'jsdoc' ]); //build jsdoc into /doc
-  grunt.registerTask('src', [ 'jshint:lib', 'uglify:lib', 'uglify:libmin', 'concat:lib', 'concat:libmin' ]); //build orbis into /dist
+  grunt.registerTask('src', [ 'jshint:lib', 'uglify:lib', 'uglify:libmin' ]); //build orbis into /dist
   //website
   grunt.registerTask('js', [ 'jshint:web', 'uglify:web', 'concat:webjs' ]); //build js into /website/public/js
-  grunt.registerTask('css', [ 'sass', 'cssmin', 'concat:webcss' ]); //build sass into /website/public/css
-  grunt.registerTask('static', [ 'pug' ]); //build static site into /website/static
-
-  grunt.registerTask('zip', ['compress']); //compress the project in a downloadable static package
+  grunt.registerTask('css', [ 'sass', 'csslint', 'cssmin', 'concat:webcss' ]); //build sass into /website/public/css
+  grunt.registerTask('static', [ 'pug', 'htmlmin', 'symlink' ]); //build static website into /website/static
+  
+  grunt.registerTask('zip', [ 'compress' ]); //compress the project in a downloadable static package
 
 };
