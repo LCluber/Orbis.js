@@ -21,7 +21,7 @@
       "start": "node ./bin/www"
     },
     "dependencies" : {
-      "FrameRatjs":                   "git+https://github.com/LCluber/FrameRat.js.git#434e9f3",
+      "FrameRatjs":                   "git+https://github.com/LCluber/FrameRat.js.git",
       "bootstrap":                    "^3.3.7",
       "jquery":                       "^1.11.3",
       "jquery-easing":                "^0.0.1",
