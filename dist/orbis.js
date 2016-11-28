@@ -20,7 +20,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* http://orbis.lcluber.com
+* http://orbisjs.lcluber.com
 */
 var ORBIS = {
     revision: "0.4.3",
@@ -475,7 +475,7 @@ ORBIS.Request = {
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 *
-* http://www.frameratjs.lcluber.com
+* http://framerat.lcluber.com
 */
 var FRAMERAT = {
     revision: "0.2.1",
