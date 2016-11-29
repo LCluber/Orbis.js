@@ -36,5 +36,7 @@ You just cloned Orbis.js : git clone https://github.com/LCluber/Orbis.js.git
     - **grunt css** builds CSS for the website,
     - **grunt static** builds the static version of the website,
     - **grunt zip** builds the downloadable zip.
-  - Run **DEBUG=myapp:* npm start** in a new window to start Express server.
+  - Start Express server :
+    - Windows : Run **set DEBUG=myapp:* & npm start**
+    - Linux / OSX : Run **DEBUG=myapp:* npm start**
   - Go to **http://localhost:3003/** to test the app.
