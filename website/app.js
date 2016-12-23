@@ -11,6 +11,8 @@ var route_doc     = require('./routes/doc');
 
 var app = express();
 
+var environment = process.env.NODE_ENV;
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -25,6 +27,13 @@ app.use(cookieParser());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
 app.use('/zip', express.static(path.join(__dirname, '../zip')));
+
+// add <script src="//localhost:35729/livereload.js?snipver=1" async="" defer=""></script>
+// for livereload of grunt-contrib-watch
+if (environment === 'development')
+  app.use(require('connect-livereload')({
+    port: 35729
+  }));
 
 app.use('/doc', route_doc);
 app.use('/', route_root);
@@ -41,7 +50,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (environment === 'development')
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('_error', {
@@ -49,7 +58,6 @@ if (app.get('env') === 'development') {
       error: err
     });
   });
-}
 
 // production error handler
 // no stacktraces leaked to user
