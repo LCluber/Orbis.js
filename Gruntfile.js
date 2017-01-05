@@ -396,7 +396,7 @@ module.exports = function(grunt){
   
   grunt.registerTask('prod', [ 'clean:web', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify:web', 'concat', 'htmlmin', 'symlink', 'compress' ]); //build for prod on the server
   
-  grunt.registerTask('serve', [ 'concurrent' ]); //serve files, open website watch for changes and.
+  grunt.registerTask('serve', [ 'jshint', 'clean', 'jsdoc', 'sass', 'cssmin', 'pug', 'uglify', 'concat', 'symlink', 'compress', 'concurrent' ]); //serve files, open website watch for changes and.
   
   grunt.registerTask('doc', [ 'jsdoc' ]); //build jsdoc into /doc
   grunt.registerTask('src', [ 'jshint:lib', 'clean:lib', 'uglify:lib', 'uglify:libmin' ]); //build library into /dist

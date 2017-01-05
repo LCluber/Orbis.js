@@ -45,3 +45,8 @@ You just cloned Orbis.js : git clone https://github.com/LCluber/Orbis.js.git
       - Linux / OSX : Run **DEBUG=Orbisjs:* npm start**
     - Go to **http://localhost:3003/** to test the app.
     - Keep in mind running **grunt serve** once will do all this automatically.
+    
+    
+  - Set node environment if needed : 
+    - Run **export NODE_ENV=development**
+    - Or **export NODE_ENV=production**
