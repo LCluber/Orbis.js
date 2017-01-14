@@ -1,6 +1,6 @@
-Version 0.4.4 (incoming)
+Version 0.4.4 (January 14th 2017)
 ------------------------------
- * documentation update
+ * added setProgressSpeed() method
 
 Version 0.4.3 (October 16th 2016)
 ------------------------------

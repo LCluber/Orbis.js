@@ -6,7 +6,7 @@ var ORBIS = {
   /**
   * @author Ludovic Cluber <http://www.lcluber.com/contact>
   * @file Asynchronous assets loader library.
-  * @version 0.2.0
+  * @version 0.4.4
   * @copyright (c) 2011 Ludovic Cluber
 
   * @license
@@ -32,7 +32,7 @@ var ORBIS = {
   *
   */
 
-  revision: '0.4.3',
+  revision: '0.4.4',
 
   assets: {}, //data from the assets file
   assetsPath      : '',
@@ -71,12 +71,12 @@ var ORBIS = {
     if ( ORBIS.Utils.isFunction(onProgress) )
       _this.onProgress = onProgress;
     else
-      _this.logs.add('onProgress Parameter is not a function');
+      _this.logs.add('onProgress parameter is not a function');
 
     if ( ORBIS.Utils.isFunction(onComplete) )
       _this.onComplete = onComplete;
     else
-      _this.logs.add('onComplete Parameter is not a function');
+      _this.logs.add('onComplete parameter is not a function');
 
     _this.progress = ORBIS.Progress.create(onAnimate);
 
@@ -291,10 +291,22 @@ var ORBIS = {
   * get the logs of the loader in order to monitor it.
   * @since 0.2.0
   * @method
-  * @returns {string}  The logs
+  * @returns {string} The logs
   */
   getLogs : function(){
     return this.logs.get();
+  },
+  
+  /**
+  * set the speed of the progress bar in pixels per seconds.
+  * @since 0.4.4
+  * @method
+  * @param {integer} [speed = 10] an integer between 10 and 100.
+  * @returns {string} return the speed
+  */
+  setProgressSpeed : function( speed ){
+    this.progress.speed = ORBIS.Utils.clamp( ORBIS.Utils.valueValidation( speed ), 10, 100 );
+    return this.progress.speed;
   }
 
 

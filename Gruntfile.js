@@ -239,7 +239,7 @@ module.exports = function(grunt){
           stripBanners: false,
           banner: banner
         },
-        src: [distDir + projectName.toLowerCase() + '.js', nodeDir + 'FrameRatjs/dist/framerat.js'],
+        src: [distDir + projectName.toLowerCase() + '.js', /*nodeDir + 'Type6js/dist/type6.js',*/ nodeDir + 'FrameRatjs/dist/framerat.js'],
         dest: distDir + projectName.toLowerCase() + '.js'
       },
       libmin: {
@@ -248,7 +248,7 @@ module.exports = function(grunt){
           stripBanners: true,
           banner: banner
         },
-        src: [distDir + projectName.toLowerCase() + '.min.js', nodeDir + 'FrameRatjs/dist/framerat.min.js'],
+        src: [distDir + projectName.toLowerCase() + '.min.js', /*nodeDir + 'Type6js/dist/type6.min.js',*/ nodeDir + 'FrameRatjs/dist/framerat.min.js'],
         dest: distDir + projectName.toLowerCase() + '.min.js'
       },
       webjs: {

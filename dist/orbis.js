@@ -23,7 +23,7 @@
 * http://orbisjs.lcluber.com
 */
 var ORBIS = {
-    revision: "0.4.3",
+    revision: "0.4.4",
     assets: {},
     assetsPath: "",
     requests: {},
@@ -42,8 +42,8 @@ var ORBIS = {
         var _this = Object.create(this);
         _this.logs = ORBIS.Logger.create();
         _this.logs.init();
-        if (ORBIS.Utils.isFunction(onProgress)) _this.onProgress = onProgress; else _this.logs.add("onProgress Parameter is not a function");
-        if (ORBIS.Utils.isFunction(onComplete)) _this.onComplete = onComplete; else _this.logs.add("onComplete Parameter is not a function");
+        if (ORBIS.Utils.isFunction(onProgress)) _this.onProgress = onProgress; else _this.logs.add("onProgress parameter is not a function");
+        if (ORBIS.Utils.isFunction(onComplete)) _this.onComplete = onComplete; else _this.logs.add("onComplete parameter is not a function");
         _this.progress = ORBIS.Progress.create(onAnimate);
         _this.setTick(tick);
         _this.setMaxPending(maxPending);
@@ -157,6 +157,10 @@ var ORBIS = {
     },
     getLogs: function() {
         return this.logs.get();
+    },
+    setProgressSpeed: function(speed) {
+        this.progress.speed = ORBIS.Utils.clamp(ORBIS.Utils.valueValidation(speed), 10, 100);
+        return this.progress.speed;
     }
 };
 
@@ -258,6 +262,9 @@ ORBIS.Utils = {
     },
     valueValidation: function(value) {
         return isNaN(value) ? 0 : Math.abs(Math.round(value));
+    },
+    clamp: function(x, min, max) {
+        return Math.min(Math.max(x, min), max);
     },
     isJSON: function(str) {
         var json = str.replace(/(\r\n|\n|\r|\t)/gm, "");
