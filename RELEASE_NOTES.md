@@ -1,3 +1,7 @@
+Version 0.4.5 (January 28th 2017)
+ ------------------------------
+ * Update FrameRat.js dependency to version 0.2.3
+
 Version 0.4.4 (January 14th 2017)
 ------------------------------
  * added setProgressSpeed() method

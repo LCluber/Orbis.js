@@ -6,7 +6,7 @@ var ORBIS = {
   /**
   * @author Ludovic Cluber <http://www.lcluber.com/contact>
   * @file Asynchronous assets loader library.
-  * @version 0.4.4
+  * @version 0.4.5
   * @copyright (c) 2011 Ludovic Cluber
 
   * @license
@@ -32,7 +32,7 @@ var ORBIS = {
   *
   */
 
-  revision: '0.4.4',
+  revision: '0.4.5',
 
   assets: {}, //data from the assets file
   assetsPath      : '',
