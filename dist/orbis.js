@@ -23,7 +23,7 @@
 * http://orbisjs.lcluber.com
 */
 var ORBIS = {
-    revision: "0.4.5",
+    revision: "0.4.6",
     assets: {},
     assetsPath: "",
     requests: {},
@@ -485,7 +485,7 @@ ORBIS.Request = {
 * http://frameratjs.lcluber.com
 */
 var FRAMERAT = {
-    revision: "0.2.4",
+    revision: "0.2.5",
     id: null,
     onAnimate: function() {},
     tickCount: 0,
@@ -766,7 +766,7 @@ FRAMERAT.Clock = {
 * http://type6js.lcluber.com
 */
 var TYPE6 = {
-    Revision: "0.2.2"
+    Revision: "0.2.3"
 };
 
 TYPE6.MathUtils = {
@@ -1242,6 +1242,12 @@ TYPE6.Geometry.Circle = {
     },
     getSquaredDistance: function(vector2) {
         return this.position.getSquaredDistance(vector2);
+    },
+    draw: function(context, color) {
+        context.fillStyle = color;
+        context.beginPath();
+        context.arc(this.getPositionX(), this.getPositionY(), this.getRadius(), 0, TYPE6.Trigonometry.TWOPI, false);
+        context.fill();
     }
 };
 
@@ -1260,7 +1266,7 @@ TYPE6.Geometry.Rectangle = {
     },
     initSize: function(sizeX, sizeY) {
         this.size = TYPE6.Vector2D.create(sizeX, sizeY);
-        this.halfSize = TYPE6.Vector2D.create(sizeX * .5, sizeY * .5);
+        this.halfSize = this.size.halve();
     },
     initPosition: function(positionX, positionY) {
         this.position = TYPE6.Vector2D.create(positionX, positionY);
@@ -1354,6 +1360,10 @@ TYPE6.Geometry.Rectangle = {
     },
     getHalfSizeY: function() {
         return this.halfSize.getY();
+    },
+    draw: function(context, color) {
+        context.fillStyle = color;
+        context.fillRect(this.topLeftCorner.getX(), this.topLeftCorner.getY(), this.size.getX(), this.size.getY());
     }
 };
 

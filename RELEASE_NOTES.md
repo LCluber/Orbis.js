@@ -1,6 +1,10 @@
+Version 0.4.6 (January 30th 2017)
+ ------------------------------
+ * Updated FrameRat.js dependency to version 0.2.5
+
 Version 0.4.5 (January 28th 2017)
  ------------------------------
- * Update FrameRat.js dependency to version 0.2.4
+ * Updated FrameRat.js dependency to version 0.2.4
 
 Version 0.4.4 (January 14th 2017)
 ------------------------------
