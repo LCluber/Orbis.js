@@ -27,7 +27,7 @@ module.exports = function(grunt){
                     srcDir + 'request.js'
                   ];
 
-  var dependencies = ['FrameRatjs/dist/*.js'];
+  var dependencies = ['Type6js/dist/*.js', 'Taipanjs/dist/*.js', 'FrameRatjs/dist/*.js'];
 
   var banner    = '/** MIT License\n' +
     '* \n' +

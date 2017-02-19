@@ -53,6 +53,8 @@
       "grunt-nodemon":                "0.4.2",
       "grunt-open":                   "0.2.3",
       "time-grunt":                   "1.3.0",
-      "FrameRatjs":                   "git+https://github.com/LCluber/FrameRat.js.git"
+      "FrameRatjs":                   "git+https://github.com/LCluber/FrameRat.js.git",
+      "Taipanjs":                     "git+https://github.com/LCluber/Taipan.js.git",
+      "Type6js":                      "git+https://github.com/LCluber/Type6.js.git"
     }
 }
