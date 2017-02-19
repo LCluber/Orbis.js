@@ -1,6 +1,6 @@
 {
     "name" : "Orbisjs",
-    "version" : "0.4.6",
+    "version" : "0.4.7",
     "description":"javascript library",
     "keywords":["assets loader","asynchronous"],
     "homepage":"http://orbisjs.lcluber.com",
@@ -21,17 +21,20 @@
       "start": "node ./bin/www"
     },
     "dependencies" : {
-      "bootstrap":                    "^3.3.7",
-      "jquery":                       "^1.11.3",
-      "jquery-easing":                "^0.0.1",
-      "font-awesome":                 "^4.6.3",
       "body-parser":                  "~1.13.2",
       "cookie-parser":                "~1.3.5",
       "debug":                        "~2.2.0",
       "express":                      "4.14.0",
       "pug":                          "2.0.0-beta6",
       "morgan":                       "~1.6.1",
-      "serve-favicon":                "~2.3.0",
+      "serve-favicon":                "~2.3.0"
+    },
+    "devDependencies": {
+      "bootstrap":                    "^3.3.7",
+      "font-awesome":                 "^4.6.3",
+      "jquery":                       "^1.11.3",
+      "jquery-easing":                "^0.0.1",
+      "connect-livereload":           "0.6.0",
       "grunt":                        "1.0.0",
       "grunt-contrib-clean":          "1.0.0",
       "grunt-contrib-uglify":         "1.0.1",
@@ -42,17 +45,14 @@
       "grunt-contrib-htmlmin":        "2.0.0",
       "grunt-contrib-symlink":        "1.0.0",
       "grunt-contrib-compress":       "1.3.0",
-      "grunt-jsdoc":                  "2.0.0",
-      "time-grunt":                   "1.3.0"
-    },
-    "devDependencies": {
-      "connect-livereload":           "0.6.0",
       "grunt-contrib-jshint":         "1.0.0",
       "grunt-contrib-csslint":        "2.0.0",
+      "grunt-jsdoc":                  "2.0.0",
       "grunt-contrib-watch":          "1.0.0",
       "grunt-concurrent":             "2.3.1",
       "grunt-nodemon":                "0.4.2",
       "grunt-open":                   "0.2.3",
+      "time-grunt":                   "1.3.0",
       "FrameRatjs":                   "git+https://github.com/LCluber/FrameRat.js.git"
     }
 }
