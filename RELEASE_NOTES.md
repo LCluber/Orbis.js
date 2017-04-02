@@ -1,3 +1,7 @@
+Version 0.4.8 (April 2nd 2017)
+------------------------------
+ * Added support for FrameRat.js version 0.2.7
+
 Version 0.4.7 (February 19th 2017)
 ------------------------------
  * FrameRat.js dependency is built separately into the dist/dependencies/ folder instead of being directly inserted into the distribution Orbis.js and Orbis.min.js files
