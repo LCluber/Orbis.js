@@ -6,7 +6,7 @@ ORBIS.File = {
   type      : '',
 
   extensions : {
-    file  : ['txt', 'text', 'json', 'babylon'],
+    file  : ['txt', 'text', 'json', 'glsl', 'babylon'],
     image : ['png','jpg', 'jpeg', 'gif'],
     sound : ['mp3', 'ogg', 'wav']
   },

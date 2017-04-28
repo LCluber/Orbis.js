@@ -23,8 +23,7 @@ ORBIS.Utils = {
     try {
       json = JSON.parse(str);
     } catch (e) {
-      console.log(e);
-      return false;
+      return e;
     }
     return json;
   },
