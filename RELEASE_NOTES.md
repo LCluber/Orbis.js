@@ -1,3 +1,8 @@
+Version 0.4.9 (April 28th 2017)
+------------------------------
+ * Added glsl file extension
+ * isJson() utils function now returns the error message on error
+
 Version 0.4.8 (April 2nd 2017)
 ------------------------------
  * Added support for FrameRat.js version 0.2.7

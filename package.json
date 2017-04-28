@@ -1,6 +1,6 @@
 {
     "name" : "Orbisjs",
-    "version" : "0.4.8",
+    "version" : "0.4.9",
     "description":"javascript library",
     "keywords":["assets loader","asynchronous"],
     "homepage":"http://orbisjs.lcluber.com",

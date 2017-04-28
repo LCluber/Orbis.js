@@ -23,7 +23,7 @@
 * http://orbisjs.lcluber.com
 */
 var ORBIS = {
-    revision: "0.4.8",
+    revision: "0.4.9",
     assets: {},
     assetsPath: "",
     requests: {},
@@ -188,7 +188,7 @@ ORBIS.File = {
     extension: "",
     type: "",
     extensions: {
-        file: [ "txt", "text", "json", "babylon" ],
+        file: [ "txt", "text", "json", "glsl", "babylon" ],
         image: [ "png", "jpg", "jpeg", "gif" ],
         sound: [ "mp3", "ogg", "wav" ]
     },
@@ -271,8 +271,7 @@ ORBIS.Utils = {
         try {
             json = JSON.parse(str);
         } catch (e) {
-            console.log(e);
-            return false;
+            return e;
         }
         return json;
     },
