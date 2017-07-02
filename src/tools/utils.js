@@ -12,11 +12,6 @@ ORBIS.Utils = {
   valueValidation : function(value){
     return isNaN(value) ? 0 : Math.abs(Math.round(value));
   },
-  
-  clamp : function ( x, min, max ) {
-    return Math.min(Math.max(x,min),max);
-    //return ( x < min ) ? min : ( ( x > max ) ? max : x );
-  },
 
   isJSON : function(str){
     var json = str.replace(/(\r\n|\n|\r|\t)/gm, '');

@@ -22,6 +22,7 @@
 *
 * http://orbisjs.lcluber.com
 */
+
 var ORBIS = {
     revision: "0.4.9",
     assets: {},
@@ -159,7 +160,7 @@ var ORBIS = {
         return this.logs.get();
     },
     setProgressSpeed: function(speed) {
-        this.progress.speed = ORBIS.Utils.clamp(ORBIS.Utils.valueValidation(speed), 10, 100);
+        this.progress.speed = TYPE6.MathUtils.clamp(ORBIS.Utils.valueValidation(speed), 10, 100);
         return this.progress.speed;
     }
 };
@@ -262,9 +263,6 @@ ORBIS.Utils = {
     },
     valueValidation: function(value) {
         return isNaN(value) ? 0 : Math.abs(Math.round(value));
-    },
-    clamp: function(x, min, max) {
-        return Math.min(Math.max(x, min), max);
     },
     isJSON: function(str) {
         var json = str.replace(/(\r\n|\n|\r|\t)/gm, "");

@@ -1,0 +1,42 @@
+{
+  "title": "Orbis.js",
+  "menu" : { 
+    "menu"          : "Menu",
+    "home"          : "Home",
+    "about"         : "About",
+    "example"       : "Example",
+    "code"          : "Code",
+    "download"      : "Download",
+    "documentation" : "Documentation",
+    "contact"       : "Contact"
+  },
+  "section" : {
+    "home" : {
+      "h1" : "Orbis.js",
+      "description" : "An open source asynchronous assets loader written in Javascript."
+    },
+    "about" : {
+      "h2" : "About",
+      "text" : "<p>The main purpose was to provide a simple way to load assets only when needed instead of loading everything when the main page loads.</p><ul><li>Setup your json config file containing all your assets (images, textures, sprites, sounds, musics, texts, jsons),</li><li>launch the loader and use onProgress callback to set your own progress bar design,</li><li>wait for onComplete callback to start using your freshly loaded assets.</li></ul><p>Check <a class='page-scroll' href='#example'>Example</a> and <a class='page-scroll' href='#source'>Code</a> section for more information on how to use Orbis.js. There is also a <a href='doc/index.html' target='_blank'>documentation</a> if you need to go deeper.<p>You can help develop Orbis.js on <a href='https://github.com/LCluber' target='_blank'>Github</a>."
+    },
+    "code" : {
+      "h2" : "Code",
+      "h3" : "HTML (index.html)",
+      "p1" : "Instantiate a state machine with an array of events as parameter.",
+      "p2" : "activate traffic lights. The finite state machine executes authorized operations only."
+    },
+    "download" : {
+      "h2" : "Download Taipan.js",
+      "min" : "Taipan.min.js",
+      "zip" : "Taipanjs.zip",
+      "github" : "Clone from Github"
+    },
+    "contact" : {
+      "h2" : "Contact me",
+      "description" : "Feel free to ask me about my work, give me suggestions, or just to say hi.",
+      "website" : "lcluber.com"
+    }
+  },
+  "github":"Github",
+  "twitter":"Twitter"
+}

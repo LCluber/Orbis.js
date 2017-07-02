@@ -56,6 +56,7 @@ var ORBIS = {
   * @since 0.2.0
   * @method
   * @param {function} onProgress The name of your onProgress callback function.
+  * @param {function} onAnimate The name of your onAnimate callback function.
   * @param {function} onComplete The name of your onComplete callback function.
   * @param {integer} [tick = 100] The timeout between two requests.
   * @param {integer} [maxPending = 6] The maximum pending requests. Once reached new requests will not start before a previous one completes. Six being the maximum on most browsers.
@@ -305,7 +306,7 @@ var ORBIS = {
   * @returns {string} return the speed
   */
   setProgressSpeed : function( speed ){
-    this.progress.speed = ORBIS.Utils.clamp( ORBIS.Utils.valueValidation( speed ), 10, 100 );
+    this.progress.speed = TYPE6.MathUtils.clamp( ORBIS.Utils.valueValidation( speed ), 10, 100 );
     return this.progress.speed;
   }
 
