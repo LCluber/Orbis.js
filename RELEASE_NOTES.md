@@ -1,3 +1,8 @@
+Version 0.4.10 (July 2nd 2017)
+------------------------------
+ * added bower.json for bower users
+ * Manage dependencies with bower
+
 Version 0.4.9 (April 28th 2017)
 ------------------------------
  * Added glsl file extension
