@@ -23,438 +23,250 @@
 * http://orbisjs.lcluber.com
 */
 
-var ORBIS = {
-    revision: "0.4.10",
-    assets: {},
-    assetsPath: "",
-    requests: {},
-    requestsLength: 0,
-    sentRequests: 0,
-    onProgress: function() {},
-    onComplete: function() {},
-    progress: {},
-    pending: 0,
-    tick: 0,
-    maxPending: 0,
-    defaultMaxPending: 6,
-    defaultTick: 100,
-    logs: {},
-    create: function(onProgress, onAnimate, onComplete, tick, maxPending) {
-        var _this = Object.create(this);
-        _this.logs = ORBIS.Logger.create();
-        _this.logs.init();
-        if (ORBIS.Utils.isFunction(onProgress)) _this.onProgress = onProgress; else _this.logs.add("onProgress parameter is not a function");
-        if (ORBIS.Utils.isFunction(onComplete)) _this.onComplete = onComplete; else _this.logs.add("onComplete parameter is not a function");
-        _this.progress = ORBIS.Progress.create(onAnimate);
-        _this.setTick(tick);
-        _this.setMaxPending(maxPending);
-        return _this;
-    },
-    launch: function(assetsFilePath, assetsPath) {
-        this.progress.init();
-        this.assetsPath = ORBIS.Utils.removeTrailingSlash(assetsPath);
-        if (this.assets.fsm && this.assets.fsm.getStatus() === "success") {
-            this.logs.add(assetsFilePath + " already loaded.");
-            this.onAssetsFileLoaded("success", this.assets.response, this);
-        } else {
-            this.logs.add("create request for " + assetsFilePath);
-            this.assets = ORBIS.Request.create(assetsFilePath, "file", "", this.onAssetsFileLoaded, this);
-            if (this.assets) this.assets.send(); else this.logs.add('!! the config file must be of type "file"');
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('../../bower_components/Weejs/dist/wee.js'), require('../../bower_components/Mouettejs/dist/mouette.js'), require('../../bower_components/Taipanjs/dist/taipan.js')) :
+    typeof define === 'function' && define.amd ? define(['exports', '../../bower_components/Weejs/dist/wee.js', '../../bower_components/Mouettejs/dist/mouette.js', '../../bower_components/Taipanjs/dist/taipan.js'], factory) :
+    (factory((global.ORBIS = {}),global.WEE,global.MOUETTE,global.TAIPAN));
+}(this, (function (exports,WEE,MOUETTE,TAIPAN) { 'use strict';
+
+    var Request = (function () {
+        function Request() {
+            this.fsm = new TAIPAN.FSM([
+                { name: 'send', from: 'idle', to: 'pending' },
+                { name: 'success', from: 'pending', to: 'success' },
+                { name: 'error', from: 'pending', to: 'error' }
+            ]);
         }
-    },
-    onAssetsFileLoaded: function(status, response, _this) {
-        if (status == "success") {
-            _this.logs.add("parsing asset file");
-            _this.requestsLength = 0;
-            _this.sentRequests = 0;
-            for (var property in response.json) {
-                if (response.json.hasOwnProperty(property)) {
-                    var type = response.json[property];
-                    var files = type.files;
-                    var folder = type.folder ? type.folder + "/" : "";
-                    for (var i = 0; i < files.length; i++) {
-                        var asset = files[i];
-                        var file = asset.hasOwnProperty("file") ? asset.file : asset;
-                        var path = _this.assetsPath + "/" + folder + file;
-                        if (_this.getAsset(file)) {
-                            _this.logs.add(path + " already loaded.");
-                            continue;
+        Request.prototype.send = function (path, type) {
+            var _this = this;
+            if (this.fsm['send']()) {
+                return WEE[WEE.String.ucfirst(type)].load(path).then(function (response) {
+                    _this.fsm['success']();
+                    return response;
+                }).catch(function (err) {
+                    MOUETTE.Logger.error(err.message);
+                    _this.fsm['error']();
+                    return false;
+                });
+            }
+        };
+        return Request;
+    }());
+
+    var Asset = (function () {
+        function Asset(path, file, extension, type) {
+            this.path = path;
+            this.file = file;
+            this.extension = extension;
+            this.type = type;
+            this.request = new Request();
+        }
+        Asset.prototype.sendRequest = function () {
+            var _this = this;
+            return this.request.send(this.path + this.file, this.type).then(function (response) {
+                if (response) {
+                    _this.response = response;
+                    if (_this.type === 'file') {
+                        var json = WEE.Check.isJSON(response);
+                        if (json) {
+                            _this.response = json;
                         }
-                        var request = ORBIS.Request.create(path, "", asset, _this.onFileLoaded, _this);
-                        if (typeof request.file === "string") {
-                            _this.logs.add(request.file);
-                            continue;
-                        }
-                        _this.logs.add("create request for " + path);
-                        _this.requests[file] = request;
-                        _this.requestsLength++;
                     }
                 }
+                return _this.file;
+            });
+        };
+        Asset.prototype.getRequestStatus = function () {
+            return this.request.fsm.state;
+        };
+        Asset.prototype.isRequestSent = function () {
+            if (this.getRequestStatus() != 'idle') {
+                return true;
             }
-            _this.logs.add(_this.requestsLength + " requests to perform");
-            _this.sendRequest();
-        } else _this.logs.add("!! error during config file AJAX request");
-    },
-    sendRequest: function() {
-        if (this.pending < this.maxPending) {
-            var nextProperty = Object.keys(this.requests)[this.sentRequests];
-            if (this.getAsset(nextProperty) || this.requests[nextProperty].send() == "error") this.updateProgress(0, this.getAsset(nextProperty).response);
-            this.pending++;
-            this.sentRequests++;
-        }
-        if (this.sentRequests < this.requestsLength) {
-            setTimeout(this.loadAnotherFile.bind(this), this.tick);
-        }
-    },
-    loadAnotherFile: function() {
-        this.sendRequest();
-    },
-    onFileLoaded: function(success, response, _this) {
-        _this.updateProgress(success, response);
-    },
-    updateProgress: function(success, response) {
-        var progress = this.progress.update(success, this.requestsLength);
-        if (this.pending > 0) this.pending--;
-        this.logs.add("progress " + this.progress.target + "%");
-        this.onProgress(this.progress.target, response);
-        if (!progress) {
-            this.logs.add("loading complete");
-            this.onComplete(this.getLogs());
-        }
-    },
-    getList: function(property) {
-        if (this.assets.response.json.hasOwnProperty(property)) {
-            var array = [];
-            var assets = this.assets.response.json[property].files;
-            for (var i = 0; i < assets.length; i++) {
-                var asset = this.getAsset(assets[i]);
-                if (asset) array.push(asset);
+            return false;
+        };
+        return Asset;
+    }());
+
+    var Progress = (function () {
+        function Progress(barId, textId, nbAssets) {
+            this.rate = 0.0;
+            this.total = 0;
+            this.percentage = 0.0;
+            this.target = 0;
+            this.speed = 40;
+            this.nbAssets = nbAssets;
+            if (barId) {
+                var element = WEE.Dom.findById(barId);
+                if (element) {
+                    this.bar = new WEE.Bind(element, '0');
+                }
             }
-            return array;
+            if (textId) {
+                var element = WEE.Dom.findById(textId);
+                if (element) {
+                    this.text = new WEE.Bind(element, 'Loading started');
+                }
+            }
         }
-        return false;
-    },
-    getAsset: function(name) {
-        if (this.requests[name] && this.requests[name].fsm.getStatus() === "success") return this.requests[name]; else return false;
-    },
-    setScope: function(scope) {
-        if (ORBIS.Utils.isObject(scope)) {
-            this.onProgress = this.onProgress.bind(scope);
-            this.progress.onAnimate = this.progress.onAnimate.bind(scope);
-            this.onComplete = this.onComplete.bind(scope);
-        } else return false;
-    },
-    getTick: function() {
-        return this.tick;
-    },
-    setTick: function(tick) {
-        this.tick = ORBIS.Utils.valueValidation(tick) ? ORBIS.Utils.valueValidation(tick) : this.defaultTick;
-    },
-    getMaxPending: function() {
-        return this.maxPending;
-    },
-    setMaxPending: function(max) {
-        this.maxPending = ORBIS.Utils.valueValidation(max) ? ORBIS.Utils.valueValidation(max) : this.defaultMaxPending;
-    },
-    getLogs: function() {
-        return this.logs.get();
-    },
-    setProgressSpeed: function(speed) {
-        this.progress.speed = TYPE6.MathUtils.clamp(ORBIS.Utils.valueValidation(speed), 10, 100);
-        return this.progress.speed;
-    }
-};
+        Progress.prototype.update = function (text) {
+            this.total++;
+            this.rate = this.total / this.nbAssets;
+            this.target = Math.round(this.rate * 100);
+            this.text.change(text);
+        };
+        Progress.prototype.updateBar = function (delta) {
+            delta *= 0.001;
+            this.percentage += this.speed * delta;
+            if (this.percentage >= this.target) {
+                this.percentage = this.target;
+            }
+            this.bar.change(this.percentage);
+            if (this.percentage === 100) {
+                this.text.change('Loading complete');
+            }
+            return this.percentage;
+        };
+        return Progress;
+    }());
 
-ORBIS.Logger = {
-    logs: "",
-    create: function() {
-        var _this = Object.create(this);
-        return _this;
-    },
-    init: function() {
-        this.logs = "";
-    },
-    get: function() {
-        return this.logs;
-    },
-    add: function(log) {
-        this.logs += log + "\n";
-    }
-};
-
-ORBIS.File = {
-    path: "",
-    directory: "",
-    name: "",
-    extension: "",
-    type: "",
-    extensions: {
-        file: [ "txt", "text", "json", "glsl", "babylon" ],
-        image: [ "png", "jpg", "jpeg", "gif" ],
-        sound: [ "mp3", "ogg", "wav" ]
-    },
-    create: function(path, validType) {
-        var _this = Object.create(this);
-        _this.path = path;
-        _this.extractExtension();
-        var isExtensionValid = _this.checkExtension(validType);
-        if (isExtensionValid === true) {
-            _this.extractDirectory();
-            _this.extractName();
-            return _this;
+    var Loader = (function () {
+        function Loader() {
+            this.default = {
+                maxPending: 6,
+                tick: 100
+            };
+            this.validExtensions = {
+                file: ['txt', 'text', 'json', 'glsl', 'babylon'],
+                img: ['png', 'jpg', 'jpeg', 'gif'],
+                sound: ['mp3', 'ogg', 'wav']
+            };
+            this.pendingRequests = 0;
+            this.tick = this.default.tick;
+            this.maxPendingRequests = this.default.maxPending;
         }
-        return isExtensionValid;
-    },
-    getPath: function() {
-        return this.path;
-    },
-    getName: function() {
-        return this.name;
-    },
-    getExtension: function() {
-        return this.extension;
-    },
-    getType: function() {
-        return this.type;
-    },
-    extractName: function() {
-        this.name = this.path ? this.path.replace(/^.*[\\\/]/, "") : false;
-    },
-    extractDirectory: function() {
-        this.directory = this.path ? this.path.replace(/[^\\\/]*$/, "") : false;
-    },
-    extractExtension: function() {
-        this.extension = this.path ? this.path.split(".").pop() : false;
-    },
-    checkExtension: function(validType) {
-        for (var property in this.extensions) {
-            if (this.extensions.hasOwnProperty(property)) {
-                if (!validType || validType == property) {
-                    for (var i = 0; i < this.extensions[property].length; i++) {
-                        if (this.extensions[property][i] == this.extension) {
-                            this.type = property;
-                            return true;
+        Loader.prototype.getAsset = function (name) {
+            for (var property in this.assets) {
+                if (this.assets.hasOwnProperty(property)) {
+                    for (var _i = 0, _a = this.assets[property].files; _i < _a.length; _i++) {
+                        var file = _a[_i];
+                        if (file.name == name) {
+                            return file;
                         }
                     }
                 }
             }
-        }
-        return 'Invalid file extension for "' + this.path + '"';
-    }
-};
-
-ORBIS.AjaxRequest = function(url, async, noCache, callback) {
-    var http = new XMLHttpRequest();
-    if (noCache) url += "?cache=" + new Date().getTime();
-    http.open("GET", url, async);
-    http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) callback(this.responseText);
-    };
-    http.send();
-};
-
-ORBIS.Utils = {
-    getFileName: function(path) {
-        return path ? path.replace(/^.*[\\\/]/, "") : false;
-    },
-    removeTrailingSlash: function(path) {
-        return path ? path.replace(/\/+$/, "") : false;
-    },
-    valueValidation: function(value) {
-        return isNaN(value) ? 0 : Math.abs(Math.round(value));
-    },
-    isJSON: function(str) {
-        var json = str.replace(/(\r\n|\n|\r|\t)/gm, "");
-        try {
-            json = JSON.parse(str);
-        } catch (e) {
-            return e;
-        }
-        return json;
-    },
-    isFunction: function(func) {
-        var getType = {};
-        return func && getType.toString.call(func) === "[object Function]";
-    },
-    isObject: function(object) {
-        return object !== null && (this.isFunction(object) || typeof object === "object");
-    }
-};
-
-ORBIS.LoadImage = function(path, onComplete, _this) {
-    var img = new Image();
-    img.src = path;
-    img.name = ORBIS.Utils.getFileName(path);
-    img.addEventListener("load", function() {
-        onComplete(1, _this);
-    }, false);
-    img.addEventListener("error", function() {
-        onComplete(0, _this);
-    }, false);
-    return img;
-};
-
-ORBIS.LoadSound = function(path, onComplete, _this) {
-    var snd = new Audio();
-    snd.src = path;
-    snd.name = ORBIS.Utils.getFileName(path);
-    snd.addEventListener("canplaythrough", function() {
-        onComplete(1, _this);
-    }, false);
-    snd.addEventListener("canplay", function() {
-        onComplete(1, _this);
-    }, false);
-    snd.addEventListener("error", function failed() {
-        onComplete(0, _this);
-    }, false);
-    return snd;
-};
-
-ORBIS.LoadFile = function(path, onComplete, _this) {
-    var resp = {};
-    resp.src = path;
-    resp.name = ORBIS.Utils.getFileName(path);
-    resp.data = "";
-    resp.json = "";
-    ORBIS.AjaxRequest(path, true, 1, function(response) {
-        if (response) {
-            resp.data = response;
-            resp.json = ORBIS.Utils.isJSON(response);
-        }
-        onComplete(response ? 1 : 0, _this);
-    });
-    return resp;
-};
-
-ORBIS.Progress = {
-    rate: 0,
-    percentage: 0,
-    target: 0,
-    speed: 40,
-    success: 0,
-    error: 0,
-    total: 0,
-    animation: {},
-    onAnimate: function() {},
-    create: function(onAnimate) {
-        var _this = Object.create(this);
-        _this.animation = FRAMERAT.create(_this.animate, _this);
-        if (ORBIS.Utils.isFunction(onAnimate)) _this.onAnimate = onAnimate;
-        return _this;
-    },
-    init: function() {
-        this.rate = 0;
-        this.percentage = 0;
-        this.target = 0;
-        this.success = 0;
-        this.error = 0;
-        this.total = 0;
-    },
-    update: function(success, totalRequests) {
-        if (success) this.onSuccess(); else this.onError();
-        this.total++;
-        this.rate = totalRequests ? this.total / totalRequests : 1;
-        this.target = Math.round(this.rate * 100);
-        this.animation.play();
-        return this.checkComplete();
-    },
-    animate: function() {
-        this.percentage += this.speed * this.animation.getDelta().getSecond();
-        if (this.percentage >= this.target) {
-            this.percentage = this.target;
-            this.animation.stop();
-        } else this.animation.newFrame();
-        this.onAnimate(this.percentage);
-    },
-    onSuccess: function() {
-        this.success++;
-    },
-    onError: function() {
-        this.error++;
-    },
-    checkComplete: function() {
-        if (this.rate >= 1) return false;
-        return true;
-    }
-};
-
-ORBIS.Request = {
-    file: {},
-    response: {},
-    fsm: {},
-    callback: {
-        method: function() {},
-        scope: {}
-    },
-    json: {},
-    loaders: {
-        file: "LoadFile",
-        image: "LoadImage",
-        sound: "LoadSound"
-    },
-    logs: {},
-    create: function(filePath, validType, additionalInfo, callbackMethod, callbackScope) {
-        var _this = Object.create(this);
-        _this.logs = callbackScope.logs;
-        _this.createFile(filePath, validType);
-        if (typeof this.file === "string") {
-            return this.file;
-        }
-        _this.createCallback(callbackMethod, callbackScope);
-        _this.createFSM();
-        _this.addInfo(additionalInfo);
-        return _this;
-    },
-    createFile: function(filePath, validType) {
-        this.file = ORBIS.File.create(filePath, validType);
-    },
-    createCallback: function(callbackMethod, callbackScope) {
-        this.callback = {};
-        this.callback.method = callbackMethod;
-        this.callback.scope = callbackScope;
-    },
-    createFSM: function() {
-        this.fsm = TAIPAN.create([ {
-            name: "send",
-            from: "idle",
-            to: "pending"
-        }, {
-            name: "success",
-            from: "pending",
-            to: "success"
-        }, {
-            name: "error",
-            from: "pending",
-            to: "error"
-        } ]);
-    },
-    addInfo: function(additionalInfo) {
-        if (additionalInfo.hasOwnProperty("file")) {
-            this.json = {};
-            for (var property in additionalInfo) {
-                if (additionalInfo.hasOwnProperty(property) && property !== "file") this.json[property] = additionalInfo[property];
+            return false;
+        };
+        Loader.prototype.getList = function (type) {
+            if (this.assets.hasOwnProperty(type)) {
+                return this.assets[type].files;
             }
-        }
-    },
-    send: function() {
-        this.logs.add("send " + this.file.getName() + ", Status " + this.fsm.getStatus());
-        this.fsm.send();
-        if (this.file.getType()) this.response = ORBIS[this.loaders[this.file.getType()]](this.file.path, this.onComplete, this); else {
-            this.fsm.error();
-            this.logs.add("!! invalid file type. Cannot load " + this.file.path + ". Status " + this.fsm.getStatus());
-        }
-        return this.fsm.getStatus();
-    },
-    onComplete: function(success, _this) {
-        var event = false;
-        if (success) event = _this.fsm.success(); else {
-            event = _this.fsm.error();
-            _this.logs.add("!! error during AJAX request for : " + _this.file.path + ".");
-        }
-        if (event) {
-            _this.logs.add("complete " + _this.file.getName() + ". Status " + _this.fsm.getStatus());
-            _this.callback.method(_this.fsm.getStatus(), _this.response, _this.callback.scope);
-        }
-    }
-};
+            return false;
+        };
+        Loader.prototype.launch = function (configFilePath, assetsPath, progressBarId, progressTextId) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var request = new Request();
+                var extension = WEE.File.getExtension(configFilePath);
+                var type = _this.getAssetType(extension);
+                if (type === 'file') {
+                    return request.send(configFilePath, type).then(function (response) {
+                        if (response) {
+                            var json = WEE.Check.isJSON(response);
+                            if (json) {
+                                _this.assets = json;
+                                var nbAssets = _this.createAssets(WEE.File.removeTrailingSlash(assetsPath));
+                                if (nbAssets) {
+                                    _this.progress = new Progress(progressBarId, progressTextId, nbAssets);
+                                    var intervalID_1 = setInterval(function () {
+                                        _this.sendRequest();
+                                        var percentage = _this.progress.updateBar(_this.tick);
+                                        if (percentage === 100) {
+                                            clearInterval(intervalID_1);
+                                            resolve();
+                                        }
+                                    }, _this.tick);
+                                }
+                                else {
+                                    reject('!! nothing to load here');
+                                }
+                            }
+                        }
+                    }).catch(function (err) {
+                        MOUETTE.Logger.error(configFilePath + ' : ' + err.message);
+                        console.log('error', err.message);
+                    });
+                }
+                else {
+                    reject('!! the config file must be of type "file"');
+                }
+            });
+        };
+        Loader.prototype.getAssetType = function (extension) {
+            for (var property in this.validExtensions) {
+                if (this.validExtensions.hasOwnProperty(property)) {
+                    if (WEE.File.checkExtension(extension, this.validExtensions[property])) {
+                        return property;
+                    }
+                }
+            }
+            return false;
+        };
+        Loader.prototype.createAssets = function (path) {
+            var nbAssets = 0;
+            for (var property in this.assets) {
+                if (this.assets.hasOwnProperty(property)) {
+                    var type = this.assets[property];
+                    var folder = type.folder ? type.folder + '/' : '';
+                    for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
+                        var file = _a[_i];
+                        if (file.hasOwnProperty('name')) {
+                            var extension = WEE.File.getExtension(file.name);
+                            var type_1 = this.getAssetType(extension);
+                            if (type_1) {
+                                file.asset = new Asset(path + '/' + folder, file.name, extension, type_1);
+                                nbAssets++;
+                            }
+                        }
+                    }
+                }
+            }
+            return nbAssets;
+        };
+        Loader.prototype.sendRequest = function () {
+            var _this = this;
+            if (this.pendingRequests < this.maxPendingRequests) {
+                var nextAsset = this.getNextAssetToLoad();
+                if (nextAsset) {
+                    nextAsset.sendRequest().then(function (response) {
+                        _this.pendingRequests--;
+                        _this.progress.update(response);
+                    });
+                    return true;
+                }
+                return false;
+            }
+        };
+        Loader.prototype.getNextAssetToLoad = function () {
+            for (var property in this.assets) {
+                if (this.assets.hasOwnProperty(property)) {
+                    var type = this.assets[property];
+                    for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
+                        var file = _a[_i];
+                        if (file.hasOwnProperty('asset') && !file.asset.isRequestSent()) {
+                            return file.asset;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+        return Loader;
+    }());
+
+    exports.Loader = Loader;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+})));

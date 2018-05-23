@@ -9,104 +9,61 @@ section( id='source' class='container content-section text-center' )
         &lt;button id="launcher" type="button" onclick="loadAssets()"&gt; LOAD ASSETS &lt;/button&gt;
 
         &lt;progress id="progressBar" value="0" max="100"&gt;&lt;/progress&gt;
-        &lt;span id="progressPercentage"&gt;0%&lt;/span&gt;
-        &lt;span id="progressFile"&gt;&lt;/span&gt;
+        &lt;input id='progressText' disabled&gt; 
 
       h3 Json config (assets.json)
 
       p
-        strong basic
+        strong Structure
 
       pre( class='col-md-6').
         {
           "type":{
             "folder": "folder_name",
             "files" : [
-              "file1.txt",
-              "file2.txt"
+              { "name":"file1.txt",
+                "other_info":"other info"
+              },
+              { "name":"file2.txt",
+                "other_info":"other info"
+              }
             ]
           },
         }
-      pre( class='col-md-6').
-        {
-          "shaders":{
-            "folder": "shaders",
-            "files"	: [
-              "shader1.txt",
-              "shader2.txt"
-            ]
-          }
-        }
+        
       p
-        strong advanced
-
+        strong Example
+          
       pre( class='col-md-6').
         {
-          "type": {
-            "folder": "folder_name",
-            "files" : [
-              {
-                "file":"file1.png",
-                "option1":{},
-                "option2":[],
-                "option3":"string",
-                "option4":bool
-              }
-            ]
-          }
-        }
-      pre( class='col-md-6').
-        {
-          "sprites": {
-            "folder": "sprites",
-            "files" :[
-              {
-                "file":"sprite1.png",
-                "texSize":[124,70],
-                "frameSize":[62,70]
-              }
-            ]
-          },
-          "sounds": {
-            "folder": "sounds",
-            "files" : [
-              {
-                "file":"sound1.mp3",
+          "audio":{
+            "folder": "audio",
+            "files"	: [
+              { "name":"sound1.mp3",
                 "volume":0.2,
                 "loop":false,
                 "type":"sfx"
+              },
+              { "name":"sound2.txt",
+                "volume":0.6,
+                "loop":true,
+                "type":"music"
               }
             ]
           }
         }
+      
       h3 Javascript (main.js)
 
       p instantiate a loader with your onProgress and onComplete callback functions.
-      pre var loader = ORBIS.create(updateProgress, animateProgress, complete, null, null);
+      pre var loader = new ORBIS.Loader();
 
-      p Launches the asynchronous loading with the assets file and the assets folder in parameters.
-      pre loader.launch('../public/assets.json', '../public/assets/');
-
-      p onProgress callback. With progress data and last file loaded in parameters.
+      p Launches the asynchronous loading with the assets file path, the assets folder path and the progressBar and ProgressText CSS IDs in parameters.
       pre.
-        function updateProgress( progress, file ) {
-          document.getElementById('progressPercentage').innerHTML = progress + '%';
-          document.getElementById('progressFile').innerHTML       = file.name;
-        }
-
-      p onAnimate callback. Returns the loaded percentage at each frame.
-      pre.
-        function animateProgress(percentage){
-          document.getElementById('progressBar').value = percentage;
-        }
-
-      p onComplete callback. With every loaded assets in parameter.
-      pre.
-        function complete( assets ) {
-          document.getElementById('progressFile').innerHTML = 'complete';
-        }
-
-      p Once the loading is complete, you can call any asset in your program like this.
-      pre.
-        var shader1     = loader.getAsset('shader1.txt'); //get a loaded asset by name.
-        var spritesList = loader.getList('sprites'); //get a list of a specific type of assets.
+        loader.launch('../public/assets.json', '../public/assets/','progressBar', 'progressText').then(
+          function(){
+            console.log('complete');
+            console.log(loader.getList('textures')); //get a list of a specific type of assets.
+            console.log(loader.getAsset('texture1.png')); //get a loaded asset by name.
+          }
+        );

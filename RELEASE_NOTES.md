@@ -1,3 +1,7 @@
+Version 0.5.0 (May 23th 2018)
+ * Library is written in TypeScript
+ * Use Promises instead of callbacks
+
 Version 0.4.10 (July 2nd 2017)
 ------------------------------
  * added bower.json for bower users
