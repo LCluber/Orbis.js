@@ -15,8 +15,6 @@ module.exports = function(grunt){
   var publicDir       = webDir + 'public/';
   var nodeDir         = 'node_modules/';
   var bowerDir        = 'bower_components/';
-  var docDir          = 'doc/';
-  var zipDir          = 'zip/';
 
 
   var banner    = '/** MIT License\n' +
@@ -44,16 +42,7 @@ module.exports = function(grunt){
     '* http://' + projectNameLC + 'js.lcluber.com\n' +
     '*/\n';
 
-  //i18n configuration for static website translations
-  var i18n = require('i18next');
-  i18n.init({
-    lng: 'en',
-    resources: {
-      en: {
-        translation: grunt.file.readJSON( webDir + 'locales/en/translation.json' )
-      }
-    }
-  });
+
   grunt.option('stack', true);
   // Project configuration.
   grunt.initConfig({
@@ -64,17 +53,17 @@ module.exports = function(grunt){
                 compiledSrcDir + '*'
               ]
       },
-      web:{
-        src: [  zipDir + '*',
-                webDir + 'static/*',
-                webDir + 'sass/build/*',
-                webDir + 'js/build/*'
+      websass:{
+        src: [  webDir + 'sass/build/*',
+                publicDir + 'css/*'
         ]
       },
-      public: {
-        src: [  publicDir + 'js/*',
-                publicDir + 'css/*',
-                publicDir + 'fonts/*'
+      webjs:{
+        src: [  publicDir + 'js/*'
+        ]
+      },
+      webmisc: {
+        src: [  publicDir + 'fonts/*'
         ]
       }
     },
@@ -83,7 +72,7 @@ module.exports = function(grunt){
         jshintrc: 'config/.jshintrc'
       },
       lib: [ 'Gruntfile.js', srcDir + '**/*.js' ],
-      web: [ webDir + 'js/*.js'],
+      web: [ webDir + 'js/*.js']
     },
     sass: {
       dist: {
@@ -117,38 +106,6 @@ module.exports = function(grunt){
           src: webDir  + 'sass/build/**/*.css',
           dest: publicDir + 'css/style.min.css'
         }]
-      }
-    },
-    // jsdoc: {
-    //   dist : {
-    //     src: src,
-    //     config: 'config/jsdoc-conf.json'
-    //   }
-    // },
-    pug: {
-      compile: {
-        options: {
-          namespace   : 'JST',
-          separator   : '\n\n',
-          amd         : false,
-          client      : false,
-          pretty      : true,
-          self        : false,
-          debug       : false,
-          compileDebug: true,
-          data: function() {
-            return {
-              t: i18n.t.bind(i18n)
-            };
-          }
-        },
-        files: [ {
-          cwd: webDir + 'views',
-          src: ['**/*.pug', '!**/_*.pug'],
-          dest: webDir + 'static',
-          expand: true,
-          ext: '.htm'
-        } ]
       }
     },
     htmlmin: {
@@ -194,10 +151,9 @@ module.exports = function(grunt){
     ts: {
       tsconfig: 'config/tsconfig.json',
       lib : {
-        outDir: compiledSrcDir,
+        //outDir: compiledSrcDir,
         options: {
-          rootDir: srcDir + 'ts/',
-          declaration: true
+          fast: 'never'
         },
         src: [ srcDir + 'ts/**/*.ts', '!node_modules/**/*.ts' ]
       }
@@ -324,6 +280,7 @@ module.exports = function(grunt){
         files: [{
           src  : [
             nodeDir + 'jquery-easing/jquery.easing.1.3.js',
+            distDir + projectNameLC + '.js',
             webDir + 'js/*.js'
           ],
           dest : publicDir + 'js/main.min.js'
@@ -337,7 +294,7 @@ module.exports = function(grunt){
           stripBanners: false,
           banner: banner
         },
-        src: srcDir + '**/*.d.ts',
+        src: compiledSrcDir + '*.d.ts',
         dest: distDir + projectNameLC + '.d.ts'
       },
       webjs: {
@@ -349,7 +306,7 @@ module.exports = function(grunt){
         src: [nodeDir + 'jquery/dist/jquery.min.js',
               nodeDir + 'bootstrap/dist/js/bootstrap.min.js',
               webDir + 'js/build/bower.min.js',
-              distDir + projectNameLC + '.min.js',
+              //distDir + projectNameLC + '.min.js',
               publicDir + 'js/main.min.js'
             ],
         dest: publicDir + 'js/main.min.js'
@@ -388,12 +345,6 @@ module.exports = function(grunt){
         src: ['*.htm'],
         dest: webDir + 'views/',
         filter: 'isFile'
-      }
-    },
-    symlink: {
-      options: {
-        overwrite: false,
-        force: false
       },
       fonts:{
         expand: true,
@@ -408,36 +359,6 @@ module.exports = function(grunt){
         src: ['fonts/**/*'],
         dest: publicDir,
         filter: 'isFile'
-      },
-      public: {
-        expand: true,
-        cwd: publicDir,
-        src: ['**/*'],
-        dest: webDir + 'static/public/'
-      },
-      doc: {
-        expand: true,
-        cwd: docDir,
-        src: ['**/*'],
-        dest: webDir + 'static/' + docDir
-      }
-    },
-    compress: {
-      main: {
-        options: {
-          archive: zipDir + projectNameLC + 'js.zip'
-        },
-        files: [
-          {expand: true, cwd: webDir + 'static/', src: '**', dest: '/'},
-          {expand: true, cwd: publicDir, src: '**', dest: '/public'},
-          {src: [ distDir + '**',
-                  docDir + '**',
-                  'LICENCE.md',
-                  'README.md',
-                  'RELEASE_NOTES.md'
-                ],
-                dest: '/', filter: 'isFile'}
-        ]
       }
     },
     nodemon: {
@@ -458,19 +379,19 @@ module.exports = function(grunt){
     },
     watch: {
       lib: {
-        files: srcDir + '**/*.js',
+        files: [ srcDir + 'ts/**/*.ts', '!' + srcDir + 'ts/build/*'],
         tasks: ['dist'],
       },
       webpug:{
         files: webDir + 'views/**/*.pug'
       },
       webjs: {
-        files: webDir + 'js/**/*.js',
-        tasks: ['website'],
+        files: [webDir + 'js/**/*.js', '!' + webDir + 'js/build/*'],
+        tasks: ['webjs'],
       },
-      webcss: {
-        files: webDir + 'sass/**/*.scss',
-        tasks: ['website'],
+      websass: {
+        files: [webDir + 'sass/**/*.scss', '!' + webDir + 'sass/build/*'],
+        tasks: ['websass'],
       },
       options: {
         interrupt: true,
@@ -496,11 +417,8 @@ module.exports = function(grunt){
   grunt.loadNpmTasks( 'grunt-contrib-csslint' );
   grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
   grunt.loadNpmTasks( 'grunt-contrib-concat' );
-  grunt.loadNpmTasks( 'grunt-contrib-pug' );
   grunt.loadNpmTasks( 'grunt-contrib-sass' );
   grunt.loadNpmTasks( 'grunt-contrib-htmlmin' );
-  grunt.loadNpmTasks( 'grunt-contrib-symlink' );
-  grunt.loadNpmTasks( 'grunt-contrib-compress' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-strip-code' );
   grunt.loadNpmTasks( 'grunt-concurrent' );
@@ -519,54 +437,52 @@ module.exports = function(grunt){
                         'uglify:libmin',
                         'concat:declaration',
                         'strip_code:declaration'
-                        //'jsdoc'
+
                       ]
                     );
 
-  grunt.registerTask( 'doc',
-                      'build jsdoc in the doc/ folder',
-                      [ 'jsdoc' ]
-                    );
-
-  // grunt.registerTask( 'static',
-  //                     'build static version of the website into /website/static',
-  //                     [ 'pug',
-  //                       'htmlmin',
-  //                       'symlink:fonts', 'symlink:fontAwesome', 'symlink:public', 'symlink:doc'
-  //                     ]
-  //                   );
-
-  // grunt.registerTask( 'zip',
-  //                     'create the zip package',
-  //                     ['compress']
-  //                   );
 
   grunt.registerTask( 'serve',
                       'launch server, open website and watch for changes',
                       [ 'concurrent' ]
                     );
 
+  grunt.registerTask( 'websass',
+                      'Compile website css',
+                      [ 'clean:websass',
+                        'sass',
+                        'cssmin',
+                        'copy:mouette',
+                        'concat:webcss'
+                       ]
+                    );
+
+  grunt.registerTask( 'webjs',
+                      'Compile website js',
+                      [ 'jshint:web',
+                        'clean:webjs',
+                        'bower_concat',
+                        'uglify:bower',
+                        'uglify:web',
+                        'concat:webjs'
+                       ]
+                    );
+
+  grunt.registerTask( 'webmisc',
+                      'Compile website misc',
+                      [ 'clean:webmisc',
+                        'copy:fonts',
+                        'copy:fontAwesome'
+                       ]
+                    );
+
   grunt.registerTask( 'website',
                       'build the website in the website/ folder',
-                      [ 'jshint:web',
-                        'clean:public', 'clean:web',
-                        //js
-                          'bower_concat',
-                          'uglify:bower',
-                          'uglify:web',
-                          'concat:webjs',
-                        //css
-                          'sass',
-                          'cssmin',
-                          'symlink:fonts', 'symlink:fontAwesome',
-                          'copy:mouette',
-                          'concat:webcss',
-                        //static
-                          'pug',
-                          'htmlmin',
-                          'symlink:public',
-                          'compress'
-                      ]
+                      function() {
+                        grunt.task.run('webjs');
+                        grunt.task.run('websass');
+                        grunt.task.run('webmisc');
+                      }
                     );
 
   grunt.registerTask( 'dist',

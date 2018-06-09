@@ -3,15 +3,18 @@
         "module": "es2015",
         "target": "es5",
         "sourceMap": true,
-        "fast": "always",
         "noImplicitAny": true,
         "allowSyntheticDefaultImports": true,
         "allowJs": false,
         "removeComments": true,
         "preserveConstEnums": true,
-        "suppressImplicitAnyIndexErrors":true
+        "suppressImplicitAnyIndexErrors":true,
+        "declaration":true,
+        "declarationDir":"src/build/",
+        "outDir":"../src/build/",
+        "rootDir":"src/ts/"
     },
     "exclude": [
-      "node_modules"
+      "../node_modules"
     ]
 }
