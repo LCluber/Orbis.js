@@ -6,7 +6,6 @@ export class Request {
 
   fsm : TAIPAN.FSM;
 
-
   constructor() {
     this.fsm = new TAIPAN.FSM([
                   { name: 'send',    from: 'idle',    to: 'pending' },

@@ -63,7 +63,7 @@ export declare class Loader {
     private sendRequest();
     private getNextAssetToLoad();
 }
-
+import * as WEE from '../bower_components/Weejs/dist/wee';
 export declare class Progress {
     rate: number;
     target: number;
@@ -77,7 +77,7 @@ export declare class Progress {
     update(text: string): void;
     updateBar(delta: number): number;
 }
-
+import * as TAIPAN from '../bower_components/Taipanjs/dist/taipan';
 export declare class Request {
     fsm: TAIPAN.FSM;
     constructor();

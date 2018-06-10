@@ -37,6 +37,9 @@
   },
   "devDependencies": {
     "@types/es6-shim": "^0.31.36",
+    "Mouettejs": "git+https://github.com/LCluber/Mouette.js.git#v0.2.1",
+    "Taipanjs": "git+https://github.com/LCluber/Taipan.js.git#v0.3.2",
+    "Weejs": "git+https://github.com/LCluber/Wee.js.git#v0.1.4",
     "bootstrap": "3.3.7",
     "connect-livereload": "0.6.0",
     "font-awesome": "4.7.0",
@@ -55,6 +58,7 @@
     "grunt-contrib-watch": "1.0.0",
     "grunt-nodemon": "0.4.2",
     "grunt-open": "0.2.3",
+    "grunt-replace": "1.0.1",
     "grunt-rollup": "4.0.0",
     "grunt-strip-code": "^1.0.6",
     "grunt-ts": "5.5.1",

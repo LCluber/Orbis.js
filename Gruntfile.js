@@ -327,15 +327,32 @@ module.exports = function(grunt){
     },
     strip_code: {
       options: {
-        //import { IBase64Service } from '../services/base64.service';
         // /// <reference path="../config/typings/index.d.ts" />
-        patterns: [ /import.*';/g,
+        patterns: [ /import { .* } from '.*';/g,
                     /export { .* } from '.*';/g,
                     /\/\/\/ <reference path=.*\/>/g
                   ]
       },
       declaration: {
           src: distDir + projectName + '.d.ts'
+      }
+    },
+    replace: {
+      declaration: {
+        options: {
+          patterns: [
+            {
+              match: /\.\.\/\.\.\//g,
+              replacement: '../'
+            }
+          ]
+        },
+        files: [
+          {
+            src: distDir + projectName + '.d.ts',
+            dest: distDir + projectName + '.d.ts'
+          }
+        ]
       }
     },
     copy: {
@@ -421,6 +438,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks( 'grunt-contrib-htmlmin' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-strip-code' );
+  grunt.loadNpmTasks( 'grunt-replace' );
   grunt.loadNpmTasks( 'grunt-concurrent' );
   grunt.loadNpmTasks( 'grunt-nodemon' );
   grunt.loadNpmTasks( 'grunt-open' );
@@ -436,8 +454,8 @@ module.exports = function(grunt){
                         'rollup',
                         'uglify:libmin',
                         'concat:declaration',
-                        'strip_code:declaration'
-
+                        'strip_code:declaration',
+                        'replace:declaration'
                       ]
                     );
 
