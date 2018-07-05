@@ -1,4 +1,13 @@
-Version 0.5.0 (May 23th 2018)
+Version 0.6.0 (July 3rd 2018)
+------------------------------
+ * Documentation automatically generated in /doc folder
+ * Typedoc and grunt-typedoc added in devDependencies
+ * New "typedoc" task in Gruntfile.js
+ * Typescript upgraded to version 2.9.2
+ * INSTALL.md becomes NOTICE.md and RELEASE_NOTES.md becomes CHANGELOG.md
+
+ Version 0.5.0 (May 23th 2018)
+------------------------------
  * Library is written in TypeScript
  * Use Promises instead of callbacks
 
