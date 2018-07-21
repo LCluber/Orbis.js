@@ -1,7 +1,6 @@
 
-import * as TAIPAN from '../../bower_components/Taipanjs/dist/taipan';
-import * as WEE    from '../../bower_components/Weejs/dist/wee';
-import { Request }   from './request';
+import {Check} from 'weejs';
+import { Request } from './request';
 
 export class Asset {
 
@@ -29,7 +28,7 @@ export class Asset {
         if (response) {
           this.response = response;
           if(this.type === 'file') {
-            let json = WEE.Check.isJSON(response as string);
+            let json = Check.isJSON(response as string);
             if (json) {
               this.response = json;
             }

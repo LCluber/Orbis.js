@@ -1,7 +1,7 @@
 
-var loader             = new ORBIS.Loader();
-var button             = WEE.Dom.findById('launcher');
-MOUETTE.Logger.prototype.level = 'error';
+var loader             = new Orbis.Loader();
+var button             = Wee.Dom.findById('launcher');
+Mouette.Logger.prototype.level = 'error';
 
 function loadAssets(){
   button.disabled = true;

@@ -23,6 +23,12 @@
 * http://orbisjs.lcluber.com
 */
 
+export declare class Ajax {
+    static file: File;
+    static img: Img;
+    static sound: Sound;
+}
+
 export declare class Asset {
     path: string;
     file: string;
@@ -58,12 +64,12 @@ export declare class Loader {
     getAsset(name: string): Asset | false;
     getList(type: string): Array<Asset> | false;
     launch(configFilePath: string, assetsPath: string, progressBarId: string, progressTextId: string): Promise<void>;
-    private getAssetType(extension);
-    private createAssets(path);
-    private sendRequest();
-    private getNextAssetToLoad();
+    private getAssetType;
+    private createAssets;
+    private sendRequest;
+    private getNextAssetToLoad;
 }
-import * as WEE from '../bower_components/Weejs/dist/wee';
+
 export declare class Progress {
     rate: number;
     target: number;
@@ -71,15 +77,17 @@ export declare class Progress {
     percentage: number;
     speed: number;
     nbAssets: number;
-    bar: WEE.Bind;
-    text: WEE.Bind;
+    bar: Bind;
+    text: Bind;
     constructor(barId: string, textId: string, nbAssets: number);
     update(text: string): void;
     updateBar(delta: number): number;
 }
-import * as TAIPAN from '../bower_components/Taipanjs/dist/taipan';
+
+
 export declare class Request {
-    fsm: TAIPAN.FSM;
+    fsm: FSM;
+    ajax: Ajax;
     constructor();
     send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | false>;
 }

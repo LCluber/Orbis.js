@@ -1,4 +1,4 @@
-import * as WEE from '../../bower_components/Weejs/dist/wee';
+import {Bind,Dom} from 'weejs';
 
 export class Progress {
 
@@ -10,8 +10,8 @@ export class Progress {
   speed             : number;//pixels per seconds
   nbAssets          : number;
 
-  bar               : WEE.Bind;
-  text              : WEE.Bind;//lastFileloaded
+  bar               : Bind;
+  text              : Bind;//lastFileloaded
 
   constructor( barId: string, textId: string, nbAssets: number ) {
 
@@ -22,15 +22,15 @@ export class Progress {
     this.speed      = 40;//pixels per seconds
     this.nbAssets   = nbAssets;
     if(barId) {
-      let element = WEE.Dom.findById(barId);
+      let element = Dom.findById(barId);
       if (element) {
-        this.bar = new WEE.Bind(<HTMLProgressElement>element, '0');
+        this.bar = new Bind(<HTMLProgressElement>element, '0');
       }
     }
     if(textId) {
-      let element = WEE.Dom.findById(textId);
+      let element = Dom.findById(textId);
       if (element) {
-        this.text = new WEE.Bind(<HTMLInputElement>element, 'Loading started');
+        this.text = new Bind(<HTMLInputElement>element, 'Loading started');
       }
     }
   }

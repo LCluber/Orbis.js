@@ -1,5 +1,5 @@
-import * as WEE      from '../../bower_components/Weejs/dist/wee';
-import * as MOUETTE  from '../../bower_components/Mouettejs/dist/mouette';
+import {File,Check}  from 'weejs';
+import {Logger}      from 'mouettejs';
 
 import {Asset}       from './asset';
 import {Request}     from './request';
@@ -48,13 +48,13 @@ export class Loader {
       sound : ['mp3', 'ogg', 'wav']
     };
 
-    // if (WEE.Check.isFunction(onProgress)) {
+    // if (Check.isFunction(onProgress)) {
     //   this.onProgress = onProgress;
     // }
     //else
       //_this.logs.add('onProgress parameter is not a function');
 
-    // if (WEE.Check.isFunction(onComplete)) {
+    // if (Check.isFunction(onComplete)) {
     //   this.onComplete = onComplete;
     // }
       //_this.logs.add('onComplete parameter is not a function');
@@ -96,16 +96,16 @@ export class Loader {
   public launch( configFilePath: string, assetsPath: string, progressBarId: string, progressTextId: string, ): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {
       let request = new Request();
-      let extension = WEE.File.getExtension(configFilePath);
+      let extension = File.getExtension(configFilePath);
       let type = this.getAssetType(extension);
       if (type === 'file') {
         return request.send(configFilePath, type).then(
           (response: string) => {
             if (response) {
-              let json = WEE.Check.isJSON(response as string);
+              let json = Check.isJSON(response as string);
               if (json) {
                 this.assets = json;
-                let nbAssets = this.createAssets(WEE.File.removeTrailingSlash(assetsPath));
+                let nbAssets = this.createAssets(File.removeTrailingSlash(assetsPath));
                 if(nbAssets) {
                   this.progress = new Progress(progressBarId, progressTextId, nbAssets);
                   let intervalID = setInterval(() => {
@@ -124,7 +124,7 @@ export class Loader {
           }
         ).catch(
           (err) => {
-            MOUETTE.Logger.error(configFilePath + ' : ' + err.message);
+            Logger.error(configFilePath + ' : ' + err.message);
             console.log('error', err.message);
           }
         );
@@ -138,7 +138,7 @@ export class Loader {
   private getAssetType(extension: string): string|false {
     for (let property in this.validExtensions) {
       if (this.validExtensions.hasOwnProperty(property)) {
-        if (WEE.File.checkExtension(extension, this.validExtensions[property])) {
+        if (File.checkExtension(extension, this.validExtensions[property])) {
           return property;
         }
       }
@@ -154,7 +154,7 @@ export class Loader {
         let folder = type.folder ? type.folder + '/' : '';
         for (let file of type.files) {
           if (file.hasOwnProperty('name')) {
-            let extension = WEE.File.getExtension(file.name);
+            let extension = File.getExtension(file.name);
             let type = this.getAssetType(extension);
             if(type) {
               file.asset = new Asset(path + '/' + folder, file.name, extension, type);
