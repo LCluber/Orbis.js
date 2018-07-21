@@ -4,4 +4,5 @@ website/sass/build/
 website/js/build/
 build/
 .sass-cache/
+.tscache/
 npm-debug.log
