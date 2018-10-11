@@ -23,9 +23,9 @@
 * http://orbisjs.lcluber.com
 */
 
-import { Bind, Check, Dom, File, Img, Sound } from 'weejs';
-import { Logger } from 'mouettejs';
-import { FSM } from 'taipanjs';
+import { Bind, Check, Dom, File, Img, Sound } from '@lcluber/weejs';
+import { Logger } from '@lcluber/mouettejs';
+import { FSM } from '@lcluber/taipanjs';
 
 class Ajax {
 }

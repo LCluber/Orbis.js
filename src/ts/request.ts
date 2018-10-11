@@ -1,5 +1,5 @@
-import {Logger} from 'mouettejs';
-import {FSM} from 'taipanjs';
+import {Logger} from '@lcluber/mouettejs';
+import {FSM} from '@lcluber/taipanjs';
 import {Ajax} from './ajax';
 
 export class Request {

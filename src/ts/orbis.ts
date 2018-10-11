@@ -1,5 +1,5 @@
-import {File,Check}  from 'weejs';
-import {Logger}      from 'mouettejs';
+import {File,Check}  from '@lcluber/weejs';
+import {Logger}      from '@lcluber/mouettejs';
 
 import {Asset}       from './asset';
 import {Request}     from './request';

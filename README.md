@@ -1,13 +1,9 @@
 ## Synopsis
 
-  Orbis.js is an asynchronous assets loader written in Javascript.
+  [Orbis.js](http://orbisjs.lcluber.com) is an asynchronous assets loader written in Javascript.
   - Setup your json config file containing all your assets (images, textures, sprites, sounds, musics, texts, jsons),
   - launch the loader and use onProgress callback to set your own progress bar design,
   - wait for onComplete callback to start using your freshly loaded assets.
-
-## Code Example
-
- [See a basic example on the dedicated website](http://orbisjs.lcluber.com/#example).
 
 ## Motivation
 
@@ -15,11 +11,23 @@ The main purpose of this library is to provide a simple way to load assets only 
 
 ## Installation
 
-To use **Orbis.js** download it **[here](http://orbisjs.lcluber.com/#download)** and learn how to use it **[there](http://orbisjs.lcluber.com/#example)**.
+```bash
+$ npm install @lcluber/orbisjs
+```
+Or download it **[here](http://orbisjs.lcluber.com/#download)**.
+
+## Demo
+
+See a basic example **[here](http://orbisjs.lcluber.com/#example)**.
+
+## Usage
+
+Learn how to use it **[here](http://orbisjs.lcluber.com/#source)**.
 
 ## API Reference
 
-[See the documentation on the dedicated website](http://orbisjs.lcluber.com/doc/).
+Read the documentation **[here](http://orbisjs.lcluber.com/doc/)**.
+
 
 ## Tests
 

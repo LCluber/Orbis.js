@@ -1,4 +1,4 @@
-import {File,Img,Sound} from 'weejs';
+import {File,Img,Sound} from '@lcluber/weejs';
 
 export class Ajax {
   static file:File = File;

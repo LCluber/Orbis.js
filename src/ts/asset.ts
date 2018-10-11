@@ -1,5 +1,5 @@
 
-import {Check} from 'weejs';
+import {Check} from '@lcluber/weejs';
 import { Request } from './request';
 
 export class Asset {

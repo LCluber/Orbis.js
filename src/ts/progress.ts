@@ -1,4 +1,4 @@
-import {Bind,Dom} from 'weejs';
+import {Bind,Dom} from '@lcluber/weejs';
 
 export class Progress {
 

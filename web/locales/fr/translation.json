@@ -1,5 +1,5 @@
 {
-  "menu" : { 
+  "menu" : {
     "menu"          : "Menu",
     "home"          : "Accueil",
     "about"         : "Présentation",
@@ -21,7 +21,7 @@
     },
     "download" : {
       "h2" : "Téléchargez Taipan.js",
-      "github" : "Clonez sur Github"
+      "github" : "Clonez sur Github "
     },
     "contact" : {
       "h2" : "Contactez moi",

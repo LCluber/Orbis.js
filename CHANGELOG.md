@@ -1,3 +1,8 @@
+Version 0.5.3 (October 12th 2018)
+-----------------------------
+ * Orbis.js published on NPM at @lcluber/orbisjs.
+ * Updated README.md with NPM installation procedure.
+
 Version 0.5.2 (July 22th 2018)
 ------------------------------
  * Library exported as ES6 and IIFE modules instead of UMD.
