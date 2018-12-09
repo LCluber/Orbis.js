@@ -1,3 +1,7 @@
+Version 0.5.4 (December 09th 2018)
+-----------------------------
+ * Updated package.js dependencies.
+
 Version 0.5.3 (October 12th 2018)
 -----------------------------
  * Orbis.js published on NPM at @lcluber/orbisjs.
