@@ -46,9 +46,9 @@
     "i18next": "11.2.3",
     "i18next-express-middleware": "1.1.1",
     "i18next-node-fs-backend": "1.0.0",
-    "@lcluber/mouettejs": "0.2.7",
+    "@lcluber/mouettejs": "0.2.8",
     "@lcluber/taipanjs": "0.3.6",
-    "@lcluber/weejs": "0.1.17"
+    "@lcluber/weejs": "0.2.1"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.3.1",

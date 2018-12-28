@@ -1,5 +1,5 @@
 
-import {Check} from '@lcluber/weejs';
+// import {Is} from '@lcluber/chjs';
 import { Request } from './request';
 
 export class Asset {
@@ -27,12 +27,12 @@ export class Asset {
       (response) => {
         if (response) {
           this.response = response;
-          if(this.type === 'file') {
-            let json = Check.isJSON(response as string);
-            if (json) {
-              this.response = json;
-            }
-          }
+          // if(this.type === 'file') {
+          //   let json = Is.json(response as string);
+          //   if (json) {
+          //     this.response = json;
+          //   }
+          // }
         }
         return this.file;
       }

@@ -1,9 +1,10 @@
-import {File,Check}  from '@lcluber/weejs';
-import {Logger}      from '@lcluber/mouettejs';
+import {File}     from '@lcluber/weejs';
+// import {Is}       from '@lcluber/chjs';
+// import {Logger}   from '@lcluber/mouettejs';
 
-import {Asset}       from './asset';
-import {Request}     from './request';
-import {Progress}    from './progress';
+import {Asset}    from './asset';
+//import {Request}  from './request';
+import {Progress} from './progress';
 
 export type ValidExtensions = {
   file  : Array<string>;
@@ -93,45 +94,23 @@ export class Loader {
     return false;
   }
 
-  public launch( configFilePath: string, assetsPath: string, progressBarId: string, progressTextId: string, ): Promise<void> {
+  public launch( list: Object, assetsPath: string, progressBarId: string, progressTextId: string, ): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {
-      let request = new Request();
-      let extension = File.getExtension(configFilePath);
-      let type = this.getAssetType(extension);
-      if (type === 'file') {
-        return request.send(configFilePath, type).then(
-          (response: string) => {
-            if (response) {
-              let json = Check.isJSON(response as string);
-              if (json) {
-                this.assets = json;
-                let nbAssets = this.createAssets(File.removeTrailingSlash(assetsPath));
-                if(nbAssets) {
-                  this.progress = new Progress(progressBarId, progressTextId, nbAssets);
-                  let intervalID = setInterval(() => {
-                    this.sendRequest();
-                    let percentage = this.progress.updateBar(this.tick);
-                    if (percentage === 100) {
-                      clearInterval(intervalID);
-                      resolve();
-                    }
-                  }, this.tick);
-                }else{
-                  reject('!! nothing to load here');
-                }
-              }
-            }
+      this.assets = list;
+      let nbAssets = this.createAssets(File.removeTrailingSlash(assetsPath));
+      if(nbAssets) {
+        this.progress = new Progress(progressBarId, progressTextId, nbAssets);
+        let intervalID = setInterval(() => {
+          this.sendRequest();
+          let percentage = this.progress.updateBar(this.tick);
+          if (percentage === 100) {
+            clearInterval(intervalID);
+            resolve();
           }
-        ).catch(
-          (err) => {
-            Logger.error(configFilePath + ' : ' + err.message);
-            console.log('error', err.message);
-          }
-        );
+        }, this.tick);
       }else{
-        reject('!! the config file must be of type "file"');
+        reject('!! nothing to load here');
       }
-    //this.logs.add('!! the config file must be of type "file"');
     });
   }
 

@@ -63,7 +63,7 @@ export declare class Loader {
     constructor();
     getAsset(name: string): Asset | false;
     getList(type: string): Array<Asset> | false;
-    launch(configFilePath: string, assetsPath: string, progressBarId: string, progressTextId: string): Promise<void>;
+    launch(list: Object, assetsPath: string, progressBarId: string, progressTextId: string): Promise<void>;
     private getAssetType;
     private createAssets;
     private sendRequest;

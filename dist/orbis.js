@@ -23,7 +23,7 @@
 * http://orbisjs.lcluber.com
 */
 
-import { Bind, Check, Dom, File, Img, Sound } from '@lcluber/weejs';
+import { Bind, Dom, File, Img, Sound } from '@lcluber/weejs';
 import { Logger } from '@lcluber/mouettejs';
 import { FSM } from '@lcluber/taipanjs';
 
@@ -68,12 +68,6 @@ class Asset {
         return this.request.send(this.path + this.file, this.type).then((response) => {
             if (response) {
                 this.response = response;
-                if (this.type === 'file') {
-                    let json = Check.isJSON(response);
-                    if (json) {
-                        this.response = json;
-                    }
-                }
             }
             return this.file;
         });
@@ -163,41 +157,23 @@ class Loader {
         }
         return false;
     }
-    launch(configFilePath, assetsPath, progressBarId, progressTextId) {
+    launch(list, assetsPath, progressBarId, progressTextId) {
         return new Promise((resolve, reject) => {
-            let request = new Request();
-            let extension = File.getExtension(configFilePath);
-            let type = this.getAssetType(extension);
-            if (type === 'file') {
-                return request.send(configFilePath, type).then((response) => {
-                    if (response) {
-                        let json = Check.isJSON(response);
-                        if (json) {
-                            this.assets = json;
-                            let nbAssets = this.createAssets(File.removeTrailingSlash(assetsPath));
-                            if (nbAssets) {
-                                this.progress = new Progress(progressBarId, progressTextId, nbAssets);
-                                let intervalID = setInterval(() => {
-                                    this.sendRequest();
-                                    let percentage = this.progress.updateBar(this.tick);
-                                    if (percentage === 100) {
-                                        clearInterval(intervalID);
-                                        resolve();
-                                    }
-                                }, this.tick);
-                            }
-                            else {
-                                reject('!! nothing to load here');
-                            }
-                        }
+            this.assets = list;
+            let nbAssets = this.createAssets(File.removeTrailingSlash(assetsPath));
+            if (nbAssets) {
+                this.progress = new Progress(progressBarId, progressTextId, nbAssets);
+                let intervalID = setInterval(() => {
+                    this.sendRequest();
+                    let percentage = this.progress.updateBar(this.tick);
+                    if (percentage === 100) {
+                        clearInterval(intervalID);
+                        resolve();
                     }
-                }).catch((err) => {
-                    Logger.error(configFilePath + ' : ' + err.message);
-                    console.log('error', err.message);
-                });
+                }, this.tick);
             }
             else {
-                reject('!! the config file must be of type "file"');
+                reject('!! nothing to load here');
             }
         });
     }

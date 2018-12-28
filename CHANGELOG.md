@@ -1,3 +1,8 @@
+Version 0.6.0 (December 28th 2018)
+-----------------------------
+ * Assets list parameter of launch() method is an object instead of a json file.
+ * Library is lighter and faster.
+
 Version 0.5.4 (December 09th 2018)
 -----------------------------
  * Updated package.js dependencies.
