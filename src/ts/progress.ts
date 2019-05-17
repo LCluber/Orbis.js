@@ -1,4 +1,4 @@
-import {Bind,Dom} from '@lcluber/weejs';
+import {/*Bind,*/Dom} from '@lcluber/weejs';
 
 export class Progress {
 
@@ -13,14 +13,14 @@ export class Progress {
   bar               : Bind;
   text              : Bind;//lastFileloaded
 
-  constructor( barId: string, textId: string, nbAssets: number ) {
+  constructor( barId: string|null, textId: string|null/*, nbAssets: number*/ ) {
 
     this.rate       = 0.0;
     this.total      = 0;
     this.percentage = 0.0;
     this.target     = 0;
     this.speed      = 40;//pixels per seconds
-    this.nbAssets   = nbAssets;
+    this.nbAssets   = 0;
     if(barId) {
       let element = Dom.findById(barId);
       if (element) {

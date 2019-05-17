@@ -8,7 +8,7 @@ export class Asset {
   file      : string;
   extension : string;
   type      : string;
-  response  : Object|HTMLImageElement|HTMLAudioElement|string|false;
+  response  : Object|HTMLImageElement|HTMLAudioElement|string|null;
   request   : Request;
 
 
@@ -19,6 +19,7 @@ export class Asset {
     this.extension = extension;
     this.type      = type;
     this.request   = new Request();
+    this.response = null;
 
   }
 

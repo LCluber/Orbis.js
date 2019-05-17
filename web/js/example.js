@@ -96,17 +96,18 @@ var list = {
 };
 
 
-var loader = new Orbis.Loader();
+var loader = new Orbis.Loader(list, '../public/assets/', 'progressBar', 'progressText');
 var button = Wee.Dom.findById('launcher');
 Mouette.Logger.prototype.level = 'error';
 
 function loadAssets(){
   button.disabled = true;
-  loader.launch(list, '../public/assets/','progressBar', 'progressText').then(
+  loader.launch().then(
     function(){
       console.log('complete');
       console.log(loader.getList('textures'));
       console.log(loader.getAsset('texture1.png'));
+      button.disabled = false;
     }
   );
 }
