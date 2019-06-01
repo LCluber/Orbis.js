@@ -1,4 +1,4 @@
-import {/*Bind,*/Dom} from '@lcluber/weejs';
+import {Bind,Dom} from '@lcluber/weejs';
 
 export class Progress {
 
@@ -10,8 +10,8 @@ export class Progress {
   speed             : number;//pixels per seconds
   nbAssets          : number;
 
-  bar               : Bind;
-  text              : Bind;//lastFileloaded
+  bar               : Bind|null;
+  text              : Bind|null;//lastFileloaded
 
   constructor( barId: string|null, textId: string|null/*, nbAssets: number*/ ) {
 
@@ -21,6 +21,8 @@ export class Progress {
     this.target     = 0;
     this.speed      = 40;//pixels per seconds
     this.nbAssets   = 0;
+    this.bar = null;
+    this.text = null;
     if(barId) {
       let element = Dom.findById(barId);
       if (element) {
@@ -39,7 +41,9 @@ export class Progress {
     this.total++;
     this.rate = this.total / this.nbAssets;
     this.target = Math.round(this.rate * 100);
-    this.text.change(text);
+    if(this.text){
+      this.text.change(text);
+    }
   }
 
   public updateBar(delta: number): number {
@@ -48,8 +52,10 @@ export class Progress {
     if (this.percentage >= this.target) {
       this.percentage = this.target;
     }
-    this.bar.change(this.percentage);
-    if (this.percentage === 100){
+    if(this.bar) {
+      this.bar.change(this.percentage);
+    }
+    if (this.percentage === 100 && this.text){
       this.text.change('Loading complete');
     }
     return this.percentage ;

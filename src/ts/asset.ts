@@ -24,20 +24,24 @@ export class Asset {
   }
 
   public sendRequest(): Promise<string> {
-    return this.request.send(this.path + this.file, this.type).then(
-      (response) => {
-        if (response) {
-          this.response = response;
-          // if(this.type === 'file') {
-          //   let json = Is.json(response as string);
-          //   if (json) {
-          //     this.response = json;
-          //   }
-          // }
+    if (this.response) {
+      return new Promise(() => { return this.file })
+    } else{
+      return this.request.send(this.path + this.file, this.type).then(
+        (response) => {
+          if (response) {
+            this.response = response;
+            // if(this.type === 'file') {
+            //   let json = Is.json(response as string);
+            //   if (json) {
+            //     this.response = json;
+            //   }
+            // }
+          }
+          return this.file;
         }
-        return this.file;
-      }
-    );
+      );
+    }
   }
 
   public getRequestStatus(): string {

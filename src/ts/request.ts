@@ -16,8 +16,8 @@ export class Request {
     this.ajax = Ajax;
   }
 
-  public send(path: string, type: string): Promise<HTMLImageElement|HTMLAudioElement|string|false> {
-    console.log(this.fsm);
+  public send(path: string, type: string): Promise<HTMLImageElement|HTMLAudioElement|string|boolean> {
+    // console.log(this.fsm);
     if (this.fsm['send']()) {
       return this.ajax[type].load(path).then(
         (response:HTMLImageElement|HTMLAudioElement|string) => {
@@ -33,8 +33,9 @@ export class Request {
           return false;
         }
       );
+    } else {
+      return new Promise(() => { return false })
     }
-
   }
 
 };

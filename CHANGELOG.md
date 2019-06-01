@@ -1,6 +1,6 @@
 Version 0.6.1 (May 14th 2019)
 -----------------------------
- * better management of assets already loaded.
+ * Better management of assets already loaded.
 
 Version 0.6.0 (December 28th 2018)
 -----------------------------

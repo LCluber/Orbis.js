@@ -47,7 +47,7 @@
     "i18next-express-middleware": "1.1.1",
     "i18next-node-fs-backend": "1.0.0",
     "@lcluber/mouettejs": "0.2.8",
-    "@lcluber/taipanjs": "0.3.6",
+    "@lcluber/taipanjs": "0.3.8",
     "@lcluber/weejs": "0.2.1"
   },
   "devDependencies": {

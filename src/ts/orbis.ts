@@ -1,7 +1,6 @@
 import {File}     from '@lcluber/weejs';
 // import {Is}       from '@lcluber/chjs';
 // import {Logger}   from '@lcluber/mouettejs';
-
 import {Asset}    from './asset';
 //import {Request}  from './request';
 import {Progress} from './progress';
@@ -10,6 +9,7 @@ export type ValidExtensions = {
   file  : string[];
   img   : string[];
   sound : string[];
+  [key: string]: string[];
 }
 
 export type Default = {
@@ -17,9 +17,13 @@ export type Default = {
   tick       : number;
 }
 
+export interface Assets {
+  [key: string]: any;
+}
+
 export class Loader {
 
-  assets             : Object; //data from the assets file
+  assets             : Assets; //data from the assets file
   path               : string;
   progress           : Progress;
   //assetsPath: string;
@@ -37,7 +41,7 @@ export class Loader {
   // logs             : {},
   validExtensions : ValidExtensions;
 
-  constructor(assets: Object, assetsPath: string, progressBarId: string, progressTextId: string) {
+  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string) {
 
     this.default = {
       maxPending : 6,
@@ -99,8 +103,8 @@ export class Loader {
   public launch(): Promise<void> {
     this.progress.nbAssets = this.createAssets();
     return new Promise((resolve: Function, reject: Function) => {
-      
-      
+
+
       if(this.progress.nbAssets) {
         let intervalID = setInterval(() => {
           this.sendRequest();
@@ -127,7 +131,7 @@ export class Loader {
     return false
   }
 
-  private createAssets(path:string): number {
+  private createAssets(): number {
     let nbAssets: number = 0;
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
@@ -138,7 +142,7 @@ export class Loader {
             let extension = File.getExtension(file.name);
             let type = this.getAssetType(extension);
             if(type) {
-              file.asset = new Asset(path + '/' + folder, file.name, extension, type);
+              file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
               nbAssets++;
             }
           }
@@ -166,9 +170,8 @@ export class Loader {
         });
         return true;
       }
-      return false;
     }
-
+    return false;
   }
 
   private getNextAssetToLoad(): Asset|false {

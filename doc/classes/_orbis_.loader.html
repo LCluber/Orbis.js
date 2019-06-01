@@ -93,6 +93,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#assets" class="tsd-kind-icon">assets</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#default" class="tsd-kind-icon">default</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#maxpendingrequests" class="tsd-kind-icon">max<wbr>Pending<wbr>Requests</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#path" class="tsd-kind-icon">path</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#pendingrequests" class="tsd-kind-icon">pending<wbr>Requests</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#progress" class="tsd-kind-icon">progress</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_orbis_.loader.html#tick" class="tsd-kind-icon">tick</a></li>
@@ -120,17 +121,23 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Loader<span class="tsd-signature-symbol">(</span>progressBarId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, progressTextId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_orbis_.loader.html" class="tsd-signature-type">Loader</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Loader<span class="tsd-signature-symbol">(</span>assets<span class="tsd-signature-symbol">: </span><a href="../interfaces/_orbis_.assets.html" class="tsd-signature-type">Assets</a>, assetsPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, progressBarId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, progressTextId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_orbis_.loader.html" class="tsd-signature-type">Loader</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L37">orbis.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L42">orbis.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>assets: <a href="../interfaces/_orbis_.assets.html" class="tsd-signature-type">Assets</a></h5>
+								</li>
+								<li>
+									<h5>assetsPath: <span class="tsd-signature-type">string</span></h5>
+								</li>
 								<li>
 									<h5>progressBarId: <span class="tsd-signature-type">string</span></h5>
 								</li>
@@ -148,10 +155,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="assets" class="tsd-anchor"></a>
 					<h3>assets</h3>
-					<div class="tsd-signature tsd-kind-icon">assets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
+					<div class="tsd-signature tsd-kind-icon">assets<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_orbis_.assets.html" class="tsd-signature-type">Assets</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L22">orbis.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L26">orbis.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -161,7 +168,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<span class="tsd-signature-symbol">:</span> <a href="../modules/_orbis_.html#default" class="tsd-signature-type">Default</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L34">orbis.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L39">orbis.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,7 +178,17 @@
 					<div class="tsd-signature tsd-kind-icon">max<wbr>Pending<wbr>Requests<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L33">orbis.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L38">orbis.ts:38</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="path" class="tsd-anchor"></a>
+					<h3>path</h3>
+					<div class="tsd-signature tsd-kind-icon">path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L27">orbis.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">pending<wbr>Requests<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L30">orbis.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L35">orbis.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -191,7 +208,7 @@
 					<div class="tsd-signature tsd-kind-icon">progress<span class="tsd-signature-symbol">:</span> <a href="_progress_.progress.html" class="tsd-signature-type">Progress</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L23">orbis.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L28">orbis.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -201,7 +218,7 @@
 					<div class="tsd-signature tsd-kind-icon">tick<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L32">orbis.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L37">orbis.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -211,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">valid<wbr>Extensions<span class="tsd-signature-symbol">:</span> <a href="../modules/_orbis_.html#validextensions" class="tsd-signature-type">ValidExtensions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L37">orbis.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L42">orbis.ts:42</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -222,21 +239,15 @@
 					<a name="createassets" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> create<wbr>Assets</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Assets<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Assets<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L127">orbis.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L134">orbis.ts:134</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>path: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
@@ -251,7 +262,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L77">orbis.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L83">orbis.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -277,7 +288,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L116">orbis.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L123">orbis.ts:123</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -303,7 +314,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L90">orbis.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L96">orbis.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -329,7 +340,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L171">orbis.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L177">orbis.ts:177</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_asset_.asset.html" class="tsd-signature-type">Asset</a>
@@ -343,24 +354,15 @@
 					<a name="launch" class="tsd-anchor"></a>
 					<h3>launch</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">launch<span class="tsd-signature-symbol">(</span>list<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, assetsPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">launch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L97">orbis.ts:97</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L103">orbis.ts:103</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>list: <span class="tsd-signature-type">Object</span></h5>
-								</li>
-								<li>
-									<h5>assetsPath: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -375,7 +377,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/1e122e3/src/ts/orbis.ts#L152">orbis.ts:152</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/43cb33c/src/ts/orbis.ts#L159">orbis.ts:159</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -427,6 +429,9 @@
 								<a href="_orbis_.loader.html#maxpendingrequests" class="tsd-kind-icon">max<wbr>Pending<wbr>Requests</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_orbis_.loader.html#path" class="tsd-kind-icon">path</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_orbis_.loader.html#pendingrequests" class="tsd-kind-icon">pending<wbr>Requests</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -463,6 +468,9 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_orbis_.assets.html" class="tsd-kind-icon">Assets</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_orbis_.html#default" class="tsd-kind-icon">Default</a>
 					</li>
