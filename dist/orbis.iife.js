@@ -1045,7 +1045,7 @@ var Orbis = (function (exports) {
         };
         Loader.prototype.launch = function () {
             var _this = this;
-            this.progress.nbAssets = this.createAssets();
+            this.createAssets();
             return new Promise(function (resolve, reject) {
                 if (_this.progress.nbAssets) {
                     var intervalID_1 = setInterval(function () {
@@ -1072,7 +1072,7 @@ var Orbis = (function (exports) {
             return false;
         };
         Loader.prototype.createAssets = function () {
-            var nbAssets = 0;
+            this.progress.nbAssets = 0;
             for (var property in this.assets) {
                 if (this.assets.hasOwnProperty(property)) {
                     var type = this.assets[property];
@@ -1084,13 +1084,12 @@ var Orbis = (function (exports) {
                             var type_1 = this.getAssetType(extension);
                             if (type_1) {
                                 file.asset = new Asset(this.path + '/' + folder, file.name, extension, type_1);
-                                nbAssets++;
+                                this.progress.nbAssets++;
                             }
                         }
                     }
                 }
             }
-            return nbAssets;
         };
         Loader.prototype.sendRequest = function () {
             var _this = this;

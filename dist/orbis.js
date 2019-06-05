@@ -176,7 +176,7 @@ class Loader {
         return false;
     }
     launch() {
-        this.progress.nbAssets = this.createAssets();
+        this.createAssets();
         return new Promise((resolve, reject) => {
             if (this.progress.nbAssets) {
                 let intervalID = setInterval(() => {
@@ -204,7 +204,7 @@ class Loader {
         return false;
     }
     createAssets() {
-        let nbAssets = 0;
+        this.progress.nbAssets = 0;
         for (let property in this.assets) {
             if (this.assets.hasOwnProperty(property)) {
                 let type = this.assets[property];
@@ -215,13 +215,12 @@ class Loader {
                         let type = this.getAssetType(extension);
                         if (type) {
                             file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
-                            nbAssets++;
+                            this.progress.nbAssets++;
                         }
                     }
                 }
             }
         }
-        return nbAssets;
     }
     sendRequest() {
         if (this.pendingRequests < this.maxPendingRequests) {

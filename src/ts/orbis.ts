@@ -101,10 +101,8 @@ export class Loader {
   }
 
   public launch(): Promise<void> {
-    this.progress.nbAssets = this.createAssets();
+    this.createAssets();
     return new Promise((resolve: Function, reject: Function) => {
-
-
       if(this.progress.nbAssets) {
         let intervalID = setInterval(() => {
           this.sendRequest();
@@ -128,11 +126,11 @@ export class Loader {
         }
       }
     }
-    return false
+    return false;
   }
 
-  private createAssets(): number {
-    let nbAssets: number = 0;
+  private createAssets(): void {
+    this.progress.nbAssets = 0;
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
         let type   = this.assets[property];
@@ -141,15 +139,14 @@ export class Loader {
           if (!file.asset && file.hasOwnProperty('name')) {
             let extension = File.getExtension(file.name);
             let type = this.getAssetType(extension);
-            if(type) {
+            if (type) {
               file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
-              nbAssets++;
+              this.progress.nbAssets ++;
             }
           }
         }
       }
     }
-    return nbAssets;
     //   _this.logs.add(_this.requestsLength + ' requests to perform');
     //   _this.sendRequest();
     // }else
