@@ -1,4 +1,4 @@
-import {Bind,Dom} from '@lcluber/weejs';
+import {Binding} from '@lcluber/weejs';
 
 export class Progress {
 
@@ -10,8 +10,8 @@ export class Progress {
   speed             : number;//pixels per seconds
   nbAssets          : number;
 
-  bar               : Bind|null;
-  text              : Bind|null;//lastFileloaded
+  bar               : Binding|null;
+  text              : Binding|null;//lastFileloaded
 
   constructor( barId: string|null, textId: string|null/*, nbAssets: number*/ ) {
 
@@ -21,28 +21,16 @@ export class Progress {
     this.target     = 0;
     this.speed      = 40;//pixels per seconds
     this.nbAssets   = 0;
-    this.bar = null;
-    this.text = null;
-    if(barId) {
-      let element = Dom.findById(barId);
-      if (element) {
-        this.bar = new Bind(<HTMLProgressElement>element, '0');
-      }
-    }
-    if(textId) {
-      let element = Dom.findById(textId);
-      if (element) {
-        this.text = new Bind(<HTMLInputElement>element, 'Loading started');
-      }
-    }
+    this.bar        = barId ? new Binding(barId, 0) : null;
+    this.text       = textId ? new Binding(textId, 'Loading started') : null;
   }
 
   public update(text: string): void {
     this.total++;
     this.rate = this.total / this.nbAssets;
     this.target = Math.round(this.rate * 100);
-    if(this.text){
-      this.text.change(text);
+    if(this.text) {
+      this.text.update(text);
     }
   }
 
@@ -53,10 +41,10 @@ export class Progress {
       this.percentage = this.target;
     }
     if(this.bar) {
-      this.bar.change(this.percentage);
+      this.bar.update(this.percentage);
     }
-    if (this.percentage === 100 && this.text){
-      this.text.change('Loading complete');
+    if (this.percentage === 100 && this.text) {
+      this.text.update('Loading complete');
     }
     return this.percentage ;
   }

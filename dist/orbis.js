@@ -23,7 +23,7 @@
 * http://orbisjs.lcluber.com
 */
 
-import { Bind, Dom, File, Img, Sound } from '@lcluber/weejs';
+import { Binding, File, Img, Sound } from '@lcluber/weejs';
 import { Logger } from '@lcluber/mouettejs';
 import { FSM } from '@lcluber/taipanjs';
 
@@ -100,27 +100,15 @@ class Progress {
         this.target = 0;
         this.speed = 40;
         this.nbAssets = 0;
-        this.bar = null;
-        this.text = null;
-        if (barId) {
-            let element = Dom.findById(barId);
-            if (element) {
-                this.bar = new Bind(element, '0');
-            }
-        }
-        if (textId) {
-            let element = Dom.findById(textId);
-            if (element) {
-                this.text = new Bind(element, 'Loading started');
-            }
-        }
+        this.bar = barId ? new Binding(barId, 0) : null;
+        this.text = textId ? new Binding(textId, 'Loading started') : null;
     }
     update(text) {
         this.total++;
         this.rate = this.total / this.nbAssets;
         this.target = Math.round(this.rate * 100);
         if (this.text) {
-            this.text.change(text);
+            this.text.update(text);
         }
     }
     updateBar(delta) {
@@ -130,10 +118,10 @@ class Progress {
             this.percentage = this.target;
         }
         if (this.bar) {
-            this.bar.change(this.percentage);
+            this.bar.update(this.percentage);
         }
         if (this.percentage === 100 && this.text) {
-            this.text.change('Loading complete');
+            this.text.update('Loading complete');
         }
         return this.percentage;
     }
@@ -156,6 +144,7 @@ class Loader {
         this.tick = this.default.tick;
         this.maxPendingRequests = this.default.maxPending;
         this.progress = new Progress(progressBarId, progressTextId);
+        this.createAssets();
     }
     getAsset(name) {
         for (let property in this.assets) {
@@ -176,7 +165,6 @@ class Loader {
         return false;
     }
     launch() {
-        this.createAssets();
         return new Promise((resolve, reject) => {
             if (this.progress.nbAssets) {
                 let intervalID = setInterval(() => {
@@ -212,10 +200,12 @@ class Loader {
                 for (let file of type.files) {
                     if (!file.asset && file.hasOwnProperty('name')) {
                         let extension = File.getExtension(file.name);
-                        let type = this.getAssetType(extension);
-                        if (type) {
-                            file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
-                            this.progress.nbAssets++;
+                        if (extension) {
+                            let type = this.getAssetType(extension);
+                            if (type) {
+                                file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
+                                this.progress.nbAssets++;
+                            }
                         }
                     }
                 }

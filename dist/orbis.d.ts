@@ -82,8 +82,8 @@ export declare class Progress {
     percentage: number;
     speed: number;
     nbAssets: number;
-    bar: Bind | null;
-    text: Bind | null;
+    bar: Binding | null;
+    text: Binding | null;
     constructor(barId: string | null, textId: string | null);
     update(text: string): void;
     updateBar(delta: number): number;

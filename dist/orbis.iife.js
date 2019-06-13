@@ -275,6 +275,98 @@ var Orbis = (function (exports) {
                 return _object !== null && (typeof _object === 'undefined' ? 'undefined' : _typeof(_object)) === 'object';
             }
         }, {
+            key: 'array',
+            value: function array(_array) {
+                return _array !== null && _array.constructor === Array;
+            }
+        }, {
+            key: 'ascii',
+            value: function ascii(code, extended) {
+                return (extended ? /^[\x00-\xFF]*$/ : /^[\x00-\x7F]*$/).test(code);
+            }
+        }, {
+            key: 'integer',
+            value: function integer(value) {
+                return value === parseInt(value, 10);
+            }
+        }, {
+            key: 'float',
+            value: function float(value) {
+                return Number(value) === value && value % 1 !== 0;
+            }
+        }, {
+            key: 'string',
+            value: function string(str) {
+                return typeof str === 'string';
+            }
+        }]);
+
+        return Is;
+    }();
+
+    var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+    var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2018 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://chjs.lcluber.com
+    */
+
+    var Is$1 = function () {
+        function Is() {
+            _classCallCheck$2(this, Is);
+        }
+
+        _createClass$2(Is, null, [{
+            key: 'json',
+            value: function json(str) {
+                if (!this.string(str)) {
+                    return false;
+                }
+                var json = str.replace(/(\r\n|\n|\r|\t)/gm, '');
+                try {
+                    json = JSON.parse(str);
+                } catch (e) {
+                    Logger.error(e);
+                    return false;
+                }
+                return json;
+            }
+        }, {
+            key: 'function',
+            value: function _function(func) {
+                var getType = {};
+                return func && getType.toString.call(func) === '[object Function]';
+            }
+        }, {
+            key: 'object',
+            value: function object(_object) {
+                return _object !== null && (typeof _object === 'undefined' ? 'undefined' : _typeof$1(_object)) === 'object';
+            }
+        }, {
             key: 'ascii',
             value: function ascii(code, extended) {
                 return (extended ? /^[\x00-\xFF]*$/ : /^[\x00-\x7F]*$/).test(code);
@@ -294,9 +386,9 @@ var Orbis = (function (exports) {
         return Is;
     }();
 
-    var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -325,10 +417,10 @@ var Orbis = (function (exports) {
 
     var HTTP = function () {
         function HTTP() {
-            _classCallCheck$2(this, HTTP);
+            _classCallCheck$3(this, HTTP);
         }
 
-        _createClass$2(HTTP, null, [{
+        _createClass$3(HTTP, null, [{
             key: 'get',
             value: function get(url) {
                 return this.call('GET', url);
@@ -414,7 +506,7 @@ var Orbis = (function (exports) {
                         http.send();
                         return;
                     }
-                    if (Is.object(data)) {
+                    if (Is$1.object(data)) {
                         data = JSON.stringify(data);
                     }
                     http.send(data);
@@ -430,281 +522,6 @@ var Orbis = (function (exports) {
     HTTP.headers = {
         'Content-Type': 'application/json'
     };
-
-    var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2018 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://weejs.lcluber.com
-    */
-
-    var Dom = function () {
-        function Dom() {
-            _classCallCheck$3(this, Dom);
-        }
-
-        _createClass$3(Dom, null, [{
-            key: 'scrollToBottom',
-            value: function scrollToBottom(HtmlElement) {
-                HtmlElement.scrollTop = HtmlElement.scrollHeight;
-            }
-        }, {
-            key: 'findById',
-            value: function findById(id) {
-                return document.getElementById(id);
-            }
-        }, {
-            key: 'showById',
-            value: function showById(a) {
-                this.findById(a).style.display = 'block';
-            }
-        }, {
-            key: 'hideById',
-            value: function hideById(a) {
-                this.findById(a).style.display = 'none';
-            }
-        }, {
-            key: 'showOverflow',
-            value: function showOverflow() {
-                document.body.style.overflow = 'visible';
-            }
-        }, {
-            key: 'hideOverflow',
-            value: function hideOverflow() {
-                document.body.style.overflow = 'hidden';
-            }
-        }, {
-            key: 'getInputValue',
-            value: function getInputValue(a) {
-                return this.findById(a).value;
-            }
-        }, {
-            key: 'clearInputValue',
-            value: function clearInputValue(a) {
-                this.findById(a).value = '';
-            }
-        }, {
-            key: 'focusOn',
-            value: function focusOn(a) {
-                this.findById(a).focus();
-            }
-        }, {
-            key: 'addHTMLElement',
-            value: function addHTMLElement(parentElement, childElementType, childElementOptions) {
-                var newElement = document.createElement(childElementType);
-                if (childElementOptions !== undefined) {
-                    Object.keys(childElementOptions).forEach(function (key) {
-                        if (key === 'textContent' || key === 'innerHTML') {
-                            newElement[key] = childElementOptions[key];
-                        } else {
-                            newElement.setAttribute(key, childElementOptions[key]);
-                        }
-                    });
-                }
-                parentElement.appendChild(newElement);
-                return newElement;
-            }
-        }]);
-
-        return Dom;
-    }();
-
-    var Bind = function () {
-        function Bind(element, data) {
-            _classCallCheck$3(this, Bind);
-
-            this.data = data;
-            this.element = element;
-            this.element.value = data;
-            this.element.addEventListener('change', this, false);
-        }
-
-        _createClass$3(Bind, [{
-            key: 'handleEvent',
-            value: function handleEvent(event) {
-                switch (event.type) {
-                    case 'change':
-                        this.change(this.element.value);
-                }
-            }
-        }, {
-            key: 'change',
-            value: function change(value) {
-                this.data = value;
-                this.element.value = value;
-            }
-        }]);
-
-        return Bind;
-    }();
-
-    var String = function () {
-        function String() {
-            _classCallCheck$3(this, String);
-        }
-
-        _createClass$3(String, null, [{
-            key: 'ucfirst',
-            value: function ucfirst(string) {
-                return string.charAt(0).toUpperCase() + string.slice(1);
-            }
-        }, {
-            key: 'toASCII',
-            value: function toASCII(code) {
-                return code.charCodeAt(0);
-            }
-        }]);
-
-        return String;
-    }();
-
-    var File = function () {
-        function File() {
-            _classCallCheck$3(this, File);
-        }
-
-        _createClass$3(File, null, [{
-            key: 'load',
-            value: function load(path) {
-                return HTTP.get(path);
-            }
-        }, {
-            key: 'removeTrailingSlash',
-            value: function removeTrailingSlash(path) {
-                return path.replace(/\/+$/, '');
-            }
-        }, {
-            key: 'getName',
-            value: function getName(path) {
-                return path.replace(/^.*[\\\/]/, '');
-            }
-        }, {
-            key: 'getExtension',
-            value: function getExtension(path) {
-                return path.split('.').pop();
-            }
-        }, {
-            key: 'getDirectory',
-            value: function getDirectory(path) {
-                return path.replace(/[^\\\/]*$/, '');
-            }
-        }, {
-            key: 'checkExtension',
-            value: function checkExtension(extension, validExtensions) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = validExtensions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var validExtension = _step.value;
-
-                        if (extension === validExtension) {
-                            return true;
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
-                return false;
-            }
-        }]);
-
-        return File;
-    }();
-
-    var Img = function () {
-        function Img() {
-            _classCallCheck$3(this, Img);
-        }
-
-        _createClass$3(Img, null, [{
-            key: 'load',
-            value: function load(path) {
-                return new Promise(function (resolve, reject) {
-                    var img = new Image();
-                    img.src = path;
-                    img.name = File.getName(path);
-                    Logger.info('xhr processing starting (' + path + ')');
-                    img.addEventListener('load', function () {
-                        Logger.info('xhr done successfully (' + path + ')');
-                        resolve(img);
-                    });
-                    img.addEventListener('error', function () {
-                        Logger.error('xhr failed (' + path + ')');
-                        reject(new Error('xhr failed (' + path + ')'));
-                    });
-                });
-            }
-        }]);
-
-        return Img;
-    }();
-
-    var Sound = function () {
-        function Sound() {
-            _classCallCheck$3(this, Sound);
-        }
-
-        _createClass$3(Sound, null, [{
-            key: 'load',
-            value: function load(path) {
-                return new Promise(function (resolve, reject) {
-                    var snd = new Audio();
-                    snd.src = path;
-                    Logger.info('xhr processing starting (' + path + ')');
-                    snd.addEventListener('canplaythrough', function () {
-                        Logger.info('xhr done successfully (' + path + ')');
-                        resolve(snd);
-                    }, false);
-                    snd.addEventListener('canplay', function () {
-                        Logger.info('xhr done successfully (' + path + ')');
-                        resolve(snd);
-                    }, false);
-                    snd.addEventListener('error', function () {
-                        Logger.error('xhr failed (' + path + ')');
-                        reject(new Error('xhr failed (' + path + ')'));
-                    }, false);
-                });
-            }
-        }]);
-
-        return Sound;
-    }();
 
     var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -815,7 +632,502 @@ var Orbis = (function (exports) {
     Logger$1.messages = [];
     Logger$1.nbMessages = 0;
 
+    var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
     function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2018 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://weejs.lcluber.com
+    */
+
+    var Dom = function () {
+        function Dom() {
+            _classCallCheck$5(this, Dom);
+        }
+
+        _createClass$5(Dom, null, [{
+            key: 'scrollToBottom',
+            value: function scrollToBottom(HtmlElement) {
+                HtmlElement.scrollTop = HtmlElement.scrollHeight;
+            }
+        }, {
+            key: 'scrollToTop',
+            value: function scrollToTop(HtmlElement) {
+                HtmlElement.scrollTop = 0;
+            }
+        }, {
+            key: 'findById',
+            value: function findById(id) {
+                return document.getElementById(id);
+            }
+        }, {
+            key: 'findByClass',
+            value: function findByClass(className) {
+                return this.arrayFrom(document.getElementsByClassName(className));
+            }
+        }, {
+            key: 'findByTag',
+            value: function findByTag(tagName) {
+                return this.arrayFrom(document.getElementsByTagName(tagName));
+            }
+        }, {
+            key: 'showElement',
+            value: function showElement(element) {
+                return this.styleElement(element, 'display', 'block');
+            }
+        }, {
+            key: 'hideElement',
+            value: function hideElement(element) {
+                return this.styleElement(element, 'display', 'none');
+            }
+        }, {
+            key: 'styleElement',
+            value: function styleElement(element, parameter, value) {
+                var htmlelement = this.checkElement(element);
+                if (htmlelement) {
+                    htmlelement.style[parameter] = value;
+                }
+                return htmlelement;
+            }
+        }, {
+            key: 'showOverflow',
+            value: function showOverflow() {
+                document.body.style.overflow = 'visible';
+            }
+        }, {
+            key: 'hideOverflow',
+            value: function hideOverflow() {
+                document.body.style.overflow = 'hidden';
+            }
+        }, {
+            key: 'getInputValue',
+            value: function getInputValue(element) {
+                var htmlelement = this.checkElement(element);
+                if (htmlelement) {
+                    return htmlelement.value;
+                }
+                return null;
+            }
+        }, {
+            key: 'clearInputValue',
+            value: function clearInputValue(element) {
+                var htmlelement = this.checkElement(element);
+                if (htmlelement) {
+                    htmlelement.value = '';
+                }
+                return htmlelement;
+            }
+        }, {
+            key: 'focusOn',
+            value: function focusOn(element) {
+                var htmlelement = this.checkElement(element);
+                if (htmlelement) {
+                    htmlelement.focus();
+                }
+                return htmlelement;
+            }
+        }, {
+            key: 'addHTMLElement',
+            value: function addHTMLElement(parentElement, childElementType, childElementAttributes) {
+                var parentHtmlElement = this.checkElement(parentElement);
+                if (parentHtmlElement) {
+                    var newElement = document.createElement(childElementType);
+                    if (childElementAttributes) {
+                        Object.keys(childElementAttributes).forEach(function (key) {
+                            if (key === 'textContent' || key === 'innerHTML') {
+                                newElement[key] = childElementAttributes[key];
+                            } else {
+                                newElement.setAttribute(key, childElementAttributes[key]);
+                            }
+                        });
+                    }
+                    parentHtmlElement.appendChild(newElement);
+                    return newElement;
+                }
+                return null;
+            }
+        }, {
+            key: 'clearHTMLElement',
+            value: function clearHTMLElement(element) {
+                var htmlelement = this.checkElement(element);
+                if (htmlelement) {
+                    htmlelement.innerHTML = '';
+                }
+                return htmlelement;
+            }
+        }, {
+            key: 'arrayFrom',
+            value: function arrayFrom(HTMLCollection) {
+                var elements = [];
+                for (var i = 0; i < HTMLCollection.length; i++) {
+                    elements.push(HTMLCollection[i]);
+                }
+                return elements;
+            }
+        }, {
+            key: 'checkElement',
+            value: function checkElement(element) {
+                if (Is.string(element)) {
+                    return this.findById(element);
+                }
+                return element;
+            }
+        }]);
+
+        return Dom;
+    }();
+
+    var Binding = function () {
+        function Binding(elementId, value) {
+            _classCallCheck$5(this, Binding);
+
+            this._value = '';
+            this.elements = [];
+            var element = Dom.findById(elementId);
+            if (element) {
+                this.elements[0] = element;
+            } else {
+                this.elements = Dom.findByClass(elementId);
+            }
+            this.value = value;
+        }
+
+        _createClass$5(Binding, [{
+            key: 'update',
+            value: function update(value) {
+                this.value = value;
+            }
+        }, {
+            key: 'updateDom',
+            value: function updateDom() {
+                if (this.elements) {
+                    var str = this._value;
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
+
+                    try {
+                        for (var _iterator = this.elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var element = _step.value;
+
+                            if (element.hasAttribute('value')) {
+                                element.value = str;
+                            } else {
+                                var pattern = /<\s*.*[^>]*>(.*?)<\s*.*\s*>/ig;
+                                if (this._value && str.match(pattern)) {
+                                    element.innerHTML = str;
+                                } else {
+                                    element.textContent = str;
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
+                            }
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
+                            }
+                        }
+                    }
+                }
+            }
+        }, {
+            key: 'value',
+            set: function set(value) {
+                this._value = value;
+                this.updateDom();
+            },
+            get: function get() {
+                return this._value;
+            }
+        }]);
+
+        return Binding;
+    }();
+
+    var String = function () {
+        function String() {
+            _classCallCheck$5(this, String);
+        }
+
+        _createClass$5(String, null, [{
+            key: 'ucfirst',
+            value: function ucfirst(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+        }, {
+            key: 'toASCII',
+            value: function toASCII(code) {
+                return code.charCodeAt(0);
+            }
+        }]);
+
+        return String;
+    }();
+
+    var File = function () {
+        function File() {
+            _classCallCheck$5(this, File);
+        }
+
+        _createClass$5(File, null, [{
+            key: 'load',
+            value: function load(path) {
+                return HTTP.get(path);
+            }
+        }, {
+            key: 'removeTrailingSlash',
+            value: function removeTrailingSlash(path) {
+                return path.replace(/\/+$/, '');
+            }
+        }, {
+            key: 'getName',
+            value: function getName(path) {
+                return path.replace(/^.*[\\\/]/, '');
+            }
+        }, {
+            key: 'getExtension',
+            value: function getExtension(path) {
+                return path.split('.').pop();
+            }
+        }, {
+            key: 'getDirectory',
+            value: function getDirectory(path) {
+                return path.replace(/[^\\\/]*$/, '');
+            }
+        }, {
+            key: 'checkExtension',
+            value: function checkExtension(extension, validExtensions) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = validExtensions[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var validExtension = _step2.value;
+
+                        if (extension === validExtension) {
+                            return true;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+
+                return false;
+            }
+        }]);
+
+        return File;
+    }();
+
+    var Img = function () {
+        function Img() {
+            _classCallCheck$5(this, Img);
+        }
+
+        _createClass$5(Img, null, [{
+            key: 'load',
+            value: function load(path) {
+                return new Promise(function (resolve, reject) {
+                    var img = new Image();
+                    img.src = path;
+                    img.name = File.getName(path);
+                    Logger$1.info('xhr processing starting (' + path + ')');
+                    img.addEventListener('load', function () {
+                        Logger$1.info('xhr done successfully (' + path + ')');
+                        resolve(img);
+                    });
+                    img.addEventListener('error', function () {
+                        Logger$1.error('xhr failed (' + path + ')');
+                        reject(new Error('xhr failed (' + path + ')'));
+                    });
+                });
+            }
+        }]);
+
+        return Img;
+    }();
+
+    var Sound = function () {
+        function Sound() {
+            _classCallCheck$5(this, Sound);
+        }
+
+        _createClass$5(Sound, null, [{
+            key: 'load',
+            value: function load(path) {
+                return new Promise(function (resolve, reject) {
+                    var snd = new Audio();
+                    snd.src = path;
+                    Logger$1.info('xhr processing starting (' + path + ')');
+                    snd.addEventListener('canplaythrough', function () {
+                        Logger$1.info('xhr done successfully (' + path + ')');
+                        resolve(snd);
+                    }, false);
+                    snd.addEventListener('canplay', function () {
+                        Logger$1.info('xhr done successfully (' + path + ')');
+                        resolve(snd);
+                    }, false);
+                    snd.addEventListener('error', function () {
+                        Logger$1.error('xhr failed (' + path + ')');
+                        reject(new Error('xhr failed (' + path + ')'));
+                    }, false);
+                });
+            }
+        }]);
+
+        return Sound;
+    }();
+
+    var _createClass$6 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2015 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://mouettejs.lcluber.com
+    */
+
+    var LEVELS$2 = {
+        info: { id: 1, name: 'info', color: '#28a745' },
+        trace: { id: 2, name: 'trace', color: '#17a2b8' },
+        warn: { id: 3, name: 'warn', color: '#ffc107' },
+        error: { id: 4, name: 'error', color: '#dc3545' },
+        off: { id: 99, name: 'off', color: null }
+    };
+
+    var Message$2 = function () {
+        function Message(level, content) {
+            _classCallCheck$6(this, Message);
+
+            this.id = level.id;
+            this.name = level.name;
+            this.color = level.color;
+            this.content = content;
+        }
+
+        _createClass$6(Message, [{
+            key: 'display',
+            value: function display() {
+                console[this.name]('%c' + this.content, 'color:' + this.color + ';');
+            }
+        }]);
+
+        return Message;
+    }();
+
+    var Logger$2 = function () {
+        function Logger() {
+            _classCallCheck$6(this, Logger);
+        }
+
+        _createClass$6(Logger, [{
+            key: 'level',
+            set: function set(name) {
+                Logger._level = LEVELS$2.hasOwnProperty(name) ? LEVELS$2[name] : LEVELS$2.info;
+            },
+            get: function get() {
+                return Logger._level.name;
+            }
+        }], [{
+            key: 'info',
+            value: function info(message) {
+                Logger.log(LEVELS$2.info, message);
+            }
+        }, {
+            key: 'trace',
+            value: function trace(message) {
+                Logger.log(LEVELS$2.trace, message);
+            }
+        }, {
+            key: 'warn',
+            value: function warn(message) {
+                Logger.log(LEVELS$2.warn, message);
+            }
+        }, {
+            key: 'error',
+            value: function error(message) {
+                Logger.log(LEVELS$2.error, message);
+            }
+        }, {
+            key: 'log',
+            value: function log(level, messageContent) {
+                var message = new Message$2(level, messageContent);
+                this.messages.push(message);
+                this.nbMessages++;
+                if (this._level.id <= message.id) {
+                    message.display();
+                }
+            }
+        }]);
+
+        return Logger;
+    }();
+
+    Logger$2._level = LEVELS$2.info;
+    Logger$2.messages = [];
+    Logger$2.nbMessages = 0;
+
+    function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -845,7 +1157,7 @@ var Orbis = (function (exports) {
     var FSM = function FSM(events) {
         var _this = this;
 
-        _classCallCheck$5(this, FSM);
+        _classCallCheck$7(this, FSM);
 
         this.state = events[0].from;
         var _iteratorNormalCompletion = true;
@@ -858,13 +1170,13 @@ var Orbis = (function (exports) {
 
                 if (!_this.hasOwnProperty(event.name)) {
                     _this[event.name] = function () {
-                        Logger$1.info('- Event ' + event.name + ' triggered');
+                        Logger$2.info('- Event ' + event.name + ' triggered');
                         if (_this.state === event.from) {
                             _this.state = event.to;
-                            Logger$1.info('from ' + event.from + ' to ' + _this.state);
+                            Logger$2.info('from ' + event.from + ' to ' + _this.state);
                             return true;
                         }
-                        Logger$1.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
+                        Logger$2.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
                         return false;
                     };
                 }
@@ -966,27 +1278,15 @@ var Orbis = (function (exports) {
             this.target = 0;
             this.speed = 40;
             this.nbAssets = 0;
-            this.bar = null;
-            this.text = null;
-            if (barId) {
-                var element = Dom.findById(barId);
-                if (element) {
-                    this.bar = new Bind(element, '0');
-                }
-            }
-            if (textId) {
-                var element = Dom.findById(textId);
-                if (element) {
-                    this.text = new Bind(element, 'Loading started');
-                }
-            }
+            this.bar = barId ? new Binding(barId, 0) : null;
+            this.text = textId ? new Binding(textId, 'Loading started') : null;
         }
         Progress.prototype.update = function (text) {
             this.total++;
             this.rate = this.total / this.nbAssets;
             this.target = Math.round(this.rate * 100);
             if (this.text) {
-                this.text.change(text);
+                this.text.update(text);
             }
         };
         Progress.prototype.updateBar = function (delta) {
@@ -996,10 +1296,10 @@ var Orbis = (function (exports) {
                 this.percentage = this.target;
             }
             if (this.bar) {
-                this.bar.change(this.percentage);
+                this.bar.update(this.percentage);
             }
             if (this.percentage === 100 && this.text) {
-                this.text.change('Loading complete');
+                this.text.update('Loading complete');
             }
             return this.percentage;
         };
@@ -1023,6 +1323,7 @@ var Orbis = (function (exports) {
             this.tick = this.default.tick;
             this.maxPendingRequests = this.default.maxPending;
             this.progress = new Progress(progressBarId, progressTextId);
+            this.createAssets();
         }
         Loader.prototype.getAsset = function (name) {
             for (var property in this.assets) {
@@ -1045,7 +1346,6 @@ var Orbis = (function (exports) {
         };
         Loader.prototype.launch = function () {
             var _this = this;
-            this.createAssets();
             return new Promise(function (resolve, reject) {
                 if (_this.progress.nbAssets) {
                     var intervalID_1 = setInterval(function () {
@@ -1081,10 +1381,12 @@ var Orbis = (function (exports) {
                         var file = _a[_i];
                         if (!file.asset && file.hasOwnProperty('name')) {
                             var extension = File.getExtension(file.name);
-                            var type_1 = this.getAssetType(extension);
-                            if (type_1) {
-                                file.asset = new Asset(this.path + '/' + folder, file.name, extension, type_1);
-                                this.progress.nbAssets++;
+                            if (extension) {
+                                var type_1 = this.getAssetType(extension);
+                                if (type_1) {
+                                    file.asset = new Asset(this.path + '/' + folder, file.name, extension, type_1);
+                                    this.progress.nbAssets++;
+                                }
                             }
                         }
                     }

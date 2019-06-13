@@ -70,6 +70,8 @@ export class Loader {
     this.tick               = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
     this.progress           = new Progress(progressBarId, progressTextId);
+
+    this.createAssets();
   }
 
   // public setTick(duration: number): void {
@@ -101,7 +103,6 @@ export class Loader {
   }
 
   public launch(): Promise<void> {
-    this.createAssets();
     return new Promise((resolve: Function, reject: Function) => {
       if(this.progress.nbAssets) {
         let intervalID = setInterval(() => {
@@ -138,10 +139,12 @@ export class Loader {
         for (let file of type.files) {
           if (!file.asset && file.hasOwnProperty('name')) {
             let extension = File.getExtension(file.name);
-            let type = this.getAssetType(extension);
-            if (type) {
-              file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
-              this.progress.nbAssets ++;
+            if (extension) {
+              let type = this.getAssetType(extension);
+              if (type) {
+                file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
+                this.progress.nbAssets ++;
+              }
             }
           }
         }
