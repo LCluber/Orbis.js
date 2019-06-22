@@ -1,19 +1,26 @@
-import {Binding} from '@lcluber/weejs';
+import {Binding, Dom} from '@lcluber/weejs';
+import {Utils} from '@lcluber/type6js';
+import {Player} from '@lcluber/frameratjs';
 
 export class Progress {
 
-  rate              : number;
-  target            : number;
-  total             : number;
+  private rate              : number;
+  private target            : number;
+  private total             : number;
 
-  percentage        : number;
-  speed             : number;//pixels per seconds
-  nbAssets          : number;
+  private percentage        : number;
+  private speed             : number;//pixels per seconds
+  public nbAssets          : number;
 
-  bar               : Binding|null;
-  text              : Binding|null;//lastFileloaded
+  private bar               : Binding|null;
+  private barWidth          : number;
+  private number            : Binding|null;
+  private text              : Binding|null;
 
-  constructor( barId: string|null, textId: string|null/*, nbAssets: number*/ ) {
+  private animation         : Player|null;
+  public finished   : boolean;
+
+  constructor( barId: string|null, textId: string|null ) {
 
     this.rate       = 0.0;
     this.total      = 0;
@@ -21,8 +28,39 @@ export class Progress {
     this.target     = 0;
     this.speed      = 40;//pixels per seconds
     this.nbAssets   = 0;
-    this.bar        = barId ? new Binding(barId, 0) : null;
-    this.text       = textId ? new Binding(textId, 'Loading started') : null;
+    this.barWidth   = 0;
+    this.finished   = false;
+    this.bar        = null;
+    this.number     = null;
+    this.animation  = null;
+    if (barId) {
+      let bar = Dom.findById(barId);
+      if (bar) {
+        this.barWidth  = bar.clientWidth;
+        let percentBar = bar.children[1];
+        this.bar       = percentBar ? new Binding(percentBar as HTMLElement, 'style.width', '0px') : null;
+        let number     = bar.children[0];
+        this.number    = number ? new Binding(number as HTMLElement, '', 0) : null;
+        this.animation = new Player(this.animateBar, 0);
+        this.animation.setScope(this);
+      }
+    }
+    this.text = textId ? new Binding(textId, '', 'Loading') : null;
+  }
+
+  private animateBar() {
+    if (this.animation) {
+      this.finished = this.updateBar(this.animation.getDelta());
+      if(!this.finished) {
+        this.animation.requestNewFrame();
+      }
+    }
+  }
+
+  public start(){
+    if (this.animation) {
+      this.animation.play();
+    }
   }
 
   public update(text: string): void {
@@ -34,19 +72,28 @@ export class Progress {
     }
   }
 
-  public updateBar(delta: number): number {
-    delta *= 0.001;//millisecond to second
+  public updateBar(delta: number): boolean {
     this.percentage += this.speed * delta;
+    let flooredPercentage = Utils.floor(this.percentage,0);
     if (this.percentage >= this.target) {
       this.percentage = this.target;
     }
-    if(this.bar) {
-      this.bar.update(this.percentage);
+    if (this.bar) {
+      this.bar.update(Utils.map(this.percentage, 0, 100, 0, this.barWidth)+'px');
     }
-    if (this.percentage === 100 && this.text) {
-      this.text.update('Loading complete');
+    if (this.number) {
+      this.number.update( flooredPercentage + '%');
     }
-    return this.percentage ;
+    if (flooredPercentage === 100) {
+      if (this.animation) {
+        this.animation.stop();
+      }
+      if ( this.text ) {
+        this.text.update('Loading complete');
+      }
+      return true;
+    }
+    return false ;
   }
 
 }

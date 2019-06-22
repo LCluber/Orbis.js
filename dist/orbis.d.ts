@@ -22,7 +22,7 @@
 *
 * http://orbisjs.lcluber.com
 */
-
+import { File, Img, Sound } from '@lcluber/weejs';
 export declare class Ajax {
     static file: File;
     static img: Img;
@@ -74,21 +74,26 @@ export declare class Loader {
     private sendRequest;
     private getNextAssetToLoad;
 }
-
 export declare class Progress {
-    rate: number;
-    target: number;
-    total: number;
-    percentage: number;
-    speed: number;
+    private rate;
+    private target;
+    private total;
+    private percentage;
+    private speed;
     nbAssets: number;
-    bar: Binding | null;
-    text: Binding | null;
+    private bar;
+    private barWidth;
+    private number;
+    private text;
+    private animation;
+    finished: boolean;
     constructor(barId: string | null, textId: string | null);
+    private animateBar;
+    start(): void;
     update(text: string): void;
-    updateBar(delta: number): number;
+    updateBar(delta: number): boolean;
 }
-
+import { FSM } from '@lcluber/taipanjs';
 
 export declare class Request {
     fsm: FSM;

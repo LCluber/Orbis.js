@@ -1,3 +1,8 @@
+Version 0.7.0 (June 22th 2019)
+-----------------------------
+ * Easier progress bar integration.
+ * Fixed declaration file.
+
 Version 0.6.1 (June 13th 2019)
 -----------------------------
  * Better management of assets already loaded.

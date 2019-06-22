@@ -41,7 +41,7 @@ export class Loader {
   // logs             : {},
   validExtensions : ValidExtensions;
 
-  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string) {
+  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string/*, progressNumberId: string*/) {
 
     this.default = {
       maxPending : 6,
@@ -54,16 +54,6 @@ export class Loader {
       sound : ['mp3', 'ogg', 'wav']
     };
 
-    // if (Check.isFunction(onProgress)) {
-    //   this.onProgress = onProgress;
-    // }
-    //else
-      //_this.logs.add('onProgress parameter is not a function');
-
-    // if (Check.isFunction(onComplete)) {
-    //   this.onComplete = onComplete;
-    // }
-      //_this.logs.add('onComplete parameter is not a function');
     this.assets             = assets;
     this.path               = File.removeTrailingSlash(assetsPath);
     this.pendingRequests    = 0;
@@ -105,10 +95,11 @@ export class Loader {
   public launch(): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {
       if(this.progress.nbAssets) {
+        this.progress.start();
         let intervalID = setInterval(() => {
           this.sendRequest();
-          let percentage = this.progress.updateBar(this.tick);
-          if (percentage === 100) {
+          // let percentage = this.progress.updateBar();
+          if (this.progress.finished) {
             clearInterval(intervalID);
             resolve();
           }

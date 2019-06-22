@@ -1,6 +1,6 @@
 {
   "name": "@lcluber/orbisjs",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Asynchronous assets loader written in Javascript",
   "keywords": [
     "assets loader",
@@ -36,19 +36,21 @@
     "dist/"
   ],
   "dependencies": {
+    "@lcluber/mouettejs": "0.2.8",
+    "@lcluber/taipanjs": "0.3.8",
+    "@lcluber/type6js": "1.0.6",
+    "@lcluber/weejs": "0.2.13",
+    "@lcluber/frameratjs": "0.3.7",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
     "debug": "3.1.0",
     "express": "4.16.3",
-    "pug": "2.0.3",
-    "morgan": "1.9.0",
-    "serve-favicon": "2.5.0",
     "i18next": "11.2.3",
     "i18next-express-middleware": "1.1.1",
     "i18next-node-fs-backend": "1.0.0",
-    "@lcluber/mouettejs": "0.2.8",
-    "@lcluber/taipanjs": "0.3.8",
-    "@lcluber/weejs": "0.2.11"
+    "morgan": "1.9.0",
+    "pug": "2.0.3",
+    "serve-favicon": "2.5.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.3.1",
