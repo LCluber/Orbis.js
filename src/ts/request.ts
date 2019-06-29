@@ -1,4 +1,4 @@
-import {Logger} from '@lcluber/mouettejs';
+import {Logger, Group} from '@lcluber/mouettejs';
 import {FSM} from '@lcluber/taipanjs';
 import {Ajax} from './ajax';
 
@@ -6,6 +6,7 @@ export class Request {
 
   fsm : FSM;
   ajax : Ajax;
+  log : Group;
 
   constructor() {
     this.fsm = new FSM([
@@ -14,6 +15,7 @@ export class Request {
                   { name: 'error',   from: 'pending', to: 'error'   }
                 ]);
     this.ajax = Ajax;
+    this.log = Logger.getGroup('Orbis') || Logger.addGroup('Orbis');
   }
 
   public send(path: string, type: string): Promise<HTMLImageElement|HTMLAudioElement|string|boolean> {
@@ -28,7 +30,7 @@ export class Request {
         (err: Error) => {
           //console.log('error', path);
           //console.log('error', err.message);
-          Logger.error(err.message);
+          this.log.error(err.message);
           this.fsm['error']();
           return false;
         }

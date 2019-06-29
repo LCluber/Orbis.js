@@ -41,6 +41,7 @@ export declare class Asset {
     getRequestStatus(): string;
     isRequestSent(): boolean;
 }
+import { Group } from '@lcluber/mouettejs';
 
 
 export declare type ValidExtensions = {
@@ -65,6 +66,7 @@ export declare class Loader {
     maxPendingRequests: number;
     default: Default;
     validExtensions: ValidExtensions;
+    log: Group;
     constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string);
     getAsset(name: string): Asset | false;
     getList(type: string): Asset[] | false;
@@ -93,11 +95,13 @@ export declare class Progress {
     update(text: string): void;
     updateBar(delta: number): boolean;
 }
+import { Group } from '@lcluber/mouettejs';
 import { FSM } from '@lcluber/taipanjs';
 
 export declare class Request {
     fsm: FSM;
     ajax: Ajax;
+    log: Group;
     constructor();
     send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | boolean>;
 }

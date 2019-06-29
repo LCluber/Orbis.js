@@ -1,3 +1,4 @@
+import {Logger, Group} from '@lcluber/mouettejs';
 import {File}     from '@lcluber/weejs';
 // import {Is}       from '@lcluber/chjs';
 // import {Logger}   from '@lcluber/mouettejs';
@@ -40,8 +41,9 @@ export class Loader {
 
   // logs             : {},
   validExtensions : ValidExtensions;
+  log : Group;
 
-  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string/*, progressNumberId: string*/) {
+  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string) {
 
     this.default = {
       maxPending : 6,
@@ -60,7 +62,8 @@ export class Loader {
     this.tick               = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
     this.progress           = new Progress(progressBarId, progressTextId);
-
+    this.log                = Logger.addGroup('Orbis');
+    // Logger.setLevel('error');
     this.createAssets();
   }
 

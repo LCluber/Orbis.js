@@ -1,6 +1,6 @@
 {
   "name": "@lcluber/orbisjs",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Asynchronous assets loader written in Javascript",
   "keywords": [
     "assets loader",
@@ -36,11 +36,11 @@
     "dist/"
   ],
   "dependencies": {
-    "@lcluber/mouettejs": "0.2.8",
-    "@lcluber/taipanjs": "0.3.8",
+    "@lcluber/mouettejs": "0.3.1",
+    "@lcluber/taipanjs": "0.3.10",
     "@lcluber/type6js": "1.0.6",
-    "@lcluber/weejs": "0.2.13",
-    "@lcluber/frameratjs": "0.3.7",
+    "@lcluber/weejs": "0.2.14",
+    "@lcluber/frameratjs": "0.3.8",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
     "debug": "3.1.0",

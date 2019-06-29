@@ -23,8 +23,8 @@
 * http://orbisjs.lcluber.com
 */
 
-import { Binding, Dom, File, Img, Sound } from '@lcluber/weejs';
 import { Logger } from '@lcluber/mouettejs';
+import { Binding, Dom, File, Img, Sound } from '@lcluber/weejs';
 import { FSM } from '@lcluber/taipanjs';
 
 class Ajax {
@@ -41,6 +41,7 @@ class Request {
             { name: 'error', from: 'pending', to: 'error' }
         ]);
         this.ajax = Ajax;
+        this.log = Logger.getGroup('Orbis') || Logger.addGroup('Orbis');
     }
     send(path, type) {
         if (this.fsm['send']()) {
@@ -48,7 +49,7 @@ class Request {
                 this.fsm['success']();
                 return response;
             }).catch((err) => {
-                Logger.error(err.message);
+                this.log.error(err.message);
                 this.fsm['error']();
                 return false;
             });
@@ -699,6 +700,7 @@ class Clock {
         this.minimumTick = 16.7;
         this.minimumTick = refreshRate ? Time$1.framePerSecondToMillisecond(refreshRate) : this.minimumTick;
         this.reset();
+        this.logger = Logger.addGroup('FrameRat');
     }
     reset() {
         this.now = 0;
@@ -713,9 +715,9 @@ class Clock {
     }
     log() {
         if (this.total) {
-            Logger.info('Elapsed time : ' + Utils$1.round(Time$1.millisecondToSecond(this.total), 2) + 'seconds');
-            Logger.info('ticks : ' + this.ticks);
-            Logger.info('Average FPS : ' + this.computeAverageFps());
+            this.logger.info('Elapsed time : ' + Utils$1.round(Time$1.millisecondToSecond(this.total), 2) + 'seconds');
+            this.logger.info('ticks : ' + this.ticks);
+            this.logger.info('Average FPS : ' + this.computeAverageFps());
         }
     }
     tick() {
@@ -892,6 +894,7 @@ class Loader {
         this.tick = this.default.tick;
         this.maxPendingRequests = this.default.maxPending;
         this.progress = new Progress(progressBarId, progressTextId);
+        this.log = Logger.addGroup('Orbis');
         this.createAssets();
     }
     getAsset(name) {

@@ -26,11 +26,222 @@
 var Orbis = (function (exports) {
     'use strict';
 
-    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
     var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
     function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2015 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://mouettejs.lcluber.com
+    */
+
+    var LEVELS = {
+        info: { id: 1, name: 'info', color: '#28a745' },
+        trace: { id: 2, name: 'trace', color: '#17a2b8' },
+        warn: { id: 3, name: 'warn', color: '#ffc107' },
+        error: { id: 4, name: 'error', color: '#dc3545' },
+        off: { id: 99, name: 'off', color: null }
+    };
+
+    function addZero(value) {
+        return value < 10 ? '0' + value : value;
+    }
+    function formatDate() {
+        var now = new Date();
+        var date = [addZero(now.getMonth() + 1), addZero(now.getDate()), now.getFullYear().toString().substr(-2)];
+        var time = [addZero(now.getHours()), addZero(now.getMinutes()), addZero(now.getSeconds())];
+        return date.join("/") + " " + time.join(":");
+    }
+
+    var Message = function () {
+        function Message(level, content) {
+            _classCallCheck(this, Message);
+
+            this.id = level.id;
+            this.name = level.name;
+            this.color = level.color;
+            this.content = content;
+            this.date = formatDate();
+        }
+
+        _createClass(Message, [{
+            key: 'display',
+            value: function display(groupName) {
+                console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
+            }
+        }]);
+
+        return Message;
+    }();
+
+    var Group = function () {
+        function Group(name, level) {
+            _classCallCheck(this, Group);
+
+            this.messages = [];
+            this.name = name;
+            this.messages = [];
+            this._level = level;
+        }
+
+        _createClass(Group, [{
+            key: 'info',
+            value: function info(message) {
+                this.log(LEVELS.info, message);
+            }
+        }, {
+            key: 'trace',
+            value: function trace(message) {
+                this.log(LEVELS.trace, message);
+            }
+        }, {
+            key: 'warn',
+            value: function warn(message) {
+                this.log(LEVELS.warn, message);
+            }
+        }, {
+            key: 'error',
+            value: function error(message) {
+                this.log(LEVELS.error, message);
+            }
+        }, {
+            key: 'log',
+            value: function log(level, messageContent) {
+                var message = new Message(level, messageContent);
+                this.messages.push(message);
+                if (this._level.id <= message.id) {
+                    message.display(this.name);
+                }
+            }
+        }, {
+            key: 'level',
+            set: function set(name) {
+                this._level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this._level;
+            },
+            get: function get() {
+                return this._level.name;
+            }
+        }]);
+
+        return Group;
+    }();
+
+    var Logger = function () {
+        function Logger() {
+            _classCallCheck(this, Logger);
+        }
+
+        _createClass(Logger, null, [{
+            key: 'setLevel',
+            value: function setLevel(name) {
+                Logger.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : Logger.level;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var group = _step.value;
+
+                        group.level = Logger.level.name;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        }, {
+            key: 'getLevel',
+            value: function getLevel() {
+                return Logger.level.name;
+            }
+        }, {
+            key: 'getGroup',
+            value: function getGroup(name) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var group = _step2.value;
+
+                        if (group.name === name) {
+                            return group;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }, {
+            key: 'addGroup',
+            value: function addGroup(name) {
+                return this.getGroup(name) || this.pushGroup(name);
+            }
+        }, {
+            key: 'pushGroup',
+            value: function pushGroup(name) {
+                var group = new Group(name, Logger.level);
+                Logger.groups.push(group);
+                return group;
+            }
+        }]);
+
+        return Logger;
+    }();
+
+    Logger.level = LEVELS.error;
+    Logger.groups = [];
+
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -59,10 +270,10 @@ var Orbis = (function (exports) {
 
     var Is = function () {
         function Is() {
-            _classCallCheck(this, Is);
+            _classCallCheck$1(this, Is);
         }
 
-        _createClass(Is, null, [{
+        _createClass$1(Is, null, [{
             key: 'json',
             value: function json(str) {
                 if (!this.string(str)) {
@@ -126,9 +337,9 @@ var Orbis = (function (exports) {
         return Is;
     }();
 
-    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -155,17 +366,17 @@ var Orbis = (function (exports) {
     * http://mouettejs.lcluber.com
     */
 
-    var LEVELS = [{ id: 1, name: 'info' }, { id: 2, name: 'trace' }, { id: 3, name: 'warn' }, { id: 4, name: 'error' }, { id: 99, name: 'off' }];
+    var LEVELS$1 = [{ id: 1, name: 'info' }, { id: 2, name: 'trace' }, { id: 3, name: 'warn' }, { id: 4, name: 'error' }, { id: 99, name: 'off' }];
 
-    var Message = function () {
+    var Message$1 = function () {
         function Message(levelName, content) {
-            _classCallCheck$1(this, Message);
+            _classCallCheck$2(this, Message);
 
             this.setLevel(levelName);
             this.content = content;
         }
 
-        _createClass$1(Message, [{
+        _createClass$2(Message, [{
             key: 'setLevel',
             value: function setLevel(name) {
                 this.level = this.findLevel(name);
@@ -188,7 +399,7 @@ var Orbis = (function (exports) {
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = LEVELS[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = LEVELS$1[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var level = _step.value;
 
                         if (level.name === name) {
@@ -210,19 +421,19 @@ var Orbis = (function (exports) {
                     }
                 }
 
-                return this.level ? this.level : LEVELS[0];
+                return this.level ? this.level : LEVELS$1[0];
             }
         }]);
 
         return Message;
     }();
 
-    var Logger = function () {
+    var Logger$1 = function () {
         function Logger() {
-            _classCallCheck$1(this, Logger);
+            _classCallCheck$2(this, Logger);
         }
 
-        _createClass$1(Logger, [{
+        _createClass$2(Logger, [{
             key: 'level',
             set: function set(name) {
                 Logger._level = Logger.findLevel(name);
@@ -267,7 +478,7 @@ var Orbis = (function (exports) {
         }, {
             key: 'addMessage',
             value: function addMessage(levelName, content) {
-                this.messages.push(new Message(levelName, content));
+                this.messages.push(new Message$1(levelName, content));
                 this.nbMessages++;
             }
         }, {
@@ -278,7 +489,7 @@ var Orbis = (function (exports) {
                 var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator2 = LEVELS[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    for (var _iterator2 = LEVELS$1[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                         var level = _step2.value;
 
                         if (level.name === name) {
@@ -300,23 +511,23 @@ var Orbis = (function (exports) {
                     }
                 }
 
-                return this._level ? this._level : LEVELS[0];
+                return this._level ? this._level : LEVELS$1[0];
             }
         }]);
 
         return Logger;
     }();
 
-    Logger._level = Logger.findLevel(LEVELS[0].name);
-    Logger.messages = [];
-    Logger.nbMessages = 0;
-    Logger.target = document.getElementById('Mouette');
+    Logger$1._level = Logger$1.findLevel(LEVELS$1[0].name);
+    Logger$1.messages = [];
+    Logger$1.nbMessages = 0;
+    Logger$1.target = document.getElementById('Mouette');
 
     var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-    var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -345,10 +556,10 @@ var Orbis = (function (exports) {
 
     var Is$1 = function () {
         function Is() {
-            _classCallCheck$2(this, Is);
+            _classCallCheck$3(this, Is);
         }
 
-        _createClass$2(Is, null, [{
+        _createClass$3(Is, null, [{
             key: 'json',
             value: function json(str) {
                 if (!this.string(str)) {
@@ -358,7 +569,7 @@ var Orbis = (function (exports) {
                 try {
                     json = JSON.parse(str);
                 } catch (e) {
-                    Logger.error(e);
+                    Logger$1.error(e);
                     return false;
                 }
                 return json;
@@ -375,6 +586,11 @@ var Orbis = (function (exports) {
                 return _object !== null && (typeof _object === 'undefined' ? 'undefined' : _typeof$1(_object)) === 'object';
             }
         }, {
+            key: 'array',
+            value: function array(_array) {
+                return _array !== null && _array.constructor === Array;
+            }
+        }, {
             key: 'ascii',
             value: function ascii(code, extended) {
                 return (extended ? /^[\x00-\xFF]*$/ : /^[\x00-\x7F]*$/).test(code);
@@ -383,6 +599,11 @@ var Orbis = (function (exports) {
             key: 'integer',
             value: function integer(value) {
                 return value === parseInt(value, 10);
+            }
+        }, {
+            key: 'float',
+            value: function float(value) {
+                return Number(value) === value && value % 1 !== 0;
             }
         }, {
             key: 'string',
@@ -394,9 +615,9 @@ var Orbis = (function (exports) {
         return Is;
     }();
 
-    var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -425,10 +646,10 @@ var Orbis = (function (exports) {
 
     var HTTP = function () {
         function HTTP() {
-            _classCallCheck$3(this, HTTP);
+            _classCallCheck$4(this, HTTP);
         }
 
-        _createClass$3(HTTP, null, [{
+        _createClass$4(HTTP, null, [{
             key: 'get',
             value: function get(url) {
                 return this.call('GET', url);
@@ -483,42 +704,48 @@ var Orbis = (function (exports) {
                 }
             }
         }, {
+            key: 'setResponseType',
+            value: function setResponseType(responseType) {
+                this.responseType = responseType;
+            }
+        }, {
             key: 'call',
             value: function call(method, url, data) {
                 var _this = this;
 
                 return new Promise(function (resolve, reject) {
+                    var msg = ['Aias xhr ', ' (' + method + ':' + url + ')'];
                     var http = new XMLHttpRequest();
-                    if (_this.noCache) {
-                        url += '?cache=' + new Date().getTime();
-                    }
+                    url += _this.noCache ? '?cache=' + new Date().getTime() : '';
                     http.open(method, url, _this.async);
-                    for (var property in _this.headers) {
-                        if (_this.headers.hasOwnProperty(property)) {
-                            http.setRequestHeader(property, _this.headers[property]);
-                        }
-                    }
+                    http.responseType = _this.responseType;
+                    _this.setRequestHeaders(http);
                     http.onreadystatechange = function () {
                         if (http.readyState == 4) {
                             if (http.status == 200) {
-                                Logger.info('xhr done successfully (' + url + ')');
+                                _this.log.info(msg[0] + 'successful' + msg[1]);
                                 resolve(http.responseText);
                             } else {
-                                Logger.error('xhr failed (' + url + ')');
+                                _this.log.error(msg[0] + 'failed' + msg[1]);
                                 reject(http.status);
                             }
                         }
                     };
-                    Logger.info('xhr processing starting (' + url + ')');
-                    if (data == undefined) {
-                        http.send();
-                        return;
-                    }
                     if (Is$1.object(data)) {
                         data = JSON.stringify(data);
                     }
-                    http.send(data);
+                    http.send(data || null);
+                    _this.log.info(msg[0] + 'sent' + msg[1]);
                 });
+            }
+        }, {
+            key: 'setRequestHeaders',
+            value: function setRequestHeaders(http) {
+                for (var property in this.headers) {
+                    if (this.headers.hasOwnProperty(property)) {
+                        http.setRequestHeader(property, this.headers[property]);
+                    }
+                }
             }
         }]);
 
@@ -527,118 +754,9 @@ var Orbis = (function (exports) {
 
     HTTP.async = true;
     HTTP.noCache = false;
-    HTTP.headers = {
-        'Content-Type': 'application/json'
-    };
-
-    var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://mouettejs.lcluber.com
-    */
-
-    var LEVELS$1 = {
-        info: { id: 1, name: 'info', color: '#28a745' },
-        trace: { id: 2, name: 'trace', color: '#17a2b8' },
-        warn: { id: 3, name: 'warn', color: '#ffc107' },
-        error: { id: 4, name: 'error', color: '#dc3545' },
-        off: { id: 99, name: 'off', color: null }
-    };
-
-    var Message$1 = function () {
-        function Message(level, content) {
-            _classCallCheck$4(this, Message);
-
-            this.id = level.id;
-            this.name = level.name;
-            this.color = level.color;
-            this.content = content;
-        }
-
-        _createClass$4(Message, [{
-            key: 'display',
-            value: function display() {
-                console[this.name]('%c' + this.content, 'color:' + this.color + ';');
-            }
-        }]);
-
-        return Message;
-    }();
-
-    var Logger$1 = function () {
-        function Logger() {
-            _classCallCheck$4(this, Logger);
-        }
-
-        _createClass$4(Logger, [{
-            key: 'level',
-            set: function set(name) {
-                Logger._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : LEVELS$1.info;
-            },
-            get: function get() {
-                return Logger._level.name;
-            }
-        }], [{
-            key: 'info',
-            value: function info(message) {
-                Logger.log(LEVELS$1.info, message);
-            }
-        }, {
-            key: 'trace',
-            value: function trace(message) {
-                Logger.log(LEVELS$1.trace, message);
-            }
-        }, {
-            key: 'warn',
-            value: function warn(message) {
-                Logger.log(LEVELS$1.warn, message);
-            }
-        }, {
-            key: 'error',
-            value: function error(message) {
-                Logger.log(LEVELS$1.error, message);
-            }
-        }, {
-            key: 'log',
-            value: function log(level, messageContent) {
-                var message = new Message$1(level, messageContent);
-                this.messages.push(message);
-                this.nbMessages++;
-                if (this._level.id <= message.id) {
-                    message.display();
-                }
-            }
-        }]);
-
-        return Logger;
-    }();
-
-    Logger$1._level = LEVELS$1.info;
-    Logger$1.messages = [];
-    Logger$1.nbMessages = 0;
+    HTTP.responseType = 'text';
+    HTTP.headers = {};
+    HTTP.log = Logger.addGroup('Aias');
 
     var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1034,17 +1152,19 @@ var Orbis = (function (exports) {
         _createClass$5(Img, null, [{
             key: 'load',
             value: function load(path) {
+                var _this = this;
+
                 return new Promise(function (resolve, reject) {
                     var img = new Image();
                     img.src = path;
                     img.name = File.getName(path);
-                    Logger$1.info('xhr processing starting (' + path + ')');
+                    _this.log.info('xhr processing starting (' + path + ')');
                     img.addEventListener('load', function () {
-                        Logger$1.info('xhr done successfully (' + path + ')');
+                        _this.log.info('xhr done successfully (' + path + ')');
                         resolve(img);
                     });
                     img.addEventListener('error', function () {
-                        Logger$1.error('xhr failed (' + path + ')');
+                        _this.log.error('xhr failed (' + path + ')');
                         reject(new Error('xhr failed (' + path + ')'));
                     });
                 });
@@ -1054,6 +1174,8 @@ var Orbis = (function (exports) {
         return Img;
     }();
 
+    Img.log = Logger.addGroup('Wee');
+
     var Sound = function () {
         function Sound() {
             _classCallCheck$5(this, Sound);
@@ -1062,20 +1184,22 @@ var Orbis = (function (exports) {
         _createClass$5(Sound, null, [{
             key: 'load',
             value: function load(path) {
+                var _this2 = this;
+
                 return new Promise(function (resolve, reject) {
                     var snd = new Audio();
                     snd.src = path;
-                    Logger$1.info('xhr processing starting (' + path + ')');
+                    _this2.log.info('xhr processing starting (' + path + ')');
                     snd.addEventListener('canplaythrough', function () {
-                        Logger$1.info('xhr done successfully (' + path + ')');
+                        _this2.log.info('xhr done successfully (' + path + ')');
                         resolve(snd);
                     }, false);
                     snd.addEventListener('canplay', function () {
-                        Logger$1.info('xhr done successfully (' + path + ')');
+                        _this2.log.info('xhr done successfully (' + path + ')');
                         resolve(snd);
                     }, false);
                     snd.addEventListener('error', function () {
-                        Logger$1.error('xhr failed (' + path + ')');
+                        _this2.log.error('xhr failed (' + path + ')');
                         reject(new Error('xhr failed (' + path + ')'));
                     }, false);
                 });
@@ -1085,116 +1209,9 @@ var Orbis = (function (exports) {
         return Sound;
     }();
 
-    var _createClass$6 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    Sound.log = Logger.addGroup('Wee');
 
     function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://mouettejs.lcluber.com
-    */
-
-    var LEVELS$2 = {
-        info: { id: 1, name: 'info', color: '#28a745' },
-        trace: { id: 2, name: 'trace', color: '#17a2b8' },
-        warn: { id: 3, name: 'warn', color: '#ffc107' },
-        error: { id: 4, name: 'error', color: '#dc3545' },
-        off: { id: 99, name: 'off', color: null }
-    };
-
-    var Message$2 = function () {
-        function Message(level, content) {
-            _classCallCheck$6(this, Message);
-
-            this.id = level.id;
-            this.name = level.name;
-            this.color = level.color;
-            this.content = content;
-        }
-
-        _createClass$6(Message, [{
-            key: 'display',
-            value: function display() {
-                console[this.name]('%c' + this.content, 'color:' + this.color + ';');
-            }
-        }]);
-
-        return Message;
-    }();
-
-    var Logger$2 = function () {
-        function Logger() {
-            _classCallCheck$6(this, Logger);
-        }
-
-        _createClass$6(Logger, [{
-            key: 'level',
-            set: function set(name) {
-                Logger._level = LEVELS$2.hasOwnProperty(name) ? LEVELS$2[name] : LEVELS$2.info;
-            },
-            get: function get() {
-                return Logger._level.name;
-            }
-        }], [{
-            key: 'info',
-            value: function info(message) {
-                Logger.log(LEVELS$2.info, message);
-            }
-        }, {
-            key: 'trace',
-            value: function trace(message) {
-                Logger.log(LEVELS$2.trace, message);
-            }
-        }, {
-            key: 'warn',
-            value: function warn(message) {
-                Logger.log(LEVELS$2.warn, message);
-            }
-        }, {
-            key: 'error',
-            value: function error(message) {
-                Logger.log(LEVELS$2.error, message);
-            }
-        }, {
-            key: 'log',
-            value: function log(level, messageContent) {
-                var message = new Message$2(level, messageContent);
-                this.messages.push(message);
-                this.nbMessages++;
-                if (this._level.id <= message.id) {
-                    message.display();
-                }
-            }
-        }]);
-
-        return Logger;
-    }();
-
-    Logger$2._level = LEVELS$2.info;
-    Logger$2.messages = [];
-    Logger$2.nbMessages = 0;
-
-    function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -1224,9 +1241,10 @@ var Orbis = (function (exports) {
     var FSM = function FSM(events) {
         var _this = this;
 
-        _classCallCheck$7(this, FSM);
+        _classCallCheck$6(this, FSM);
 
         this.state = events[0].from;
+        this.log = Logger.getGroup('Taipan') || Logger.addGroup('Taipan');
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -1237,13 +1255,13 @@ var Orbis = (function (exports) {
 
                 if (!_this.hasOwnProperty(event.name)) {
                     _this[event.name] = function () {
-                        Logger$2.info('- Event ' + event.name + ' triggered');
+                        _this.log.info('- Event ' + event.name + ' triggered');
                         if (_this.state === event.from) {
                             _this.state = event.to;
-                            Logger$2.info('from ' + event.from + ' to ' + _this.state);
+                            _this.log.info('from ' + event.from + ' to ' + _this.state);
                             return true;
                         }
-                        Logger$2.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
+                        _this.log.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
                         return false;
                     };
                 }
@@ -1280,6 +1298,7 @@ var Orbis = (function (exports) {
         function Request() {
             this.fsm = new FSM([{ name: 'send', from: 'idle', to: 'pending' }, { name: 'success', from: 'pending', to: 'success' }, { name: 'error', from: 'pending', to: 'error' }]);
             this.ajax = Ajax;
+            this.log = Logger.getGroup('Orbis') || Logger.addGroup('Orbis');
         }
         Request.prototype.send = function (path, type) {
             var _this = this;
@@ -1288,7 +1307,7 @@ var Orbis = (function (exports) {
                     _this.fsm['success']();
                     return response;
                 }).catch(function (err) {
-                    Logger.error(err.message);
+                    _this.log.error(err.message);
                     _this.fsm['error']();
                     return false;
                 });
@@ -1337,9 +1356,9 @@ var Orbis = (function (exports) {
         return Asset;
     }();
 
-    var _createClass$7 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$6 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -1368,10 +1387,10 @@ var Orbis = (function (exports) {
 
     var Utils = function () {
         function Utils() {
-            _classCallCheck$8(this, Utils);
+            _classCallCheck$7(this, Utils);
         }
 
-        _createClass$7(Utils, null, [{
+        _createClass$6(Utils, null, [{
             key: 'round',
             value: function round(x, decimals) {
                 decimals = Math.pow(10, decimals);
@@ -1481,10 +1500,10 @@ var Orbis = (function (exports) {
 
     var Trigonometry = function () {
         function Trigonometry() {
-            _classCallCheck$8(this, Trigonometry);
+            _classCallCheck$7(this, Trigonometry);
         }
 
-        _createClass$7(Trigonometry, null, [{
+        _createClass$6(Trigonometry, null, [{
             key: 'init',
             value: function init() {
                 Trigonometry.createRoundedPis();
@@ -1671,10 +1690,10 @@ var Orbis = (function (exports) {
 
     var Time = function () {
         function Time() {
-            _classCallCheck$8(this, Time);
+            _classCallCheck$7(this, Time);
         }
 
-        _createClass$7(Time, null, [{
+        _createClass$6(Time, null, [{
             key: 'millisecondToSecond',
             value: function millisecondToSecond(millisecond) {
                 return millisecond * 0.001;
@@ -1701,10 +1720,10 @@ var Orbis = (function (exports) {
 
     var Random = function () {
         function Random() {
-            _classCallCheck$8(this, Random);
+            _classCallCheck$7(this, Random);
         }
 
-        _createClass$7(Random, null, [{
+        _createClass$6(Random, null, [{
             key: 'float',
             value: function float(min, max) {
                 return min + Math.random() * (max - min);
@@ -1735,10 +1754,10 @@ var Orbis = (function (exports) {
 
     var Bezier = function () {
         function Bezier() {
-            _classCallCheck$8(this, Bezier);
+            _classCallCheck$7(this, Bezier);
         }
 
-        _createClass$7(Bezier, null, [{
+        _createClass$6(Bezier, null, [{
             key: 'quadratic',
             value: function quadratic(p0, p1, p2, t) {
                 var oneMinusT = 1 - t;
@@ -1758,7 +1777,7 @@ var Orbis = (function (exports) {
 
     var Vector2 = function () {
         function Vector2(x, y) {
-            _classCallCheck$8(this, Vector2);
+            _classCallCheck$7(this, Vector2);
 
             this._x = 0.0;
             this._y = 0.0;
@@ -1766,7 +1785,7 @@ var Orbis = (function (exports) {
             this.y = y || 0.0;
         }
 
-        _createClass$7(Vector2, [{
+        _createClass$6(Vector2, [{
             key: 'isOrigin',
             value: function isOrigin() {
                 return Utils.isOrigin(this.x) && Utils.isOrigin(this.y) ? true : false;
@@ -2139,7 +2158,7 @@ var Orbis = (function (exports) {
 
     var Circle = function () {
         function Circle(positionX, positionY, radius) {
-            _classCallCheck$8(this, Circle);
+            _classCallCheck$7(this, Circle);
 
             this.shape = 'circle';
             this._radius = 0.0;
@@ -2148,7 +2167,7 @@ var Orbis = (function (exports) {
             this.radius = radius;
         }
 
-        _createClass$7(Circle, [{
+        _createClass$6(Circle, [{
             key: 'clone',
             value: function clone() {
                 return new Circle(this.position.x, this.position.y, this.radius);
@@ -2225,7 +2244,7 @@ var Orbis = (function (exports) {
 
     var Rectangle = function () {
         function Rectangle(positionX, positionY, sizeX, sizeY) {
-            _classCallCheck$8(this, Rectangle);
+            _classCallCheck$7(this, Rectangle);
 
             this.shape = 'aabb';
             this.size = new Vector2(sizeX, sizeY);
@@ -2236,7 +2255,7 @@ var Orbis = (function (exports) {
             this.bottomRightCorner = new Vector2(positionX + this.halfSize.x, positionY + this.halfSize.y);
         }
 
-        _createClass$7(Rectangle, [{
+        _createClass$6(Rectangle, [{
             key: 'clone',
             value: function clone() {
                 return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -2353,7 +2372,7 @@ var Orbis = (function (exports) {
 
     var Vector3 = function () {
         function Vector3(x, y, z) {
-            _classCallCheck$8(this, Vector3);
+            _classCallCheck$7(this, Vector3);
 
             this._x = 0.0;
             this._y = 0.0;
@@ -2363,7 +2382,7 @@ var Orbis = (function (exports) {
             this.z = z || 0.0;
         }
 
-        _createClass$7(Vector3, [{
+        _createClass$6(Vector3, [{
             key: 'fromArray',
             value: function fromArray(array, offset) {
                 if (offset === undefined) {
@@ -2669,7 +2688,7 @@ var Orbis = (function (exports) {
 
     var Matrix4x3 = function () {
         function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
-            _classCallCheck$8(this, Matrix4x3);
+            _classCallCheck$7(this, Matrix4x3);
 
             this.m = new Float32Array(16);
             this.xAxis = new Vector3();
@@ -2678,7 +2697,7 @@ var Orbis = (function (exports) {
             this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
         }
 
-        _createClass$7(Matrix4x3, [{
+        _createClass$6(Matrix4x3, [{
             key: 'make',
             value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
                 this.m[0] = Utils.validate(x1 || 0.0);
@@ -2781,13 +2800,13 @@ var Orbis = (function (exports) {
 
     var Matrix4x4 = function () {
         function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
-            _classCallCheck$8(this, Matrix4x4);
+            _classCallCheck$7(this, Matrix4x4);
 
             this.m = new Float32Array(16);
             this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
         }
 
-        _createClass$7(Matrix4x4, [{
+        _createClass$6(Matrix4x4, [{
             key: 'make',
             value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
                 this.m[0] = Utils.validate(x1 || 0.0);
@@ -2899,9 +2918,9 @@ var Orbis = (function (exports) {
         return Matrix4x4;
     }();
 
-    var _createClass$8 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$7 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$9(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -2930,10 +2949,10 @@ var Orbis = (function (exports) {
 
     var Utils$1 = function () {
         function Utils() {
-            _classCallCheck$9(this, Utils);
+            _classCallCheck$8(this, Utils);
         }
 
-        _createClass$8(Utils, null, [{
+        _createClass$7(Utils, null, [{
             key: "round",
             value: function round(x, decimals) {
                 decimals = Math.pow(10, decimals);
@@ -3038,10 +3057,10 @@ var Orbis = (function (exports) {
 
     var Trigonometry$1 = function () {
         function Trigonometry() {
-            _classCallCheck$9(this, Trigonometry);
+            _classCallCheck$8(this, Trigonometry);
         }
 
-        _createClass$8(Trigonometry, null, [{
+        _createClass$7(Trigonometry, null, [{
             key: "init",
             value: function init() {
                 Trigonometry.createRoundedPis();
@@ -3228,10 +3247,10 @@ var Orbis = (function (exports) {
 
     var Time$1 = function () {
         function Time() {
-            _classCallCheck$9(this, Time);
+            _classCallCheck$8(this, Time);
         }
 
-        _createClass$8(Time, null, [{
+        _createClass$7(Time, null, [{
             key: "millisecondToSecond",
             value: function millisecondToSecond(millisecond) {
                 return millisecond * 0.001;
@@ -3258,10 +3277,10 @@ var Orbis = (function (exports) {
 
     var Random$1 = function () {
         function Random() {
-            _classCallCheck$9(this, Random);
+            _classCallCheck$8(this, Random);
         }
 
-        _createClass$8(Random, null, [{
+        _createClass$7(Random, null, [{
             key: "float",
             value: function float(min, max) {
                 return min + Math.random() * (max - min);
@@ -3292,10 +3311,10 @@ var Orbis = (function (exports) {
 
     var Bezier$1 = function () {
         function Bezier() {
-            _classCallCheck$9(this, Bezier);
+            _classCallCheck$8(this, Bezier);
         }
 
-        _createClass$8(Bezier, null, [{
+        _createClass$7(Bezier, null, [{
             key: "quadratic",
             value: function quadratic(p0, p1, p2, t) {
                 var oneMinusT = 1 - t;
@@ -3321,13 +3340,13 @@ var Orbis = (function (exports) {
 
     var Vector2$1 = function () {
         function Vector2(x, y) {
-            _classCallCheck$9(this, Vector2);
+            _classCallCheck$8(this, Vector2);
 
             this.x = x;
             this.y = y;
         }
 
-        _createClass$8(Vector2, [{
+        _createClass$7(Vector2, [{
             key: "isOrigin",
             value: function isOrigin() {
                 return Utils$1.isOrigin(this.x) && Utils$1.isOrigin(this.y) ? true : false;
@@ -3706,14 +3725,14 @@ var Orbis = (function (exports) {
 
     var Circle$1 = function () {
         function Circle(positionX, positionY, radius) {
-            _classCallCheck$9(this, Circle);
+            _classCallCheck$8(this, Circle);
 
             this.shape = 'circle';
             this.position = new Vector2$1(positionX, positionY);
             this.radius = radius;
         }
 
-        _createClass$8(Circle, [{
+        _createClass$7(Circle, [{
             key: "clone",
             value: function clone() {
                 return new Circle(this.position.x, this.position.y, this.radius);
@@ -3785,7 +3804,7 @@ var Orbis = (function (exports) {
 
     var Rectangle$1 = function () {
         function Rectangle(positionX, positionY, sizeX, sizeY) {
-            _classCallCheck$9(this, Rectangle);
+            _classCallCheck$8(this, Rectangle);
 
             this.shape = 'aabb';
             this.size = new Vector2$1(sizeX, sizeY);
@@ -3796,7 +3815,7 @@ var Orbis = (function (exports) {
             this.bottomRightCorner = new Vector2$1(positionX + this.halfSize.x, positionY + this.halfSize.y);
         }
 
-        _createClass$8(Rectangle, [{
+        _createClass$7(Rectangle, [{
             key: "clone",
             value: function clone() {
                 return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -3915,14 +3934,14 @@ var Orbis = (function (exports) {
 
     var Vector3$1 = function () {
         function Vector3(x, y, z) {
-            _classCallCheck$9(this, Vector3);
+            _classCallCheck$8(this, Vector3);
 
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        _createClass$8(Vector3, [{
+        _createClass$7(Vector3, [{
             key: "fromArray",
             value: function fromArray(array, offset) {
                 if (offset === undefined) {
@@ -4228,7 +4247,7 @@ var Orbis = (function (exports) {
 
     var Matrix4x3$1 = function () {
         function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
-            _classCallCheck$9(this, Matrix4x3);
+            _classCallCheck$8(this, Matrix4x3);
 
             this.m = new Float32Array(16);
             this.xAxis = new Vector3$1();
@@ -4237,7 +4256,7 @@ var Orbis = (function (exports) {
             this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
         }
 
-        _createClass$8(Matrix4x3, [{
+        _createClass$7(Matrix4x3, [{
             key: "make",
             value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
                 this.m[0] = Utils$1.validate(x1);
@@ -4340,7 +4359,7 @@ var Orbis = (function (exports) {
 
     var Matrix4x4$1 = function () {
         function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
-            _classCallCheck$9(this, Matrix4x4);
+            _classCallCheck$8(this, Matrix4x4);
 
             this.m = new Float32Array(16);
             this.xAxis = new Vector3$1();
@@ -4349,7 +4368,7 @@ var Orbis = (function (exports) {
             this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
         }
 
-        _createClass$8(Matrix4x4, [{
+        _createClass$7(Matrix4x4, [{
             key: "make",
             value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
                 this.m[0] = Utils$1.validate(x1);
@@ -4461,118 +4480,9 @@ var Orbis = (function (exports) {
         return Matrix4x4;
     }();
 
-    var _createClass$9 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$8 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$10(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://mouettejs.lcluber.com
-    */
-
-    var LEVELS$3 = {
-        info: { id: 1, name: 'info', color: '#28a745' },
-        trace: { id: 2, name: 'trace', color: '#17a2b8' },
-        warn: { id: 3, name: 'warn', color: '#ffc107' },
-        error: { id: 4, name: 'error', color: '#dc3545' },
-        off: { id: 99, name: 'off', color: null }
-    };
-
-    var Message$3 = function () {
-        function Message(level, content) {
-            _classCallCheck$10(this, Message);
-
-            this.id = level.id;
-            this.name = level.name;
-            this.color = level.color;
-            this.content = content;
-        }
-
-        _createClass$9(Message, [{
-            key: 'display',
-            value: function display() {
-                console[this.name]('%c' + this.content, 'color:' + this.color + ';');
-            }
-        }]);
-
-        return Message;
-    }();
-
-    var Logger$3 = function () {
-        function Logger() {
-            _classCallCheck$10(this, Logger);
-        }
-
-        _createClass$9(Logger, [{
-            key: 'level',
-            set: function set(name) {
-                Logger._level = LEVELS$3.hasOwnProperty(name) ? LEVELS$3[name] : LEVELS$3.info;
-            },
-            get: function get() {
-                return Logger._level.name;
-            }
-        }], [{
-            key: 'info',
-            value: function info(message) {
-                Logger.log(LEVELS$3.info, message);
-            }
-        }, {
-            key: 'trace',
-            value: function trace(message) {
-                Logger.log(LEVELS$3.trace, message);
-            }
-        }, {
-            key: 'warn',
-            value: function warn(message) {
-                Logger.log(LEVELS$3.warn, message);
-            }
-        }, {
-            key: 'error',
-            value: function error(message) {
-                Logger.log(LEVELS$3.error, message);
-            }
-        }, {
-            key: 'log',
-            value: function log(level, messageContent) {
-                var message = new Message$3(level, messageContent);
-                this.messages.push(message);
-                this.nbMessages++;
-                if (this._level.id <= message.id) {
-                    message.display();
-                }
-            }
-        }]);
-
-        return Logger;
-    }();
-
-    Logger$3._level = LEVELS$3.info;
-    Logger$3.messages = [];
-    Logger$3.nbMessages = 0;
-
-    var _createClass$10 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$11(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$9(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -4601,14 +4511,15 @@ var Orbis = (function (exports) {
 
     var Clock = function () {
         function Clock(refreshRate) {
-            _classCallCheck$11(this, Clock);
+            _classCallCheck$9(this, Clock);
 
             this.minimumTick = 16.7;
             this.minimumTick = refreshRate ? Time$1.framePerSecondToMillisecond(refreshRate) : this.minimumTick;
             this.reset();
+            this.logger = Logger.addGroup('FrameRat');
         }
 
-        _createClass$10(Clock, [{
+        _createClass$8(Clock, [{
             key: 'reset',
             value: function reset() {
                 this.now = 0;
@@ -4627,9 +4538,9 @@ var Orbis = (function (exports) {
             key: 'log',
             value: function log() {
                 if (this.total) {
-                    Logger$3.info('Elapsed time : ' + Utils$1.round(Time$1.millisecondToSecond(this.total), 2) + 'seconds');
-                    Logger$3.info('ticks : ' + this.ticks);
-                    Logger$3.info('Average FPS : ' + this.computeAverageFps());
+                    this.logger.info('Elapsed time : ' + Utils$1.round(Time$1.millisecondToSecond(this.total), 2) + 'seconds');
+                    this.logger.info('ticks : ' + this.ticks);
+                    this.logger.info('Average FPS : ' + this.computeAverageFps());
                 }
             }
         }, {
@@ -4695,7 +4606,7 @@ var Orbis = (function (exports) {
 
     var Player = function () {
         function Player(onAnimate, refreshRate) {
-            _classCallCheck$11(this, Player);
+            _classCallCheck$9(this, Player);
 
             this.frameId = 0;
             this.clock = new Clock(refreshRate);
@@ -4703,7 +4614,7 @@ var Orbis = (function (exports) {
             this.fsm = new FSM([{ name: 'play', from: 'paused', to: 'running' }, { name: 'pause', from: 'running', to: 'paused' }]);
         }
 
-        _createClass$10(Player, [{
+        _createClass$8(Player, [{
             key: 'getDelta',
             value: function getDelta() {
                 return Time$1.millisecondToSecond(this.clock.delta);
@@ -4865,6 +4776,7 @@ var Orbis = (function (exports) {
             this.tick = this.default.tick;
             this.maxPendingRequests = this.default.maxPending;
             this.progress = new Progress(progressBarId, progressTextId);
+            this.log = Logger.addGroup('Orbis');
             this.createAssets();
         }
         Loader.prototype.getAsset = function (name) {

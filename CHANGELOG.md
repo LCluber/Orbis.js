@@ -1,3 +1,7 @@
+Version 0.7.1 (June 29th 2019)
+-----------------------------
+ * Updated Mouette logger for log groups management.
+
 Version 0.7.0 (June 22th 2019)
 -----------------------------
  * Easier progress bar integration.
