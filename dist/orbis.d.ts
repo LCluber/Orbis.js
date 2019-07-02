@@ -22,7 +22,9 @@
 *
 * http://orbisjs.lcluber.com
 */
-import { File, Img, Sound } from '@lcluber/weejs';
+
+
+
 export declare class Ajax {
     static file: File;
     static img: Img;
@@ -95,13 +97,11 @@ export declare class Progress {
     update(text: string): void;
     updateBar(delta: number): boolean;
 }
-import { Group } from '@lcluber/mouettejs';
 import { FSM } from '@lcluber/taipanjs';
 
 export declare class Request {
     fsm: FSM;
     ajax: Ajax;
-    log: Group;
     constructor();
     send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | boolean>;
 }
