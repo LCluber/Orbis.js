@@ -1,15 +1,16 @@
+import {Logger, Group} from '@lcluber/mouettejs';
 import {File}     from '@lcluber/weejs';
 // import {Is}       from '@lcluber/chjs';
 // import {Logger}   from '@lcluber/mouettejs';
-
 import {Asset}    from './asset';
 //import {Request}  from './request';
 import {Progress} from './progress';
 
 export type ValidExtensions = {
-  file  : Array<string>;
-  img   : Array<string>;
-  sound : Array<string>;
+  file  : string[];
+  img   : string[];
+  sound : string[];
+  [key: string]: string[];
 }
 
 export type Default = {
@@ -17,9 +18,14 @@ export type Default = {
   tick       : number;
 }
 
+export interface Assets {
+  [key: string]: any;
+}
+
 export class Loader {
 
-  assets             : Object; //data from the assets file
+  assets             : Assets; //data from the assets file
+  path               : string;
   progress           : Progress;
   //assetsPath: string;
   // requests        : {}, //requests list
@@ -35,8 +41,9 @@ export class Loader {
 
   // logs             : {},
   validExtensions : ValidExtensions;
+  log : Group;
 
-  constructor() {
+  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string) {
 
     this.default = {
       maxPending : 6,
@@ -49,21 +56,15 @@ export class Loader {
       sound : ['mp3', 'ogg', 'wav']
     };
 
-    // if (Check.isFunction(onProgress)) {
-    //   this.onProgress = onProgress;
-    // }
-    //else
-      //_this.logs.add('onProgress parameter is not a function');
-
-    // if (Check.isFunction(onComplete)) {
-    //   this.onComplete = onComplete;
-    // }
-      //_this.logs.add('onComplete parameter is not a function');
-
+    this.assets             = assets;
+    this.path               = File.removeTrailingSlash(assetsPath);
     this.pendingRequests    = 0;
     this.tick               = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
-
+    this.progress           = new Progress(progressBarId, progressTextId);
+    this.log                = Logger.addGroup('Orbis');
+    // Logger.setLevel('error');
+    this.createAssets();
   }
 
   // public setTick(duration: number): void {
@@ -87,23 +88,21 @@ export class Loader {
     return false;
   }
 
-  public getList (type: string): Array<Asset>|false {
+  public getList (type: string): Asset[]|false {
     if (this.assets.hasOwnProperty(type)) {
       return this.assets[type].files;
     }
     return false;
   }
 
-  public launch( list: Object, assetsPath: string, progressBarId: string, progressTextId: string, ): Promise<void> {
+  public launch(): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {
-      this.assets = list;
-      let nbAssets = this.createAssets(File.removeTrailingSlash(assetsPath));
-      if(nbAssets) {
-        this.progress = new Progress(progressBarId, progressTextId, nbAssets);
+      if(this.progress.nbAssets) {
+        this.progress.start();
         let intervalID = setInterval(() => {
           this.sendRequest();
-          let percentage = this.progress.updateBar(this.tick);
-          if (percentage === 100) {
+          // let percentage = this.progress.updateBar();
+          if (this.progress.finished) {
             clearInterval(intervalID);
             resolve();
           }
@@ -122,28 +121,29 @@ export class Loader {
         }
       }
     }
-    return false
+    return false;
   }
 
-  private createAssets(path:string): number {
-    let nbAssets: number = 0;
+  private createAssets(): void {
+    this.progress.nbAssets = 0;
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
         let type   = this.assets[property];
         let folder = type.folder ? type.folder + '/' : '';
         for (let file of type.files) {
-          if (file.hasOwnProperty('name')) {
+          if (!file.asset && file.hasOwnProperty('name')) {
             let extension = File.getExtension(file.name);
-            let type = this.getAssetType(extension);
-            if(type) {
-              file.asset = new Asset(path + '/' + folder, file.name, extension, type);
-              nbAssets++;
+            if (extension) {
+              let type = this.getAssetType(extension);
+              if (type) {
+                file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
+                this.progress.nbAssets ++;
+              }
             }
           }
         }
       }
     }
-    return nbAssets;
     //   _this.logs.add(_this.requestsLength + ' requests to perform');
     //   _this.sendRequest();
     // }else
@@ -164,9 +164,8 @@ export class Loader {
         });
         return true;
       }
-      return false;
     }
-
+    return false;
   }
 
   private getNextAssetToLoad(): Asset|false {

@@ -3,3 +3,6 @@ $fontColor: #4d4e53;
 $linkColor: #0095dd;
 $linkColorHover: lighten($linkColor,20%);
 $navbarBGColor: #eee;
+
+$themeColorMain: #0095dd;
+$themeColorDark: darken($themeColorMain,8%);

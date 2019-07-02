@@ -23,6 +23,8 @@
 * http://orbisjs.lcluber.com
 */
 
+
+
 export declare class Ajax {
     static file: File;
     static img: Img;
@@ -34,60 +36,72 @@ export declare class Asset {
     file: string;
     extension: string;
     type: string;
-    response: Object | HTMLImageElement | HTMLAudioElement | string | false;
+    response: Object | HTMLImageElement | HTMLAudioElement | string | null;
     request: Request;
     constructor(path: string, file: string, extension: string, type: string);
     sendRequest(): Promise<string>;
     getRequestStatus(): string;
     isRequestSent(): boolean;
 }
+import { Group } from '@lcluber/mouettejs';
 
 
 export declare type ValidExtensions = {
-    file: Array<string>;
-    img: Array<string>;
-    sound: Array<string>;
+    file: string[];
+    img: string[];
+    sound: string[];
+    [key: string]: string[];
 };
 export declare type Default = {
     maxPending: number;
     tick: number;
 };
+export interface Assets {
+    [key: string]: any;
+}
 export declare class Loader {
-    assets: Object;
+    assets: Assets;
+    path: string;
     progress: Progress;
     pendingRequests: number;
     tick: number;
     maxPendingRequests: number;
     default: Default;
     validExtensions: ValidExtensions;
-    constructor();
+    log: Group;
+    constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string);
     getAsset(name: string): Asset | false;
-    getList(type: string): Array<Asset> | false;
-    launch(list: Object, assetsPath: string, progressBarId: string, progressTextId: string): Promise<void>;
+    getList(type: string): Asset[] | false;
+    launch(): Promise<void>;
     private getAssetType;
     private createAssets;
     private sendRequest;
     private getNextAssetToLoad;
 }
-
 export declare class Progress {
-    rate: number;
-    target: number;
-    total: number;
-    percentage: number;
-    speed: number;
+    private rate;
+    private target;
+    private total;
+    private percentage;
+    private speed;
     nbAssets: number;
-    bar: Bind;
-    text: Bind;
-    constructor(barId: string, textId: string, nbAssets: number);
+    private bar;
+    private barWidth;
+    private number;
+    private text;
+    private animation;
+    finished: boolean;
+    constructor(barId: string | null, textId: string | null);
+    private animateBar;
+    start(): void;
     update(text: string): void;
-    updateBar(delta: number): number;
+    updateBar(delta: number): boolean;
 }
-
+import { FSM } from '@lcluber/taipanjs';
 
 export declare class Request {
     fsm: FSM;
     ajax: Ajax;
     constructor();
-    send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | false>;
+    send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | boolean>;
 }

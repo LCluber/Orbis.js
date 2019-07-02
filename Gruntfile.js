@@ -326,7 +326,7 @@ module.exports = function(grunt){
     strip_code: {
       options: {
         // /// <reference path="../config/typings/index.d.ts" />
-        patterns: [ /import { .* } from '.*';/g,
+        patterns: [ /import { .* } from '\..*';/g,
                     /export { .* } from '.*';/g,
                     /\/\/\/ <reference path=.*\/>/g
                   ]
