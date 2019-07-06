@@ -1006,54 +1006,44 @@ var Orbis = (function (exports) {
       }
   };
 
-  var Img = function () {
-      function Img() {}
-      Img.load = function (path) {
-          var _this = this;
-          return new Promise(function (resolve, reject) {
-              var img = new Image();
-              img.src = path;
-              img.name = File.getName(path);
-              _this.log.info('xhr processing starting (' + path + ')');
-              img.addEventListener('load', function () {
-                  _this.log.info('xhr done successfully (' + path + ')');
-                  resolve(img);
-              });
-              img.addEventListener('error', function () {
-                  _this.log.error('xhr failed (' + path + ')');
-                  reject(new Error('xhr failed (' + path + ')'));
-              });
+  function loadImage(path) {
+      var log = Logger.addGroup("Orbis");
+      return new Promise(function (resolve, reject) {
+          var img = new Image();
+          img.src = path;
+          img.name = File.getName(path);
+          log.info("xhr processing starting (" + path + ")");
+          img.addEventListener("load", function () {
+              log.info("xhr done successfully (" + path + ")");
+              resolve(img);
           });
-      };
-      Img.log = Logger.addGroup('Orbis');
-      return Img;
-  }();
+          img.addEventListener("error", function () {
+              log.error("xhr failed (" + path + ")");
+              reject(new Error("xhr failed (" + path + ")"));
+          });
+      });
+  }
 
-  var Sound = function () {
-      function Sound() {}
-      Sound.load = function (path) {
-          var _this = this;
-          return new Promise(function (resolve, reject) {
-              var snd = new Audio();
-              snd.src = path;
-              _this.log.info('xhr processing starting (' + path + ')');
-              snd.addEventListener('canplaythrough', function () {
-                  _this.log.info('xhr done successfully (' + path + ')');
-                  resolve(snd);
-              }, false);
-              snd.addEventListener('canplay', function () {
-                  _this.log.info('xhr done successfully (' + path + ')');
-                  resolve(snd);
-              }, false);
-              snd.addEventListener('error', function () {
-                  _this.log.error('xhr failed (' + path + ')');
-                  reject(new Error('xhr failed (' + path + ')'));
-              }, false);
-          });
-      };
-      Sound.log = Logger.addGroup('Orbis');
-      return Sound;
-  }();
+  function loadSound(path) {
+      var log = Logger.addGroup("Orbis");
+      return new Promise(function (resolve, reject) {
+          var snd = new Audio();
+          snd.src = path;
+          log.info("xhr processing starting (" + path + ")");
+          snd.addEventListener("canplaythrough", function () {
+              log.info("xhr done successfully (" + path + ")");
+              resolve(snd);
+          }, false);
+          snd.addEventListener("canplay", function () {
+              log.info("xhr done successfully (" + path + ")");
+              resolve(snd);
+          }, false);
+          snd.addEventListener("error", function () {
+              log.error("xhr failed (" + path + ")");
+              reject(new Error("xhr failed (" + path + ")"));
+          }, false);
+      });
+  }
 
   var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1736,35 +1726,27 @@ var Orbis = (function (exports) {
       "Content-Type": "application/json"
   });
 
-  var File$1 = function () {
-      function File() {}
-      File.load = function (path) {
-          return HTTP.GET(path);
-      };
-      return File;
-  }();
-
-  var Ajax = function () {
-      function Ajax() {}
-      Ajax.file = File$1;
-      Ajax.img = Img;
-      Ajax.sound = Sound;
-      return Ajax;
-  }();
+  function loadFile(path) {
+      return HTTP.GET(path);
+  }
 
   var Request = function () {
       function Request() {
-          this.fsm = new FSM([{ name: 'send', from: 'idle', to: 'pending' }, { name: 'success', from: 'pending', to: 'success' }, { name: 'error', from: 'pending', to: 'error' }]);
-          this.ajax = Ajax;
+          this.fsm = new FSM([{ name: "send", from: "idle", to: "pending" }, { name: "success", from: "pending", to: "success" }, { name: "error", from: "pending", to: "error" }]);
+          this.ajax = {
+              file: loadFile,
+              img: loadImage,
+              sound: loadSound
+          };
       }
       Request.prototype.send = function (path, type) {
           var _this = this;
-          if (this.fsm['send']()) {
-              return this.ajax[type].load(path).then(function (response) {
-                  _this.fsm['success']();
+          if (this.fsm["send"]()) {
+              return this.ajax[type](path).then(function (response) {
+                  _this.fsm["success"]();
                   return response;
               }).catch(function () {
-                  _this.fsm['error']();
+                  _this.fsm["error"]();
                   return false;
               });
           } else {
@@ -1804,7 +1786,7 @@ var Orbis = (function (exports) {
           return this.request.fsm.state;
       };
       Asset.prototype.isRequestSent = function () {
-          if (this.getRequestStatus() != 'idle') {
+          if (this.getRequestStatus() != "idle") {
               return true;
           }
           return false;
@@ -5370,14 +5352,14 @@ var Orbis = (function (exports) {
               if (bar) {
                   this.barWidth = bar.clientWidth;
                   var percentBar = bar.children[1];
-                  this.bar = percentBar ? new Binding(percentBar, 'style.width', '0px') : null;
+                  this.bar = percentBar ? new Binding(percentBar, "style.width", "0px") : null;
                   var number = bar.children[0];
-                  this.number = number ? new Binding(number, '', 0) : null;
+                  this.number = number ? new Binding(number, "", 0) : null;
                   this.animation = new Player(this.animateBar, 0);
                   this.animation.setScope(this);
               }
           }
-          this.text = textId ? new Binding(textId, '', 'Loading') : null;
+          this.text = textId ? new Binding(textId, "", "Loading") : null;
       }
       Progress.prototype.animateBar = function () {
           if (this.animation) {
@@ -5407,17 +5389,17 @@ var Orbis = (function (exports) {
           }
           var flooredPercentage = Utils.floor(this.percentage, 0);
           if (this.bar) {
-              this.bar.update(Utils.map(this.percentage, 0, 100, 0, this.barWidth) + 'px');
+              this.bar.update(Utils.map(this.percentage, 0, 100, 0, this.barWidth) + "px");
           }
           if (this.number) {
-              this.number.update(flooredPercentage + '%');
+              this.number.update(flooredPercentage + "%");
           }
           if (flooredPercentage === 100) {
               if (this.animation) {
                   this.animation.stop();
               }
               if (this.text) {
-                  this.text.update('Loading complete');
+                  this.text.update("Loading complete");
               }
               return true;
           }
@@ -5433,9 +5415,9 @@ var Orbis = (function (exports) {
               tick: 100
           };
           this.validExtensions = {
-              file: ['txt', 'text', 'json', 'glsl', 'babylon'],
-              img: ['png', 'jpg', 'jpeg', 'gif'],
-              sound: ['mp3', 'ogg', 'wav']
+              file: ["txt", "text", "json", "glsl", "babylon"],
+              img: ["png", "jpg", "jpeg", "gif"],
+              sound: ["mp3", "ogg", "wav"]
           };
           this.assets = assets;
           this.path = File.removeTrailingSlash(assetsPath);
@@ -5443,7 +5425,7 @@ var Orbis = (function (exports) {
           this.tick = this.default.tick;
           this.maxPendingRequests = this.default.maxPending;
           this.progress = new Progress(progressBarId, progressTextId);
-          this.log = Logger.addGroup('Orbis');
+          this.log = Logger.addGroup("Orbis");
           this.createAssets();
       }
       Loader.prototype.getAsset = function (name) {
@@ -5478,7 +5460,7 @@ var Orbis = (function (exports) {
                       }
                   }, _this.tick);
               } else {
-                  reject('!! nothing to load here');
+                  reject("!! nothing to load here");
               }
           });
       };
@@ -5497,15 +5479,15 @@ var Orbis = (function (exports) {
           for (var property in this.assets) {
               if (this.assets.hasOwnProperty(property)) {
                   var type = this.assets[property];
-                  var folder = type.folder ? type.folder + '/' : '';
+                  var folder = type.folder ? type.folder + "/" : "";
                   for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
                       var file = _a[_i];
-                      if (!file.asset && file.hasOwnProperty('name')) {
+                      if (!file.asset && file.hasOwnProperty("name")) {
                           var extension = File.getExtension(file.name);
                           if (extension) {
                               var type_1 = this.getAssetType(extension);
                               if (type_1) {
-                                  file.asset = new Asset(this.path + '/' + folder, file.name, extension, type_1);
+                                  file.asset = new Asset(this.path + "/" + folder, file.name, extension, type_1);
                                   this.progress.nbAssets++;
                               }
                           }
@@ -5534,7 +5516,7 @@ var Orbis = (function (exports) {
                   var type = this.assets[property];
                   for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
                       var file = _a[_i];
-                      if (file.hasOwnProperty('asset') && !file.asset.isRequestSent()) {
+                      if (file.hasOwnProperty("asset") && !file.asset.isRequestSent()) {
                           return file.asset;
                       }
                   }

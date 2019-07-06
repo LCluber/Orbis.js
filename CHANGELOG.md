@@ -1,4 +1,4 @@
-## Version 0.7.2 (July 2nd 2019)
+## Version 0.7.2 (July 6th 2019)
 
 - Updated Weejs to 0.3.0.
 - image, sound and file loaders included in the library.

@@ -23,14 +23,6 @@
 * http://orbisjs.lcluber.com
 */
 
-
-
-export declare class Ajax {
-    static file: File;
-    static img: Img;
-    static sound: Sound;
-}
-
 export declare class Asset {
     path: string;
     file: string;
@@ -43,7 +35,7 @@ export declare class Asset {
     getRequestStatus(): string;
     isRequestSent(): boolean;
 }
-import { Group } from '@lcluber/mouettejs';
+import { Group } from "@lcluber/mouettejs";
 
 
 export declare type ValidExtensions = {
@@ -97,8 +89,12 @@ export declare class Progress {
     update(text: string): void;
     updateBar(delta: number): boolean;
 }
-import { FSM } from '@lcluber/taipanjs';
-
+import { FSM } from "@lcluber/taipanjs";
+export declare type Ajax = {
+    file: Function;
+    img: Function;
+    sound: Function;
+};
 export declare class Request {
     fsm: FSM;
     ajax: Ajax;

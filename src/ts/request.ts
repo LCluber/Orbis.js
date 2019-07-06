@@ -1,5 +1,13 @@
 import { FSM } from "@lcluber/taipanjs";
-import { Ajax } from "./ajax";
+import { loadImage } from "./loaders/image";
+import { loadSound } from "./loaders/sound";
+import { loadFile } from "./loaders/file";
+
+export type Ajax = {
+  file: Function;
+  img: Function;
+  sound: Function;
+};
 
 export class Request {
   fsm: FSM;
@@ -11,7 +19,11 @@ export class Request {
       { name: "success", from: "pending", to: "success" },
       { name: "error", from: "pending", to: "error" }
     ]);
-    this.ajax = Ajax;
+    this.ajax = {
+      file: loadFile,
+      img: loadImage,
+      sound: loadSound
+    };
   }
 
   public send(
@@ -20,8 +32,7 @@ export class Request {
   ): Promise<HTMLImageElement | HTMLAudioElement | string | boolean> {
     // console.log(this.fsm);
     if (this.fsm["send"]()) {
-      return this.ajax[type]
-        .load(path)
+      return this.ajax[type](path)
         .then((response: HTMLImageElement | HTMLAudioElement | string) => {
           this.fsm["success"]();
           return response;

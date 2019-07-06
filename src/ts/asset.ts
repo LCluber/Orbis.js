@@ -1,34 +1,32 @@
-
 // import {Is} from '@lcluber/chjs';
-import { Request } from './request';
+import { Request } from "./request";
 
 export class Asset {
+  path: string;
+  file: string;
+  extension: string;
+  type: string;
+  response: Object | HTMLImageElement | HTMLAudioElement | string | null;
+  request: Request;
 
-  path      : string;
-  file      : string;
-  extension : string;
-  type      : string;
-  response  : Object|HTMLImageElement|HTMLAudioElement|string|null;
-  request   : Request;
-
-
-  constructor( path: string, file: string, extension: string, type: string ){
-
-    this.path      = path;
-    this.file      = file;
+  constructor(path: string, file: string, extension: string, type: string) {
+    this.path = path;
+    this.file = file;
     this.extension = extension;
-    this.type      = type;
-    this.request   = new Request();
+    this.type = type;
+    this.request = new Request();
     this.response = null;
-
   }
 
   public sendRequest(): Promise<string> {
     if (this.response) {
-      return new Promise(() => { return this.file })
-    } else{
-      return this.request.send(this.path + this.file, this.type).then(
-        (response) => {
+      return new Promise(() => {
+        return this.file;
+      });
+    } else {
+      return this.request
+        .send(this.path + this.file, this.type)
+        .then(response => {
           if (response) {
             this.response = response;
             // if(this.type === 'file') {
@@ -39,8 +37,7 @@ export class Asset {
             // }
           }
           return this.file;
-        }
-      );
+        });
     }
   }
 
@@ -49,10 +46,9 @@ export class Asset {
   }
 
   public isRequestSent(): boolean {
-    if(this.getRequestStatus() != 'idle') {
+    if (this.getRequestStatus() != "idle") {
       return true;
     }
     return false;
   }
-
 }
