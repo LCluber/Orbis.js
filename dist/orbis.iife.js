@@ -26,224 +26,11 @@
 var Orbis = (function (exports) {
   'use strict';
 
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  /** MIT License
-   *
-   * Copyright (c) 2015 Ludovic CLUBER
-   *
-   * Permission is hereby granted, free of charge, to any person obtaining a copy
-   * of this software and associated documentation files (the "Software"), to deal
-   * in the Software without restriction, including without limitation the rights
-   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-   * copies of the Software, and to permit persons to whom the Software is
-   * furnished to do so, subject to the following conditions:
-   *
-   * The above copyright notice and this permission notice shall be included in all
-   * copies or substantial portions of the Software.
-   *
-   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-   * SOFTWARE.
-   *
-   * http://mouettejs.lcluber.com
-   */
-
-  var LEVELS = {
-    info: { id: 1, name: "info", color: "#28a745" },
-    trace: { id: 2, name: "trace", color: "#17a2b8" },
-    warn: { id: 3, name: "warn", color: "#ffc107" },
-    error: { id: 4, name: "error", color: "#dc3545" },
-    off: { id: 99, name: "off", color: null }
-  };
-
-  function addZero(value) {
-    return value < 10 ? "0" + value : value;
-  }
-  function formatDate() {
-    var now = new Date();
-    var date = [addZero(now.getMonth() + 1), addZero(now.getDate()), now.getFullYear().toString().substr(-2)];
-    var time = [addZero(now.getHours()), addZero(now.getMinutes()), addZero(now.getSeconds())];
-    return date.join("/") + " " + time.join(":");
-  }
-
-  var Message = function () {
-    function Message(level, content) {
-      _classCallCheck(this, Message);
-
-      this.id = level.id;
-      this.name = level.name;
-      this.color = level.color;
-      this.content = content;
-      this.date = formatDate();
-    }
-
-    _createClass(Message, [{
-      key: "display",
-      value: function display(groupName) {
-        console[this.name]("%c[" + groupName + "] " + this.date + " : ", "color:" + this.color + ";", this.content);
-      }
-    }]);
-
-    return Message;
-  }();
-
-  var Group = function () {
-    function Group(name, level) {
-      _classCallCheck(this, Group);
-
-      this.messages = [];
-      this.name = name;
-      this.messages = [];
-      this._level = level;
-    }
-
-    _createClass(Group, [{
-      key: "info",
-      value: function info(message) {
-        this.log(LEVELS.info, message);
-      }
-    }, {
-      key: "trace",
-      value: function trace(message) {
-        this.log(LEVELS.trace, message);
-      }
-    }, {
-      key: "warn",
-      value: function warn(message) {
-        this.log(LEVELS.warn, message);
-      }
-    }, {
-      key: "error",
-      value: function error(message) {
-        this.log(LEVELS.error, message);
-      }
-    }, {
-      key: "log",
-      value: function log(level, messageContent) {
-        var message = new Message(level, messageContent);
-        this.messages.push(message);
-        if (this._level.id <= message.id) {
-          message.display(this.name);
-        }
-      }
-    }, {
-      key: "level",
-      set: function set(name) {
-        this._level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this._level;
-      },
-      get: function get() {
-        return this._level.name;
-      }
-    }]);
-
-    return Group;
-  }();
-
-  var Logger = function () {
-    function Logger() {
-      _classCallCheck(this, Logger);
-    }
-
-    _createClass(Logger, null, [{
-      key: "setLevel",
-      value: function setLevel(name) {
-        Logger.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : Logger.level;
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var group = _step.value;
-
-            group.level = Logger.level.name;
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        return Logger.getLevel();
-      }
-    }, {
-      key: "getLevel",
-      value: function getLevel() {
-        return Logger.level.name;
-      }
-    }, {
-      key: "getGroup",
-      value: function getGroup(name) {
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-          for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var group = _step2.value;
-
-            if (group.name === name) {
-              return group;
-            }
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-
-        return null;
-      }
-    }, {
-      key: "addGroup",
-      value: function addGroup(name) {
-        return this.getGroup(name) || this.pushGroup(name);
-      }
-    }, {
-      key: "pushGroup",
-      value: function pushGroup(name) {
-        var group = new Group(name, Logger.level);
-        Logger.groups.push(group);
-        return group;
-      }
-    }]);
-
-    return Logger;
-  }();
-
-  Logger.level = LEVELS.error;
-  Logger.groups = [];
-
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-  var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-  function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -272,10 +59,10 @@ var Orbis = (function (exports) {
 
   var Is = function () {
       function Is() {
-          _classCallCheck$1(this, Is);
+          _classCallCheck(this, Is);
       }
 
-      _createClass$1(Is, null, [{
+      _createClass(Is, null, [{
           key: 'json',
           value: function json(str) {
               if (!this.string(str)) {
@@ -339,9 +126,9 @@ var Orbis = (function (exports) {
       return Is;
   }();
 
-  var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -370,10 +157,10 @@ var Orbis = (function (exports) {
 
   var Dom = function () {
       function Dom() {
-          _classCallCheck$2(this, Dom);
+          _classCallCheck$1(this, Dom);
       }
 
-      _createClass$2(Dom, null, [{
+      _createClass$1(Dom, null, [{
           key: 'scrollToBottom',
           value: function scrollToBottom(HtmlElement) {
               HtmlElement.scrollTop = HtmlElement.scrollHeight;
@@ -507,7 +294,7 @@ var Orbis = (function (exports) {
 
   var Binding = function () {
       function Binding(element, property, value) {
-          _classCallCheck$2(this, Binding);
+          _classCallCheck$1(this, Binding);
 
           this._value = '';
           this.elements = this.getElements(element);
@@ -521,7 +308,7 @@ var Orbis = (function (exports) {
           this.value = value;
       }
 
-      _createClass$2(Binding, [{
+      _createClass$1(Binding, [{
           key: 'addPropertyToElement',
           value: function addPropertyToElement() {
               if (this.elements) {
@@ -640,10 +427,10 @@ var Orbis = (function (exports) {
 
   var String = function () {
       function String() {
-          _classCallCheck$2(this, String);
+          _classCallCheck$1(this, String);
       }
 
-      _createClass$2(String, null, [{
+      _createClass$1(String, null, [{
           key: 'ucfirst',
           value: function ucfirst(string) {
               return string.charAt(0).toUpperCase() + string.slice(1);
@@ -660,10 +447,10 @@ var Orbis = (function (exports) {
 
   var File = function () {
       function File() {
-          _classCallCheck$2(this, File);
+          _classCallCheck$1(this, File);
       }
 
-      _createClass$2(File, null, [{
+      _createClass$1(File, null, [{
           key: 'removeTrailingSlash',
           value: function removeTrailingSlash(path) {
               return path.replace(/\/+$/, '');
@@ -720,9 +507,9 @@ var Orbis = (function (exports) {
       return File;
   }();
 
-  var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -749,7 +536,7 @@ var Orbis = (function (exports) {
   * http://mouettejs.lcluber.com
   */
 
-  var LEVELS$1 = {
+  var LEVELS = {
       info: { id: 1, name: 'info', color: '#28a745' },
       trace: { id: 2, name: 'trace', color: '#17a2b8' },
       warn: { id: 3, name: 'warn', color: '#ffc107' },
@@ -757,28 +544,28 @@ var Orbis = (function (exports) {
       off: { id: 99, name: 'off', color: null }
   };
 
-  function addZero$1(value) {
+  function addZero(value) {
       return value < 10 ? '0' + value : value;
   }
-  function formatDate$1() {
+  function formatDate() {
       var now = new Date();
-      var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
-      var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
+      var date = [addZero(now.getMonth() + 1), addZero(now.getDate()), now.getFullYear().toString().substr(-2)];
+      var time = [addZero(now.getHours()), addZero(now.getMinutes()), addZero(now.getSeconds())];
       return date.join("/") + " " + time.join(":");
   }
 
-  var Message$1 = function () {
+  var Message = function () {
       function Message(level, content) {
-          _classCallCheck$3(this, Message);
+          _classCallCheck$2(this, Message);
 
           this.id = level.id;
           this.name = level.name;
           this.color = level.color;
           this.content = content;
-          this.date = formatDate$1();
+          this.date = formatDate();
       }
 
-      _createClass$3(Message, [{
+      _createClass$2(Message, [{
           key: 'display',
           value: function display(groupName) {
               console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
@@ -788,9 +575,9 @@ var Orbis = (function (exports) {
       return Message;
   }();
 
-  var Group$1 = function () {
+  var Group = function () {
       function Group(name, level) {
-          _classCallCheck$3(this, Group);
+          _classCallCheck$2(this, Group);
 
           this.messages = [];
           this.name = name;
@@ -798,30 +585,30 @@ var Orbis = (function (exports) {
           this._level = level;
       }
 
-      _createClass$3(Group, [{
+      _createClass$2(Group, [{
           key: 'info',
           value: function info(message) {
-              this.log(LEVELS$1.info, message);
+              this.log(LEVELS.info, message);
           }
       }, {
           key: 'trace',
           value: function trace(message) {
-              this.log(LEVELS$1.trace, message);
+              this.log(LEVELS.trace, message);
           }
       }, {
           key: 'warn',
           value: function warn(message) {
-              this.log(LEVELS$1.warn, message);
+              this.log(LEVELS.warn, message);
           }
       }, {
           key: 'error',
           value: function error(message) {
-              this.log(LEVELS$1.error, message);
+              this.log(LEVELS.error, message);
           }
       }, {
           key: 'log',
           value: function log(level, messageContent) {
-              var message = new Message$1(level, messageContent);
+              var message = new Message(level, messageContent);
               this.messages.push(message);
               if (this._level.id <= message.id) {
                   message.display(this.name);
@@ -830,7 +617,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'level',
           set: function set(name) {
-              this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
+              this._level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this._level;
           },
           get: function get() {
               return this._level.name;
@@ -840,15 +627,15 @@ var Orbis = (function (exports) {
       return Group;
   }();
 
-  var Logger$1 = function () {
+  var Logger = function () {
       function Logger() {
-          _classCallCheck$3(this, Logger);
+          _classCallCheck$2(this, Logger);
       }
 
-      _createClass$3(Logger, null, [{
+      _createClass$2(Logger, null, [{
           key: 'setLevel',
           value: function setLevel(name) {
-              Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
+              Logger.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : Logger.level;
               var _iteratorNormalCompletion = true;
               var _didIteratorError = false;
               var _iteratorError = undefined;
@@ -919,7 +706,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'pushGroup',
           value: function pushGroup(name) {
-              var group = new Group$1(name, Logger.level);
+              var group = new Group(name, Logger.level);
               Logger.groups.push(group);
               return group;
           }
@@ -928,10 +715,10 @@ var Orbis = (function (exports) {
       return Logger;
   }();
 
-  Logger$1.level = LEVELS$1.error;
-  Logger$1.groups = [];
+  Logger.level = LEVELS.error;
+  Logger.groups = [];
 
-  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -961,10 +748,10 @@ var Orbis = (function (exports) {
   var FSM = function FSM(events) {
       var _this = this;
 
-      _classCallCheck$4(this, FSM);
+      _classCallCheck$3(this, FSM);
 
       this.state = events[0].from;
-      this.log = Logger$1.getGroup('Taipan') || Logger$1.addGroup('Taipan');
+      this.log = Logger.getGroup('Taipan') || Logger.addGroup('Taipan');
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -1006,8 +793,221 @@ var Orbis = (function (exports) {
       }
   };
 
+  var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  /** MIT License
+   *
+   * Copyright (c) 2015 Ludovic CLUBER
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a copy
+   * of this software and associated documentation files (the "Software"), to deal
+   * in the Software without restriction, including without limitation the rights
+   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   * copies of the Software, and to permit persons to whom the Software is
+   * furnished to do so, subject to the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be included in all
+   * copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   * SOFTWARE.
+   *
+   * http://mouettejs.lcluber.com
+   */
+
+  var LEVELS$1 = {
+    info: { id: 1, name: "info", color: "#28a745" },
+    trace: { id: 2, name: "trace", color: "#17a2b8" },
+    warn: { id: 3, name: "warn", color: "#ffc107" },
+    error: { id: 4, name: "error", color: "#dc3545" },
+    off: { id: 99, name: "off", color: null }
+  };
+
+  function addZero$1(value) {
+    return value < 10 ? "0" + value : value;
+  }
+  function formatDate$1() {
+    var now = new Date();
+    var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
+    var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
+    return date.join("/") + " " + time.join(":");
+  }
+
+  var Message$1 = function () {
+    function Message(level, content) {
+      _classCallCheck$4(this, Message);
+
+      this.id = level.id;
+      this.name = level.name;
+      this.color = level.color;
+      this.content = content;
+      this.date = formatDate$1();
+    }
+
+    _createClass$3(Message, [{
+      key: "display",
+      value: function display(groupName) {
+        console[this.name]("%c[" + groupName + "] " + this.date + " : ", "color:" + this.color + ";", this.content);
+      }
+    }]);
+
+    return Message;
+  }();
+
+  var Group$1 = function () {
+    function Group(name, level) {
+      _classCallCheck$4(this, Group);
+
+      this.messages = [];
+      this.name = name;
+      this.messages = [];
+      this._level = level;
+    }
+
+    _createClass$3(Group, [{
+      key: "info",
+      value: function info(message) {
+        this.log(LEVELS$1.info, message);
+      }
+    }, {
+      key: "trace",
+      value: function trace(message) {
+        this.log(LEVELS$1.trace, message);
+      }
+    }, {
+      key: "warn",
+      value: function warn(message) {
+        this.log(LEVELS$1.warn, message);
+      }
+    }, {
+      key: "error",
+      value: function error(message) {
+        this.log(LEVELS$1.error, message);
+      }
+    }, {
+      key: "log",
+      value: function log(level, messageContent) {
+        var message = new Message$1(level, messageContent);
+        this.messages.push(message);
+        if (this._level.id <= message.id) {
+          message.display(this.name);
+        }
+      }
+    }, {
+      key: "level",
+      set: function set(name) {
+        this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
+      },
+      get: function get() {
+        return this._level.name;
+      }
+    }]);
+
+    return Group;
+  }();
+
+  var Logger$1 = function () {
+    function Logger() {
+      _classCallCheck$4(this, Logger);
+    }
+
+    _createClass$3(Logger, null, [{
+      key: "setLevel",
+      value: function setLevel(name) {
+        Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var group = _step.value;
+
+            group.level = Logger.level.name;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        return Logger.getLevel();
+      }
+    }, {
+      key: "getLevel",
+      value: function getLevel() {
+        return Logger.level.name;
+      }
+    }, {
+      key: "getGroup",
+      value: function getGroup(name) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var group = _step2.value;
+
+            if (group.name === name) {
+              return group;
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        return null;
+      }
+    }, {
+      key: "addGroup",
+      value: function addGroup(name) {
+        return this.getGroup(name) || this.pushGroup(name);
+      }
+    }, {
+      key: "pushGroup",
+      value: function pushGroup(name) {
+        var group = new Group$1(name, Logger.level);
+        Logger.groups.push(group);
+        return group;
+      }
+    }]);
+
+    return Logger;
+  }();
+
+  Logger$1.level = LEVELS$1.error;
+  Logger$1.groups = [];
+
   function loadImage(path) {
-      var log = Logger.addGroup("Orbis");
+      var log = Logger$1.addGroup("Orbis");
       return new Promise(function (resolve, reject) {
           var img = new Image();
           img.src = path;
@@ -1025,7 +1025,7 @@ var Orbis = (function (exports) {
   }
 
   function loadSound(path) {
-      var log = Logger.addGroup("Orbis");
+      var log = Logger$1.addGroup("Orbis");
       return new Promise(function (resolve, reject) {
           var snd = new Audio();
           snd.src = path;
@@ -5374,6 +5374,13 @@ var Orbis = (function (exports) {
               this.animation.play();
           }
       };
+      Progress.prototype.reset = function () {
+          this.finished = false;
+          this.percentage = 0.0;
+          if (this.text) {
+              this.text.update("Loading");
+          }
+      };
       Progress.prototype.update = function (text) {
           this.total++;
           this.rate = this.total / this.nbAssets;
@@ -5425,7 +5432,6 @@ var Orbis = (function (exports) {
           this.tick = this.default.tick;
           this.maxPendingRequests = this.default.maxPending;
           this.progress = new Progress(progressBarId, progressTextId);
-          this.log = Logger.addGroup("Orbis");
           this.createAssets();
       }
       Loader.prototype.getAsset = function (name) {
@@ -5463,6 +5469,9 @@ var Orbis = (function (exports) {
                   reject("!! nothing to load here");
               }
           });
+      };
+      Loader.prototype.resetProgress = function () {
+          this.progress.reset();
       };
       Loader.prototype.getAssetType = function (extension) {
           for (var property in this.validExtensions) {

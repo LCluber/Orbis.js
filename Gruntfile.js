@@ -182,7 +182,10 @@ module.exports = function(grunt) {
           external: [
             "@lcluber/taipanjs",
             "@lcluber/weejs",
-            "@lcluber/mouettejs"
+            "@lcluber/mouettejs",
+            "@lcluber/type6js",
+            "@lcluber/aiasjs",
+            "@lcluber/frameratjs"
           ]
         },
         files: [
