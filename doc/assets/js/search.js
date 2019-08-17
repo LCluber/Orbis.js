@@ -519,6 +519,30 @@ typedoc.search.data = {
     },
     {
       id: 63,
+      kind: 2048,
+      name: "removeTrailingSlash",
+      url: "classes/_orbis_.loader.html#removetrailingslash",
+      classes: "tsd-kind-method tsd-parent-kind-class tsd-is-private",
+      parent: '"orbis".Loader'
+    },
+    {
+      id: 64,
+      kind: 2048,
+      name: "getExtension",
+      url: "classes/_orbis_.loader.html#getextension",
+      classes: "tsd-kind-method tsd-parent-kind-class tsd-is-private",
+      parent: '"orbis".Loader'
+    },
+    {
+      id: 65,
+      kind: 2048,
+      name: "checkExtension",
+      url: "classes/_orbis_.loader.html#checkextension",
+      classes: "tsd-kind-method tsd-parent-kind-class tsd-is-private",
+      parent: '"orbis".Loader'
+    },
+    {
+      id: 66,
       kind: 4194304,
       name: "ValidExtensions",
       url: "modules/_orbis_.html#validextensions",
@@ -526,7 +550,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 64,
+      id: 67,
       kind: 65536,
       name: "__type",
       url: "modules/_orbis_.html#validextensions.__type-1",
@@ -535,7 +559,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions'
     },
     {
-      id: 65,
+      id: 68,
       kind: 32,
       name: "file",
       url: "modules/_orbis_.html#validextensions.__type-1.file",
@@ -544,7 +568,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 66,
+      id: 69,
       kind: 32,
       name: "img",
       url: "modules/_orbis_.html#validextensions.__type-1.img",
@@ -553,7 +577,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 67,
+      id: 70,
       kind: 32,
       name: "sound",
       url: "modules/_orbis_.html#validextensions.__type-1.sound",
@@ -562,7 +586,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 68,
+      id: 71,
       kind: 4194304,
       name: "Default",
       url: "modules/_orbis_.html#default",
@@ -570,7 +594,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 69,
+      id: 72,
       kind: 65536,
       name: "__type",
       url: "modules/_orbis_.html#default.__type",
@@ -579,7 +603,7 @@ typedoc.search.data = {
       parent: '"orbis".Default'
     },
     {
-      id: 70,
+      id: 73,
       kind: 32,
       name: "maxPending",
       url: "modules/_orbis_.html#default.__type.maxpending",
@@ -588,7 +612,7 @@ typedoc.search.data = {
       parent: '"orbis".Default.__type'
     },
     {
-      id: 71,
+      id: 74,
       kind: 32,
       name: "tick",
       url: "modules/_orbis_.html#default.__type.tick",

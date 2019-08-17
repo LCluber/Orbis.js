@@ -68,6 +68,9 @@ export declare class Loader {
     private createAssets;
     private sendRequest;
     private getNextAssetToLoad;
+    private removeTrailingSlash;
+    private getExtension;
+    private checkExtension;
 }
 export declare class Progress {
     private rate;

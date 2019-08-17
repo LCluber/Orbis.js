@@ -1,8 +1,4 @@
-// import { Logger, Group } from "@lcluber/mouettejs";
-import { File } from "@lcluber/weejs";
-// import {Is}       from '@lcluber/chjs';
 import { Asset } from "./asset";
-//import {Request}  from './request';
 import { Progress } from "./progress";
 
 export type ValidExtensions = {
@@ -59,7 +55,7 @@ export class Loader {
     };
 
     this.assets = assets;
-    this.path = File.removeTrailingSlash(assetsPath);
+    this.path = this.removeTrailingSlash(assetsPath);
     this.pendingRequests = 0;
     this.tick = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
@@ -122,7 +118,7 @@ export class Loader {
   private getAssetType(extension: string): string | false {
     for (let property in this.validExtensions) {
       if (this.validExtensions.hasOwnProperty(property)) {
-        if (File.checkExtension(extension, this.validExtensions[property])) {
+        if (this.checkExtension(extension, this.validExtensions[property])) {
           return property;
         }
       }
@@ -138,7 +134,7 @@ export class Loader {
         let folder = type.folder ? type.folder + "/" : "";
         for (let file of type.files) {
           if (!file.asset && file.hasOwnProperty("name")) {
-            let extension = File.getExtension(file.name);
+            let extension = this.getExtension(file.name);
             if (extension) {
               let type = this.getAssetType(extension);
               if (type) {
@@ -187,6 +183,27 @@ export class Loader {
             return file.asset;
           }
         }
+      }
+    }
+    return false;
+  }
+
+  private removeTrailingSlash(path: string): string {
+    return path.replace(/\/+$/, "");
+  }
+
+  private getExtension(path: string): string | undefined {
+    return path.split(".").pop();
+  }
+
+  private checkExtension(
+    extension: string,
+    validExtensions: string[]
+  ): boolean {
+    // return validExtensions.find(validExtension => extension === validExtension) != undefined;
+    for (let validExtension of validExtensions) {
+      if (extension === validExtension) {
+        return true;
       }
     }
     return false;

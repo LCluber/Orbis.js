@@ -1,12 +1,11 @@
 import { Logger, Group } from "@lcluber/mouettejs";
-import { File as WeeFile } from "@lcluber/weejs";
 
 export function loadImage(path: string): Promise<string> {
   let log: Group = Logger.addGroup("Orbis");
   return new Promise((resolve: Function, reject: Function) => {
     let img = new Image();
     img.src = path;
-    img.name = WeeFile.getName(path);
+    img.name = getName(path);
     log.info("xhr processing starting (" + path + ")");
     img.addEventListener("load", () => {
       log.info("xhr done successfully (" + path + ")");
@@ -17,4 +16,10 @@ export function loadImage(path: string): Promise<string> {
       reject(new Error("xhr failed (" + path + ")"));
     });
   });
+}
+
+function getName(path: string): string {
+  return path.replace(/^.*[\\\/]/, "");
+  //var filename = path.split('/').pop();
+  //return filename.split('.').shift();
 }

@@ -23,10 +23,10 @@
 * http://orbisjs.lcluber.com
 */
 
-import { Binding, Dom, File } from '@lcluber/weejs';
 import { FSM } from '@lcluber/taipanjs';
 import { Logger } from '@lcluber/mouettejs';
 import { HTTP } from '@lcluber/aiasjs';
+import { Binding, Dom } from '@lcluber/weejs';
 import { Utils } from '@lcluber/type6js';
 import { Player } from '@lcluber/frameratjs';
 
@@ -35,7 +35,7 @@ function loadImage(path) {
     return new Promise((resolve, reject) => {
         let img = new Image();
         img.src = path;
-        img.name = File.getName(path);
+        img.name = getName(path);
         log.info("xhr processing starting (" + path + ")");
         img.addEventListener("load", () => {
             log.info("xhr done successfully (" + path + ")");
@@ -46,6 +46,9 @@ function loadImage(path) {
             reject(new Error("xhr failed (" + path + ")"));
         });
     });
+}
+function getName(path) {
+    return path.replace(/^.*[\\\/]/, "");
 }
 
 function loadSound(path) {
@@ -237,7 +240,7 @@ class Loader {
             sound: ["mp3", "ogg", "wav"]
         };
         this.assets = assets;
-        this.path = File.removeTrailingSlash(assetsPath);
+        this.path = this.removeTrailingSlash(assetsPath);
         this.pendingRequests = 0;
         this.tick = this.default.tick;
         this.maxPendingRequests = this.default.maxPending;
@@ -285,7 +288,7 @@ class Loader {
     getAssetType(extension) {
         for (let property in this.validExtensions) {
             if (this.validExtensions.hasOwnProperty(property)) {
-                if (File.checkExtension(extension, this.validExtensions[property])) {
+                if (this.checkExtension(extension, this.validExtensions[property])) {
                     return property;
                 }
             }
@@ -300,7 +303,7 @@ class Loader {
                 let folder = type.folder ? type.folder + "/" : "";
                 for (let file of type.files) {
                     if (!file.asset && file.hasOwnProperty("name")) {
-                        let extension = File.getExtension(file.name);
+                        let extension = this.getExtension(file.name);
                         if (extension) {
                             let type = this.getAssetType(extension);
                             if (type) {
@@ -335,6 +338,20 @@ class Loader {
                         return file.asset;
                     }
                 }
+            }
+        }
+        return false;
+    }
+    removeTrailingSlash(path) {
+        return path.replace(/\/+$/, "");
+    }
+    getExtension(path) {
+        return path.split(".").pop();
+    }
+    checkExtension(extension, validExtensions) {
+        for (let validExtension of validExtensions) {
+            if (extension === validExtension) {
+                return true;
             }
         }
         return false;
