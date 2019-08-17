@@ -1,3 +1,8 @@
+## Version 0.8.0 (August 17th 2019)
+
+- Added resetProgress() method.
+- Updated dependencies.
+
 ## Version 0.7.2 (July 6th 2019)
 
 - Updated Weejs to 0.3.0.
