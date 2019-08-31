@@ -1,3 +1,10 @@
+## [0.8.2](https://github.com/LCluber/Orbis.js/compare/v0.8.1...v0.8.2) (2019-08-31)
+
+
+### Bug Fixes
+
+* **sound:** added stalled event listener to sound loader ([facd150](https://github.com/LCluber/Orbis.js/commit/facd150))
+
 ## [0.8.1](https://github.com/LCluber/Orbis.js/compare/v0.8.0...v0.8.1) (2019-08-18)
 
 
