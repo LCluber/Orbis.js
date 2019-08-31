@@ -3,7 +3,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "target": "es5",
-    "lib": ["es2016", "DOM", "ES5", "ScriptHost", "ES2015.Promise"],
+    "lib": ["es2016", "dom", "es5", "scripthost", "es2015.promise"],
     "sourceMap": true,
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,

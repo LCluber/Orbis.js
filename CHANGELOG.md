@@ -1,3 +1,10 @@
+## [0.8.1](https://github.com/LCluber/Orbis.js/compare/v0.8.0...v0.8.1) (2019-08-18)
+
+
+### Bug Fixes
+
+* **dist:** fixed dist forlder ([708766d](https://github.com/LCluber/Orbis.js/commit/708766d))
+
 ## Version 0.8.0 (August 17th 2019)
 
 - Added resetProgress() method.
