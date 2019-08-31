@@ -31,5 +31,13 @@ export function loadSound(path: string): Promise<string> {
       },
       false
     );
+    snd.addEventListener(
+      "stalled",
+      () => {
+        log.error("xhr failed (" + path + ")");
+        reject(new Error("xhr failed (" + path + ")"));
+      },
+      false
+    );
   });
 }

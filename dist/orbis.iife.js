@@ -564,6 +564,10 @@ var Orbis = (function (exports) {
                 log.error("xhr failed (" + path + ")");
                 reject(new Error("xhr failed (" + path + ")"));
             }, false);
+            snd.addEventListener("stalled", function () {
+                log.error("xhr failed (" + path + ")");
+                reject(new Error("xhr failed (" + path + ")"));
+            }, false);
         });
     }
 

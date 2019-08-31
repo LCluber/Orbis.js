@@ -69,6 +69,10 @@ function loadSound(path) {
             log.error("xhr failed (" + path + ")");
             reject(new Error("xhr failed (" + path + ")"));
         }, false);
+        snd.addEventListener("stalled", () => {
+            log.error("xhr failed (" + path + ")");
+            reject(new Error("xhr failed (" + path + ")"));
+        }, false);
     });
 }
 
