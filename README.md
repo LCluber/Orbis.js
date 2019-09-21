@@ -1,6 +1,6 @@
 ## Synopsis
 
-  [Orbis.js](http://orbisjs.lcluber.com) is an asynchronous assets loader written in TypeScript.
+[Orbis.js](http://orbisjs.lcluber.com) is a lazy loader written in TypeScript.
 
 ## Motivation
 
@@ -11,6 +11,7 @@ The main purpose of this library is to provide a simple way to load assets only 
 ```bash
 $ npm install @lcluber/orbisjs
 ```
+
 Or download it **[here](http://orbisjs.lcluber.com/#download)**.
 
 ## Demo
@@ -25,7 +26,6 @@ Learn how to use it **[here](http://orbisjs.lcluber.com/#source)**.
 
 Read the documentation **[here](http://orbisjs.lcluber.com/doc/)**.
 
-
 ## Tests
 
 No tests to run yet
@@ -33,7 +33,7 @@ No tests to run yet
 ## Contributors
 
 There is still a lot of work to do on this project and I would be glad to get all the help you can provide.
-To contribute you can clone the project on **[GitHub](https://github.com/LCluber/Orbis.js)** and see  **NOTICE.md** for detailed installation walkthrough of the project.
+To contribute you can clone the project on **[GitHub](https://github.com/LCluber/Orbis.js)** and see **NOTICE.md** for detailed installation walkthrough of the project.
 
 ## License
 

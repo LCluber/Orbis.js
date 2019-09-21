@@ -1,4 +1,23 @@
-## Version 0.7.2 (July 2nd 2019)
+## [0.8.2](https://github.com/LCluber/Orbis.js/compare/v0.8.1...v0.8.2) (2019-08-31)
+
+
+### Bug Fixes
+
+* **sound:** added stalled event listener to sound loader ([facd150](https://github.com/LCluber/Orbis.js/commit/facd150))
+
+## [0.8.1](https://github.com/LCluber/Orbis.js/compare/v0.8.0...v0.8.1) (2019-08-18)
+
+
+### Bug Fixes
+
+* **dist:** fixed dist forlder ([708766d](https://github.com/LCluber/Orbis.js/commit/708766d))
+
+## Version 0.8.0 (August 17th 2019)
+
+- Added resetProgress() method.
+- Updated dependencies.
+
+## Version 0.7.2 (July 6th 2019)
 
 - Updated Weejs to 0.3.0.
 - image, sound and file loaders included in the library.
