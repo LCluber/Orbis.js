@@ -1,68 +1,66 @@
-import {Logger, Group} from '@lcluber/mouettejs';
-import {File}     from '@lcluber/weejs';
-// import {Is}       from '@lcluber/chjs';
-// import {Logger}   from '@lcluber/mouettejs';
-import {Asset}    from './asset';
-//import {Request}  from './request';
-import {Progress} from './progress';
+import { Asset } from "./asset";
+import { Progress } from "./progress";
 
 export type ValidExtensions = {
-  file  : string[];
-  img   : string[];
-  sound : string[];
+  file: string[];
+  img: string[];
+  sound: string[];
   [key: string]: string[];
-}
+};
 
 export type Default = {
-  maxPending : number;
-  tick       : number;
-}
+  maxPending: number;
+  tick: number;
+};
 
 export interface Assets {
   [key: string]: any;
 }
 
 export class Loader {
-
-  assets             : Assets; //data from the assets file
-  path               : string;
-  progress           : Progress;
+  assets: Assets; //data from the assets file
+  path: string;
+  progress: Progress;
   //assetsPath: string;
   // requests        : {}, //requests list
 
   // sentRequests    : 0,
   // onProgress         : Function;
   // onComplete         : Function;
-  pendingRequests    : number;
+  pendingRequests: number;
 
-  tick               : number;
-  maxPendingRequests : number;
-  default            : Default;
+  tick: number;
+  maxPendingRequests: number;
+  default: Default;
 
   // logs             : {},
-  validExtensions : ValidExtensions;
-  log : Group;
+  validExtensions: ValidExtensions;
+  // log: Group;
 
-  constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string) {
-
+  constructor(
+    assets: Assets,
+    assetsPath: string,
+    progressBarId: string,
+    progressTextId: string
+  ) {
     this.default = {
-      maxPending : 6,
-      tick       : 100
+      maxPending: 6,
+      tick: 100
     };
 
     this.validExtensions = {
-      file  : ['txt', 'text', 'json', 'glsl', 'babylon'],
-      img   : ['png','jpg', 'jpeg', 'gif'],
-      sound : ['mp3', 'ogg', 'wav']
+      file: ["txt", "text", "json", "glsl", "babylon"],
+      img: ["png", "jpg", "jpeg", "gif"],
+      sound: ["mp3", "ogg", "wav"]
     };
 
-    this.assets             = assets;
-    this.path               = File.removeTrailingSlash(assetsPath);
-    this.pendingRequests    = 0;
-    this.tick               = this.default.tick;
+    this.assets = assets;
+    this.path = this.removeTrailingSlash(assetsPath);
+    this.pendingRequests = 0;
+    this.tick = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
-    this.progress           = new Progress(progressBarId, progressTextId);
-    this.log                = Logger.addGroup('Orbis');
+    this.progress = new Progress(progressBarId, progressTextId);
+    // this.log = Logger.addGroup("Orbis");
     // Logger.setLevel('error');
     this.createAssets();
   }
@@ -75,7 +73,7 @@ export class Loader {
   //   this.maxPendingRequests = maxPendingRequests;
   // }
 
-  public getAsset(name: string): Asset|false {
+  public getAsset(name: string): Asset | false {
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
         for (let file of this.assets[property].files) {
@@ -88,7 +86,7 @@ export class Loader {
     return false;
   }
 
-  public getList (type: string): Asset[]|false {
+  public getList(type: string): Asset[] | false {
     if (this.assets.hasOwnProperty(type)) {
       return this.assets[type].files;
     }
@@ -97,7 +95,7 @@ export class Loader {
 
   public launch(): Promise<void> {
     return new Promise((resolve: Function, reject: Function) => {
-      if(this.progress.nbAssets) {
+      if (this.progress.nbAssets) {
         this.progress.start();
         let intervalID = setInterval(() => {
           this.sendRequest();
@@ -107,16 +105,20 @@ export class Loader {
             resolve();
           }
         }, this.tick);
-      }else{
-        reject('!! nothing to load here');
+      } else {
+        reject("!! nothing to load here");
       }
     });
   }
 
-  private getAssetType(extension: string): string|false {
+  public resetProgress() {
+    this.progress.reset();
+  }
+
+  private getAssetType(extension: string): string | false {
     for (let property in this.validExtensions) {
       if (this.validExtensions.hasOwnProperty(property)) {
-        if (File.checkExtension(extension, this.validExtensions[property])) {
+        if (this.checkExtension(extension, this.validExtensions[property])) {
           return property;
         }
       }
@@ -128,16 +130,21 @@ export class Loader {
     this.progress.nbAssets = 0;
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
-        let type   = this.assets[property];
-        let folder = type.folder ? type.folder + '/' : '';
+        let type = this.assets[property];
+        let folder = type.folder ? type.folder + "/" : "";
         for (let file of type.files) {
-          if (!file.asset && file.hasOwnProperty('name')) {
-            let extension = File.getExtension(file.name);
+          if (!file.asset && file.hasOwnProperty("name")) {
+            let extension = this.getExtension(file.name);
             if (extension) {
               let type = this.getAssetType(extension);
               if (type) {
-                file.asset = new Asset(this.path + '/' + folder, file.name, extension, type);
-                this.progress.nbAssets ++;
+                file.asset = new Asset(
+                  this.path + "/" + folder,
+                  file.name,
+                  extension,
+                  type
+                );
+                this.progress.nbAssets++;
               }
             }
           }
@@ -151,11 +158,10 @@ export class Loader {
   }
 
   private sendRequest(): boolean {
-
     if (this.pendingRequests < this.maxPendingRequests) {
       let nextAsset = this.getNextAssetToLoad();
       if (nextAsset) {
-        nextAsset.sendRequest().then((response) => {
+        nextAsset.sendRequest().then(response => {
           // if(response) {
           this.pendingRequests--;
           this.progress.update(response);
@@ -168,12 +174,12 @@ export class Loader {
     return false;
   }
 
-  private getNextAssetToLoad(): Asset|false {
+  private getNextAssetToLoad(): Asset | false {
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
         let type = this.assets[property];
         for (let file of type.files) {
-          if (file.hasOwnProperty('asset') && !file.asset.isRequestSent()) {
+          if (file.hasOwnProperty("asset") && !file.asset.isRequestSent()) {
             return file.asset;
           }
         }
@@ -182,6 +188,26 @@ export class Loader {
     return false;
   }
 
+  private removeTrailingSlash(path: string): string {
+    return path.replace(/\/+$/, "");
+  }
+
+  private getExtension(path: string): string | undefined {
+    return path.split(".").pop();
+  }
+
+  private checkExtension(
+    extension: string,
+    validExtensions: string[]
+  ): boolean {
+    // return validExtensions.find(validExtension => extension === validExtension) != undefined;
+    for (let validExtension of validExtensions) {
+      if (extension === validExtension) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   // /**
   // * Set the scope used by onProgress, onAnimate, onComplete callbacks.
@@ -197,8 +223,6 @@ export class Loader {
   //   }else
   //     return false;
   // },
-
-
 
   // /**
   // * Set the maximum number of simultaneous pending requests the loader can handle. Once reached new requests will not start before a previous request completes. Six being the maximum on most browsers.
@@ -223,6 +247,4 @@ export class Loader {
   //   this.progress.speed = TYPE6.MathUtils.clamp( ORBIS.Utils.valueValidation( speed ), 10, 100 );
   //   return this.progress.speed;
   // }
-
-
 }

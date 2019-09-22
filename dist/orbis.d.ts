@@ -23,14 +23,6 @@
 * http://orbisjs.lcluber.com
 */
 
-
-
-export declare class Ajax {
-    static file: File;
-    static img: Img;
-    static sound: Sound;
-}
-
 export declare class Asset {
     path: string;
     file: string;
@@ -43,7 +35,6 @@ export declare class Asset {
     getRequestStatus(): string;
     isRequestSent(): boolean;
 }
-import { Group } from '@lcluber/mouettejs';
 
 
 export declare type ValidExtensions = {
@@ -68,15 +59,18 @@ export declare class Loader {
     maxPendingRequests: number;
     default: Default;
     validExtensions: ValidExtensions;
-    log: Group;
     constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string);
     getAsset(name: string): Asset | false;
     getList(type: string): Asset[] | false;
     launch(): Promise<void>;
+    resetProgress(): void;
     private getAssetType;
     private createAssets;
     private sendRequest;
     private getNextAssetToLoad;
+    private removeTrailingSlash;
+    private getExtension;
+    private checkExtension;
 }
 export declare class Progress {
     private rate;
@@ -94,11 +88,16 @@ export declare class Progress {
     constructor(barId: string | null, textId: string | null);
     private animateBar;
     start(): void;
+    reset(): void;
     update(text: string): void;
     updateBar(delta: number): boolean;
 }
-import { FSM } from '@lcluber/taipanjs';
-
+import { FSM } from "@lcluber/taipanjs";
+export declare type Ajax = {
+    file: Function;
+    img: Function;
+    sound: Function;
+};
 export declare class Request {
     fsm: FSM;
     ajax: Ajax;

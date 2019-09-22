@@ -63,6 +63,14 @@ export class Progress {
     }
   }
 
+  public reset() {
+    this.finished = false;
+    this.percentage = 0.0;
+    if (this.text) {
+      this.text.update("Loading");
+    }
+  }
+
   public update(text: string): void {
     this.total++;
     this.rate = this.total / this.nbAssets;

@@ -3,7 +3,7 @@
     "module": "ES6",
     "moduleResolution": "node",
     "target": "ES6",
-    "lib":["DOM","ES5","ScriptHost","ES2015.Promise"],
+    "lib": ["es2016", "dom", "es5", "scripthost", "es2015.promise"],
     "sourceMap": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -14,15 +14,13 @@
     "strictPropertyInitialization": true,
     "allowSyntheticDefaultImports": true,
     "preserveConstEnums": true,
-    "suppressImplicitAnyIndexErrors":true,
+    "suppressImplicitAnyIndexErrors": true,
     "allowJs": false,
     "removeComments": true,
-    "declaration":true,
-    "declarationDir":"build/es6/",
-    "outDir":"build/es6/",
-    "rootDir":"src/ts/"
+    "declaration": true,
+    "declarationDir": "build/es6/",
+    "outDir": "build/es6/",
+    "rootDir": "src/ts/"
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
