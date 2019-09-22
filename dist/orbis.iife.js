@@ -546,31 +546,6 @@ var Orbis = (function (exports) {
         return path.replace(/^.*[\\\/]/, "");
     }
 
-    function loadSound(path) {
-        var log = Logger$1.addGroup("Orbis");
-        return new Promise(function (resolve, reject) {
-            var snd = new Audio();
-            snd.src = path;
-            log.info("xhr processing starting (" + path + ")");
-            snd.addEventListener("canplaythrough", function () {
-                log.info("xhr done successfully (" + path + ")");
-                resolve(snd);
-            }, false);
-            snd.addEventListener("canplay", function () {
-                log.info("xhr done successfully (" + path + ")");
-                resolve(snd);
-            }, false);
-            snd.addEventListener("error", function () {
-                log.error("xhr failed (" + path + ")");
-                reject(new Error("xhr failed (" + path + ")"));
-            }, false);
-            snd.addEventListener("stalled", function () {
-                log.error("xhr failed (" + path + ")");
-                reject(new Error("xhr failed (" + path + ")"));
-            }, false);
-        });
-    }
-
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
     function isObject(object) {
@@ -860,6 +835,10 @@ var Orbis = (function (exports) {
         "Content-Type": "application/json"
     });
 
+    function loadSound(path) {
+        return HTTP.GET(path);
+    }
+
     function loadFile(path) {
         return HTTP.GET(path);
     }
@@ -878,6 +857,7 @@ var Orbis = (function (exports) {
             if (this.fsm["send"]()) {
                 return this.ajax[type](path).then(function (response) {
                     _this.fsm["success"]();
+                    console.log(response);
                     return response;
                 }).catch(function () {
                     _this.fsm["error"]();

@@ -52,28 +52,7 @@ function getName(path) {
 }
 
 function loadSound(path) {
-    let log = Logger.addGroup("Orbis");
-    return new Promise((resolve, reject) => {
-        let snd = new Audio();
-        snd.src = path;
-        log.info("xhr processing starting (" + path + ")");
-        snd.addEventListener("canplaythrough", () => {
-            log.info("xhr done successfully (" + path + ")");
-            resolve(snd);
-        }, false);
-        snd.addEventListener("canplay", () => {
-            log.info("xhr done successfully (" + path + ")");
-            resolve(snd);
-        }, false);
-        snd.addEventListener("error", () => {
-            log.error("xhr failed (" + path + ")");
-            reject(new Error("xhr failed (" + path + ")"));
-        }, false);
-        snd.addEventListener("stalled", () => {
-            log.error("xhr failed (" + path + ")");
-            reject(new Error("xhr failed (" + path + ")"));
-        }, false);
-    });
+    return HTTP.GET(path);
 }
 
 function loadFile(path) {
@@ -98,6 +77,7 @@ class Request {
             return this.ajax[type](path)
                 .then((response) => {
                 this.fsm["success"]();
+                console.log(response);
                 return response;
             })
                 .catch(() => {

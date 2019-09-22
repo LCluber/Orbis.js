@@ -35,6 +35,7 @@ export class Request {
       return this.ajax[type](path)
         .then((response: HTMLImageElement | HTMLAudioElement | string) => {
           this.fsm["success"]();
+          console.log(response);
           return response;
         })
         .catch((/*err: Error*/) => {
