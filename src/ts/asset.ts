@@ -41,7 +41,7 @@ export class Asset {
     }
   }
 
-  public getRequestStatus(): string {
+  public getRequestStatus(): string | number | boolean {
     return this.request.fsm.state;
   }
 

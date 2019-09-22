@@ -32,7 +32,7 @@ export declare class Asset {
     request: Request;
     constructor(path: string, file: string, extension: string, type: string);
     sendRequest(): Promise<string>;
-    getRequestStatus(): string;
+    getRequestStatus(): string | number | boolean;
     isRequestSent(): boolean;
 }
 

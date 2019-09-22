@@ -52,11 +52,20 @@ function getName(path) {
 }
 
 function loadSound(path) {
-    return HTTP.GET(path);
+    let context = new AudioContext();
+    return HTTP.GET(path, "arraybuffer")
+        .then((response) => {
+        return context.decodeAudioData(response, (buffer) => {
+            return buffer;
+        }, (e) => {
+            console.log('decodeAudioData error' + e.err);
+            return false;
+        });
+    });
 }
 
 function loadFile(path) {
-    return HTTP.GET(path);
+    return HTTP.GET(path, "text");
 }
 
 class Request {
@@ -77,7 +86,6 @@ class Request {
             return this.ajax[type](path)
                 .then((response) => {
                 this.fsm["success"]();
-                console.log(response);
                 return response;
             })
                 .catch(() => {

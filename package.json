@@ -53,10 +53,10 @@
   ],
   "dependencies": {
     "@lcluber/mouettejs": "2.1.0",
-    "@lcluber/taipanjs": "0.3.10",
+    "@lcluber/taipanjs": "0.3.11",
     "@lcluber/type6js": "1.0.6",
     "@lcluber/weejs": "1.0.0",
-    "@lcluber/aiasjs": "1.0.2",
+    "@lcluber/aiasjs": "2.0.0",
     "@lcluber/frameratjs": "0.3.8",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",

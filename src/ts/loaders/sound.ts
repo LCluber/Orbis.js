@@ -1,9 +1,18 @@
 // import { Logger, Group } from "@lcluber/mouettejs";
-import { HTTP, DataType } from "@lcluber/aiasjs";
+import { HTTP } from "@lcluber/aiasjs";
 
-export function loadSound(path: string): Promise<DataType> {
-  //const context = new AudioContext();
-  return HTTP.GET(path);
-  // .then((response: any) => { response ? response.arrayBuffer() : null})
-  // .then((arrayBuffer: ArrayBuffer) => {arrayBuffer ? context.decodeAudioData(arrayBuffer) ? null });
+export function loadSound(path: string): Promise<AudioBuffer | false> {
+  let context = new AudioContext();
+  return HTTP.GET(path, "arraybuffer").then((response: ArrayBuffer) => {
+    return context.decodeAudioData(
+      response,
+      buffer => {
+        return buffer;
+      },
+      (e: any) => {
+        console.log("decodeAudioData error" + e.err);
+        return false;
+      }
+    );
+  });
 }

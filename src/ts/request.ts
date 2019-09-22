@@ -33,11 +33,19 @@ export class Request {
     // console.log(this.fsm);
     if (this.fsm["send"]()) {
       return this.ajax[type](path)
-        .then((response: HTMLImageElement | HTMLAudioElement | string) => {
-          this.fsm["success"]();
-          console.log(response);
-          return response;
-        })
+        .then(
+          (
+            response:
+              | HTMLImageElement
+              | HTMLAudioElement
+              | string
+              | Blob
+              | AudioBuffer
+          ) => {
+            this.fsm["success"]();
+            return response;
+          }
+        )
         .catch((/*err: Error*/) => {
           //console.log('error', path);
           //console.log('error', err.message);
