@@ -38,12 +38,12 @@ function loadImage(path) {
         img.name = getName(path);
         log.info("xhr processing starting (" + path + ")");
         img.addEventListener("load", () => {
-            log.info("xhr done successfully (" + path + ")");
+            log.info("xhr (" + path + ") done");
             resolve(img);
         });
         img.addEventListener("error", () => {
-            log.error("xhr failed (" + path + ")");
-            reject(new Error("xhr failed (" + path + ")"));
+            log.error("xhr (" + path + ") failed");
+            reject(new Error("xhr (" + path + ") failed"));
         });
     });
 }
@@ -52,13 +52,13 @@ function getName(path) {
 }
 
 function loadSound(path) {
+    let log = Logger.addGroup("Orbis");
     let context = new AudioContext();
-    return HTTP.GET(path, "arraybuffer")
-        .then((response) => {
+    return HTTP.GET(path, "arraybuffer").then((response) => {
         return context.decodeAudioData(response, (buffer) => {
             return buffer;
         }, (e) => {
-            console.log('decodeAudioData error' + e.err);
+            log.error("decodeAudioData error : " + e.message);
             return false;
         });
     });

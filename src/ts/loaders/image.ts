@@ -8,12 +8,12 @@ export function loadImage(path: string): Promise<string> {
     img.name = getName(path);
     log.info("xhr processing starting (" + path + ")");
     img.addEventListener("load", () => {
-      log.info("xhr done successfully (" + path + ")");
+      log.info("xhr (" + path + ") done");
       resolve(img);
     });
     img.addEventListener("error", () => {
-      log.error("xhr failed (" + path + ")");
-      reject(new Error("xhr failed (" + path + ")"));
+      log.error("xhr (" + path + ") failed");
+      reject(new Error("xhr (" + path + ") failed"));
     });
   });
 }

@@ -533,12 +533,12 @@ var Orbis = (function (exports) {
             img.name = getName(path);
             log.info("xhr processing starting (" + path + ")");
             img.addEventListener("load", function () {
-                log.info("xhr done successfully (" + path + ")");
+                log.info("xhr (" + path + ") done");
                 resolve(img);
             });
             img.addEventListener("error", function () {
-                log.error("xhr failed (" + path + ")");
-                reject(new Error("xhr failed (" + path + ")"));
+                log.error("xhr (" + path + ") failed");
+                reject(new Error("xhr (" + path + ") failed"));
             });
         });
     }
@@ -703,7 +703,6 @@ var Orbis = (function (exports) {
                 var _this = this;
 
                 return new Promise(function (resolve, reject) {
-                    var msg = ["Aias xhr ", " (" + _this.method + ":" + url + ")"];
                     var http = new XMLHttpRequest();
                     url += _this.noCache ? "?cache=" + new Date().getTime() : "";
                     http.open(_this.method, url, _this.async);
@@ -714,9 +713,14 @@ var Orbis = (function (exports) {
                             http.onload = function () {
                                 var arrayBuffer = http.response;
                                 if (arrayBuffer) {
+                                    _this.logInfo(url, http.status, http.statusText);
                                     resolve(arrayBuffer);
                                 } else {
-                                    reject(http.status);
+                                    _this.logError(url, http.status, http.statusText);
+                                    reject({
+                                        status: http.status,
+                                        statusText: http.statusText
+                                    });
                                 }
                             };
                             break;
@@ -724,9 +728,14 @@ var Orbis = (function (exports) {
                             http.onload = function () {
                                 var blob = http.response;
                                 if (blob) {
+                                    _this.logInfo(url, http.status, http.statusText);
                                     resolve(blob);
                                 } else {
-                                    reject(http.status);
+                                    _this.logError(url, http.status, http.statusText);
+                                    reject({
+                                        status: http.status,
+                                        statusText: http.statusText
+                                    });
                                 }
                             };
                             break;
@@ -734,11 +743,14 @@ var Orbis = (function (exports) {
                             http.onreadystatechange = function () {
                                 if (http.readyState == 4) {
                                     if (http.status == 200) {
-                                        _this.log.info(msg[0] + "successful" + msg[1]);
+                                        _this.logInfo(url, http.status, http.statusText);
                                         resolve(http.responseText);
                                     } else {
-                                        _this.log.error(msg[0] + "failed" + msg[1]);
-                                        reject(http.status);
+                                        _this.logError(url, http.status, http.statusText);
+                                        reject({
+                                            status: http.status,
+                                            statusText: http.statusText
+                                        });
                                     }
                                 }
                             };
@@ -747,7 +759,7 @@ var Orbis = (function (exports) {
                         data = JSON.stringify(data);
                     }
                     http.send(data || null);
-                    _this.log.info(msg[0] + "sent" + msg[1]);
+                    _this.log.info("xhr (" + _this.method + ":" + url + ")" + "sent");
                 });
             }
         }, {
@@ -758,6 +770,16 @@ var Orbis = (function (exports) {
                         http.setRequestHeader(property, this.headers[property]);
                     }
                 }
+            }
+        }, {
+            key: 'logInfo',
+            value: function logInfo(url, status, statusText) {
+                this.log.info("xhr (" + this.method + ":" + url + ") done with status " + status + " " + statusText);
+            }
+        }, {
+            key: 'logError',
+            value: function logError(url, status, statusText) {
+                this.log.error("xhr (" + this.method + ":" + url + ") failed with status " + status + " " + statusText);
             }
         }]);
 
@@ -848,12 +870,13 @@ var Orbis = (function (exports) {
     });
 
     function loadSound(path) {
+        var log = Logger$1.addGroup("Orbis");
         var context = new AudioContext();
         return HTTP.GET(path, "arraybuffer").then(function (response) {
             return context.decodeAudioData(response, function (buffer) {
                 return buffer;
             }, function (e) {
-                console.log('decodeAudioData error' + e.err);
+                log.error("decodeAudioData error : " + e.message);
                 return false;
             });
         });
