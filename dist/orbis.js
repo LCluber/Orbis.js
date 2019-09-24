@@ -52,16 +52,7 @@ function getName(path) {
 }
 
 function loadSound(path) {
-    let log = Logger.addGroup("Orbis");
-    let context = new AudioContext();
-    return HTTP.GET(path, "arraybuffer").then((response) => {
-        return context.decodeAudioData(response, (buffer) => {
-            return buffer;
-        }, (e) => {
-            log.error("decodeAudioData error : " + e.message);
-            return false;
-        });
-    });
+    return HTTP.GET(path, "audiobuffer");
 }
 
 function loadFile(path) {

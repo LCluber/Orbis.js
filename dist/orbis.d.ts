@@ -102,5 +102,5 @@ export declare class Request {
     fsm: FSM;
     ajax: Ajax;
     constructor();
-    send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | boolean>;
+    send(path: string, type: string): Promise<HTMLImageElement | AudioBuffer | string | Object | false>;
 }
