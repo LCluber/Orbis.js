@@ -387,10 +387,21 @@ var Orbis = (function (exports) {
             this.messages = [];
             this.name = name;
             this.messages = [];
-            this._level = level;
+            this.level = level;
         }
 
         _createClass$1(Group, [{
+            key: "setLevel",
+            value: function setLevel(name) {
+                this.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this.level;
+                return this.getLevel();
+            }
+        }, {
+            key: "getLevel",
+            value: function getLevel() {
+                return this.level.name;
+            }
+        }, {
             key: "info",
             value: function info(message) {
                 this.log(LEVELS$1.info, message);
@@ -415,17 +426,9 @@ var Orbis = (function (exports) {
             value: function log(level, messageContent) {
                 var message = new Message$1(level, messageContent);
                 this.messages.push(message);
-                if (this._level.id <= message.id) {
+                if (this.level.id <= message.id) {
                     message.display(this.name);
                 }
-            }
-        }, {
-            key: "level",
-            set: function set(name) {
-                this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
-            },
-            get: function get() {
-                return this._level.name;
             }
         }]);
 
@@ -449,7 +452,7 @@ var Orbis = (function (exports) {
                     for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var group = _step.value;
 
-                        group.level = Logger.level.name;
+                        group.setLevel(Logger.level.name);
                     }
                 } catch (err) {
                     _didIteratorError = true;
@@ -803,6 +806,16 @@ var Orbis = (function (exports) {
         }
 
         _createClass$2(HTTP, null, [{
+            key: 'setLogLevel',
+            value: function setLogLevel(name) {
+                return this.log.setLevel(name);
+            }
+        }, {
+            key: 'getLogLevel',
+            value: function getLogLevel() {
+                return this.log.getLevel();
+            }
+        }, {
             key: 'GET',
             value: function GET(url, responseType) {
                 return this.get.call(url, responseType);
@@ -852,6 +865,7 @@ var Orbis = (function (exports) {
         return HTTP;
     }();
 
+    HTTP.log = Logger$1.addGroup("Aias");
     HTTP.get = new Method("GET", {
         "Content-Type": "application/x-www-form-urlencoded"
     });
