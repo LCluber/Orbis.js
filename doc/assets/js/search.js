@@ -447,6 +447,14 @@ typedoc.search.data = {
     },
     {
       id: 54,
+      kind: 1024,
+      name: "log",
+      url: "classes/_orbis_.loader.html#log",
+      classes: "tsd-kind-property tsd-parent-kind-class",
+      parent: '"orbis".Loader'
+    },
+    {
+      id: 55,
       kind: 512,
       name: "constructor",
       url: "classes/_orbis_.loader.html#constructor",
@@ -454,7 +462,23 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 55,
+      id: 56,
+      kind: 2048,
+      name: "setLogLevel",
+      url: "classes/_orbis_.loader.html#setloglevel",
+      classes: "tsd-kind-method tsd-parent-kind-class",
+      parent: '"orbis".Loader'
+    },
+    {
+      id: 57,
+      kind: 2048,
+      name: "getLogLevel",
+      url: "classes/_orbis_.loader.html#getloglevel",
+      classes: "tsd-kind-method tsd-parent-kind-class",
+      parent: '"orbis".Loader'
+    },
+    {
+      id: 58,
       kind: 2048,
       name: "getAsset",
       url: "classes/_orbis_.loader.html#getasset",
@@ -462,7 +486,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 56,
+      id: 59,
       kind: 2048,
       name: "getList",
       url: "classes/_orbis_.loader.html#getlist",
@@ -470,7 +494,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 57,
+      id: 60,
       kind: 2048,
       name: "launch",
       url: "classes/_orbis_.loader.html#launch",
@@ -478,7 +502,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 58,
+      id: 61,
       kind: 2048,
       name: "resetProgress",
       url: "classes/_orbis_.loader.html#resetprogress",
@@ -486,7 +510,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 59,
+      id: 62,
       kind: 2048,
       name: "getAssetType",
       url: "classes/_orbis_.loader.html#getassettype",
@@ -494,7 +518,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 60,
+      id: 63,
       kind: 2048,
       name: "createAssets",
       url: "classes/_orbis_.loader.html#createassets",
@@ -502,7 +526,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 61,
+      id: 64,
       kind: 2048,
       name: "sendRequest",
       url: "classes/_orbis_.loader.html#sendrequest",
@@ -510,7 +534,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 62,
+      id: 65,
       kind: 2048,
       name: "getNextAssetToLoad",
       url: "classes/_orbis_.loader.html#getnextassettoload",
@@ -518,7 +542,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 63,
+      id: 66,
       kind: 2048,
       name: "removeTrailingSlash",
       url: "classes/_orbis_.loader.html#removetrailingslash",
@@ -526,7 +550,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 64,
+      id: 67,
       kind: 2048,
       name: "getExtension",
       url: "classes/_orbis_.loader.html#getextension",
@@ -534,7 +558,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 65,
+      id: 68,
       kind: 2048,
       name: "checkExtension",
       url: "classes/_orbis_.loader.html#checkextension",
@@ -542,7 +566,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 66,
+      id: 69,
       kind: 4194304,
       name: "ValidExtensions",
       url: "modules/_orbis_.html#validextensions",
@@ -550,7 +574,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 67,
+      id: 70,
       kind: 65536,
       name: "__type",
       url: "modules/_orbis_.html#validextensions.__type-1",
@@ -559,7 +583,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions'
     },
     {
-      id: 68,
+      id: 71,
       kind: 32,
       name: "file",
       url: "modules/_orbis_.html#validextensions.__type-1.file",
@@ -568,7 +592,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 69,
+      id: 72,
       kind: 32,
       name: "img",
       url: "modules/_orbis_.html#validextensions.__type-1.img",
@@ -577,7 +601,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 70,
+      id: 73,
       kind: 32,
       name: "sound",
       url: "modules/_orbis_.html#validextensions.__type-1.sound",
@@ -586,7 +610,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 71,
+      id: 74,
       kind: 4194304,
       name: "Default",
       url: "modules/_orbis_.html#default",
@@ -594,7 +618,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 72,
+      id: 75,
       kind: 65536,
       name: "__type",
       url: "modules/_orbis_.html#default.__type",
@@ -603,7 +627,7 @@ typedoc.search.data = {
       parent: '"orbis".Default'
     },
     {
-      id: 73,
+      id: 76,
       kind: 32,
       name: "maxPending",
       url: "modules/_orbis_.html#default.__type.maxpending",
@@ -612,7 +636,7 @@ typedoc.search.data = {
       parent: '"orbis".Default.__type'
     },
     {
-      id: 74,
+      id: 77,
       kind: 32,
       name: "tick",
       url: "modules/_orbis_.html#default.__type.tick",

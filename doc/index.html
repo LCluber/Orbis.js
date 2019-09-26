@@ -116,26 +116,22 @@
             >
               <h2>Installation</h2>
             </a>
-            <pre><code class="language-bash">$ npm install @lcluber/orbisjs</code></pre>
-            <p>
-              Or download it
-              <strong
-                ><a href="http://orbisjs.lcluber.com/#download">here</a></strong
-              >.
-            </p>
             <a
-              href="#demo"
-              id="demo"
+              href="#npm"
+              id="npm"
               style="color: inherit; text-decoration: none;"
             >
-              <h2>Demo</h2>
+              <h3>npm</h3>
             </a>
-            <p>
-              See a basic example
-              <strong
-                ><a href="http://orbisjs.lcluber.com/#example">here</a></strong
-              >.
-            </p>
+            <pre><code class="language-bash">$ npm i @lcluber/orbisjs</code></pre>
+            <a
+              href="#yarn"
+              id="yarn"
+              style="color: inherit; text-decoration: none;"
+            >
+              <h3>Yarn</h3>
+            </a>
+            <pre><code class="language-bash">$ yarn add @lcluber/orbisjs</code></pre>
             <a
               href="#usage"
               id="usage"
@@ -143,12 +139,148 @@
             >
               <h2>Usage</h2>
             </a>
-            <p>
-              Learn how to use it
-              <strong
-                ><a href="http://orbisjs.lcluber.com/#source">here</a></strong
-              >.
-            </p>
+            <a
+              href="#html"
+              id="html"
+              style="color: inherit; text-decoration: none;"
+            >
+              <h3>html</h3>
+            </a>
+            <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressPanel'</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'launcher'</span> <span class="hljs-attr">type</span>=<span class="hljs-string">'button'</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'btn btn-default'</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">'loadAssets()'</span>&gt;</span>LOAD ASSETS<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressText'</span>&gt;</span>Loading<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressBar'</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressBarNumber'</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressBarPercentage'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+            <a
+              href="#assets-object"
+              id="assets-object"
+              style="color: inherit; text-decoration: none;"
+            >
+              <h3>assets object</h3>
+            </a>
+            <pre><code class="language-javascript"><span class="hljs-comment">//example of assets to load :</span>
+<span class="hljs-keyword">var</span> list = {
+  <span class="hljs-attr">shaders</span>: {
+    <span class="hljs-attr">folder</span>: <span class="hljs-string">"shaders"</span>,
+    <span class="hljs-attr">files</span>: [
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"shader1.txt"</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"shader2.txt"</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"shader3.txt"</span> }
+    ]
+  },
+  <span class="hljs-attr">materials</span>: {
+    <span class="hljs-attr">folder</span>: <span class="hljs-string">"materials"</span>,
+    <span class="hljs-attr">files</span>: [
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"material1.txt"</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"material2.txt"</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"material3.doc"</span> }
+    ]
+  },
+  <span class="hljs-attr">textures</span>: {
+    <span class="hljs-attr">folder</span>: <span class="hljs-string">"textures"</span>,
+    <span class="hljs-attr">files</span>: [
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"texture1.png"</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"texture2.png"</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">"texture3.png"</span> }
+    ]
+  },
+  <span class="hljs-attr">meshes</span>: {
+    <span class="hljs-attr">folder</span>: <span class="hljs-string">"meshes"</span>,
+    <span class="hljs-attr">files</span>: [{ <span class="hljs-attr">name</span>: <span class="hljs-string">"mesh1.json"</span> }, { <span class="hljs-attr">name</span>: <span class="hljs-string">"mesh2.json"</span> }]
+  },
+  <span class="hljs-attr">sprites</span>: {
+    <span class="hljs-attr">folder</span>: <span class="hljs-string">"sprites"</span>,
+    <span class="hljs-attr">files</span>: [
+      {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">"sprite1.png"</span>,
+        <span class="hljs-attr">texSize</span>: [<span class="hljs-number">124</span>, <span class="hljs-number">70</span>],
+        <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">62</span>, <span class="hljs-number">70</span>]
+      },
+      {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">"sprite2.png"</span>,
+        <span class="hljs-attr">texSize</span>: [<span class="hljs-number">540</span>, <span class="hljs-number">30</span>],
+        <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">30</span>]
+      },
+      {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">"sprite3.png"</span>,
+        <span class="hljs-attr">texSize</span>: [<span class="hljs-number">540</span>, <span class="hljs-number">30</span>],
+        <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">30</span>]
+      }
+    ]
+  },
+  <span class="hljs-attr">sounds</span>: {
+    <span class="hljs-attr">folder</span>: <span class="hljs-string">"sounds"</span>,
+    <span class="hljs-attr">files</span>: [
+      {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">"sound1.mp3"</span>,
+        <span class="hljs-attr">volume</span>: <span class="hljs-number">0.2</span>,
+        <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+      },
+      {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">"sound2.mp3"</span>,
+        <span class="hljs-attr">volume</span>: <span class="hljs-number">0.3</span>,
+        <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+      },
+      {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">"sound3.mp3"</span>,
+        <span class="hljs-attr">volume</span>: <span class="hljs-number">0.7</span>,
+        <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+      }
+    ]
+  }
+};</code></pre>
+            <a
+              href="#es6"
+              id="es6"
+              style="color: inherit; text-decoration: none;"
+            >
+              <h3>ES6</h3>
+            </a>
+            <pre><code class="language-javascript"><span class="hljs-keyword">import</span> { Loader } <span class="hljs-keyword">from</span> <span class="hljs-string">"@lcluber/orbisjs"</span>;
+
+<span class="hljs-keyword">let</span> loader = <span class="hljs-keyword">new</span> Loader(
+  list,
+  <span class="hljs-string">"../public/assets/"</span>,
+  <span class="hljs-string">"progressBar"</span>,
+  <span class="hljs-string">"progressText"</span>
+);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadAssets</span>(<span class="hljs-params"></span>) </span>{
+  loader.launch().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"complete"</span>);
+    <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
+    <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
+  });
+}
+</code></pre>
+            <a
+              href="#iife"
+              id="iife"
+              style="color: inherit; text-decoration: none;"
+            >
+              <h3>IIFE</h3>
+            </a>
+            <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"node-modules/@lcluber/orbisjs/dist/orbis.iife.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+            <pre><code class="language-javascript"><span class="hljs-keyword">var</span> loader = <span class="hljs-keyword">new</span> Orbis.Loader(
+  list,
+  <span class="hljs-string">"../public/assets/"</span>,
+  <span class="hljs-string">"progressBar"</span>,
+  <span class="hljs-string">"progressText"</span>
+);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadAssets</span>(<span class="hljs-params"></span>) </span>{
+  loader.launch().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"complete"</span>);
+    <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
+    <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
+  });
+}</code></pre>
             <a
               href="#api-reference"
               id="api-reference"
@@ -156,19 +288,26 @@
             >
               <h2>API Reference</h2>
             </a>
-            <p>
-              Read the documentation
-              <strong><a href="http://orbisjs.lcluber.com/doc/">here</a></strong
-              >.
-            </p>
-            <a
-              href="#tests"
-              id="tests"
-              style="color: inherit; text-decoration: none;"
-            >
-              <h2>Tests</h2>
-            </a>
-            <p>No tests to run yet</p>
+            <pre><code class="language-javascript">
+interface Asset {
+  <span class="hljs-attr">path</span>: string;
+  file: string;
+  extension: string;
+  type: string;
+  response: <span class="hljs-built_in">Object</span> | HTMLImageElement | AudioBuffer | string | <span class="hljs-literal">null</span>;
+  request: Request;
+}
+
+loader.getAsset(name: string): Asset | <span class="hljs-literal">false</span>;
+loader.getList(type: string): Asset[] | <span class="hljs-literal">false</span>;
+loader.launch(): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-keyword">void</span>&gt;;
+loader.resetProgress(): <span class="hljs-keyword">void</span>;
+
+<span class="hljs-comment">// Log levels from @lcluber Mouette.js logger library</span>
+type LevelName = <span class="hljs-string">"info"</span> | <span class="hljs-string">"trace"</span> | <span class="hljs-string">"warn"</span> | <span class="hljs-string">"error"</span> | <span class="hljs-string">"off"</span>;
+loader.setLogLevel(name: LevelName): LevelName {}
+loader.getLogLevel(): LevelName {}
+</code></pre>
             <a
               href="#contributors"
               id="contributors"

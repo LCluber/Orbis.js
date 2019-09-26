@@ -22,10 +22,124 @@ $ yarn add @lcluber/orbisjs
 
 ## Usage
 
+### html
+
+```html
+<div id="progressPanel">
+  <button
+    id="launcher"
+    type="button"
+    class="btn btn-default"
+    onclick="loadAssets()"
+  >
+    LOAD ASSETS
+  </button>
+  <div id="progressText">Loading</div>
+  <div id="progressBar">
+    <div id="progressBarNumber">0</div>
+    <div id="progressBarPercentage"></div>
+  </div>
+</div>
+```
+
+### assets object
+
+```javascript
+//example of assets to load :
+var list = {
+  shaders: {
+    folder: "shaders",
+    files: [
+      { name: "shader1.txt" },
+      { name: "shader2.txt" },
+      { name: "shader3.txt" }
+    ]
+  },
+  materials: {
+    folder: "materials",
+    files: [
+      { name: "material1.txt" },
+      { name: "material2.txt" },
+      { name: "material3.doc" }
+    ]
+  },
+  textures: {
+    folder: "textures",
+    files: [
+      { name: "texture1.png" },
+      { name: "texture2.png" },
+      { name: "texture3.png" }
+    ]
+  },
+  meshes: {
+    folder: "meshes",
+    files: [{ name: "mesh1.json" }, { name: "mesh2.json" }]
+  },
+  sprites: {
+    folder: "sprites",
+    files: [
+      {
+        name: "sprite1.png",
+        texSize: [124, 70],
+        frameSize: [62, 70]
+      },
+      {
+        name: "sprite2.png",
+        texSize: [540, 30],
+        frameSize: [30, 30]
+      },
+      {
+        name: "sprite3.png",
+        texSize: [540, 30],
+        frameSize: [30, 30]
+      }
+    ]
+  },
+  sounds: {
+    folder: "sounds",
+    files: [
+      {
+        name: "sound1.mp3",
+        volume: 0.2,
+        loop: 0,
+        type: 0
+      },
+      {
+        name: "sound2.mp3",
+        volume: 0.3,
+        loop: 0,
+        type: 0
+      },
+      {
+        name: "sound3.mp3",
+        volume: 0.7,
+        loop: 0,
+        type: 0
+      }
+    ]
+  }
+};
+```
+
 ### ES6
 
 ```javascript
-import { Group } from "@lcluber/orbisjs";
+import { Loader } from "@lcluber/orbisjs";
+
+let loader = new Loader(
+  list,
+  "../public/assets/",
+  "progressBar",
+  "progressText"
+);
+
+function loadAssets() {
+  loader.launch().then(() => {
+    console.log("complete");
+    console.log(loader.getList("sounds"));
+    console.log(loader.getAsset("sound3.mp3"));
+  });
+}
 ```
 
 ### IIFE
@@ -54,10 +168,26 @@ function loadAssets() {
 ## API Reference
 
 ```javascript
+
+interface Asset {
+  path: string;
+  file: string;
+  extension: string;
+  type: string;
+  response: Object | HTMLImageElement | AudioBuffer | string | null;
+  request: Request;
+}
+
+loader.getAsset(name: string): Asset | false;
+loader.getList(type: string): Asset[] | false;
+loader.launch(): Promise<void>;
+loader.resetProgress(): void;
+
 // Log levels from @lcluber Mouette.js logger library
 type LevelName = "info" | "trace" | "warn" | "error" | "off";
-log.setLogLevel(name: LevelName): LevelName {}
-log.getLogLevel(): LevelName {}
+loader.setLogLevel(name: LevelName): LevelName {}
+loader.getLogLevel(): LevelName {}
+
 ```
 
 ## Contributors

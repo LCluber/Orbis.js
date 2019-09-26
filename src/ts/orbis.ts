@@ -66,12 +66,12 @@ export class Loader {
   //   this.maxPendingRequests = maxPendingRequests;
   // }
 
-  public static setLogLevel(name: LevelName): LevelName {
+  public setLogLevel(name: LevelName): LevelName {
     return this.log.setLevel(name);
   }
 
-  public static getLogLevel(): LevelName {
-    return tlhis.log.getLevel();
+  public getLogLevel(): LevelName {
+    return this.log.getLevel();
   }
 
   public getAsset(name: string): Asset | false {

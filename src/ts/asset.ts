@@ -6,7 +6,7 @@ export class Asset {
   file: string;
   extension: string;
   type: string;
-  response: Object | HTMLImageElement | HTMLAudioElement | string | null;
+  response: Object | HTMLImageElement | AudioBuffer | string | null;
   request: Request;
 
   constructor(path: string, file: string, extension: string, type: string) {
