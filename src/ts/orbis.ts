@@ -1,3 +1,4 @@
+import { Logger, Group, LevelName } from "@lcluber/mouettejs";
 import { Asset } from "./asset";
 import { Progress } from "./progress";
 
@@ -21,21 +22,14 @@ export class Loader {
   assets: Assets; //data from the assets file
   path: string;
   progress: Progress;
-  //assetsPath: string;
-  // requests        : {}, //requests list
-
-  // sentRequests    : 0,
-  // onProgress         : Function;
-  // onComplete         : Function;
   pendingRequests: number;
 
   tick: number;
   maxPendingRequests: number;
   default: Default;
 
-  // logs             : {},
   validExtensions: ValidExtensions;
-  // log: Group;
+  log: Group;
 
   constructor(
     assets: Assets,
@@ -60,8 +54,7 @@ export class Loader {
     this.tick = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
     this.progress = new Progress(progressBarId, progressTextId);
-    // this.log = Logger.addGroup("Orbis");
-    // Logger.setLevel('error');
+    this.log = Logger.addGroup("Orbis");
     this.createAssets();
   }
 
@@ -72,6 +65,14 @@ export class Loader {
   // public setMaxPendingRequests(maxPendingRequests: number): void {
   //   this.maxPendingRequests = maxPendingRequests;
   // }
+
+  public static setLogLevel(name: LevelName): LevelName {
+    return this.log.setLevel(name);
+  }
+
+  public static getLogLevel(): LevelName {
+    return tlhis.log.getLevel();
+  }
 
   public getAsset(name: string): Asset | false {
     for (let property in this.assets) {

@@ -8,27 +8,57 @@ The main purpose of this library is to provide a simple way to load assets only 
 
 ## Installation
 
+### npm
+
 ```bash
-$ npm install @lcluber/orbisjs
+$ npm i @lcluber/orbisjs
 ```
 
-Or download it **[here](http://orbisjs.lcluber.com/#download)**.
+### Yarn
 
-## Demo
-
-See a basic example **[here](http://orbisjs.lcluber.com/#example)**.
+```bash
+$ yarn add @lcluber/orbisjs
+```
 
 ## Usage
 
-Learn how to use it **[here](http://orbisjs.lcluber.com/#source)**.
+### ES6
+
+```javascript
+import { Group } from "@lcluber/orbisjs";
+```
+
+### IIFE
+
+```html
+<script src="node-modules/@lcluber/orbisjs/dist/orbis.iife.min.js"></script>
+```
+
+```javascript
+var loader = new Orbis.Loader(
+  list,
+  "../public/assets/",
+  "progressBar",
+  "progressText"
+);
+
+function loadAssets() {
+  loader.launch().then(function() {
+    console.log("complete");
+    console.log(loader.getList("sounds"));
+    console.log(loader.getAsset("sound3.mp3"));
+  });
+}
+```
 
 ## API Reference
 
-Read the documentation **[here](http://orbisjs.lcluber.com/doc/)**.
-
-## Tests
-
-No tests to run yet
+```javascript
+// Log levels from @lcluber Mouette.js logger library
+type LevelName = "info" | "trace" | "warn" | "error" | "off";
+log.setLogLevel(name: LevelName): LevelName {}
+log.getLogLevel(): LevelName {}
+```
 
 ## Contributors
 
