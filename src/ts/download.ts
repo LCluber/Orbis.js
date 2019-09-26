@@ -1,7 +1,7 @@
 // import {Is} from '@lcluber/chjs';
 import { Request } from "./request";
 
-export class Asset {
+export class Download {
   path: string;
   file: string;
   extension: string;

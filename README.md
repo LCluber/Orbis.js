@@ -80,18 +80,24 @@ var list = {
     files: [
       {
         name: "sprite1.png",
-        texSize: [124, 70],
-        frameSize: [62, 70]
+        params: {
+          texSize: [124, 70],
+          frameSize: [62, 70]
+        }
       },
       {
         name: "sprite2.png",
-        texSize: [540, 30],
-        frameSize: [30, 30]
+        params: {
+          texSize: [540, 30],
+          frameSize: [30, 30]
+        }
       },
       {
         name: "sprite3.png",
-        texSize: [540, 30],
-        frameSize: [30, 30]
+        params: {
+          texSize: [540, 30],
+          frameSize: [30, 30]
+        }
       }
     ]
   },
@@ -100,21 +106,27 @@ var list = {
     files: [
       {
         name: "sound1.mp3",
-        volume: 0.2,
-        loop: 0,
-        type: 0
+        params: {
+          volume: 0.2,
+          loop: 0,
+          type: 0
+        }
       },
       {
         name: "sound2.mp3",
-        volume: 0.3,
-        loop: 0,
-        type: 0
+        params: {
+          volume: 0.3,
+          loop: 0,
+          type: 0
+        }
       },
       {
         name: "sound3.mp3",
-        volume: 0.7,
-        loop: 0,
-        type: 0
+        params: {
+          volume: 0.7,
+          loop: 0,
+          type: 0
+        }
       }
     ]
   }
@@ -178,9 +190,30 @@ interface Asset {
   request: Request;
 }
 
-loader.getAsset(name: string): Asset | false;
-loader.getList(type: string): Asset[] | false;
-loader.launch(): Promise<void>;
+interface Assets {
+  [key: string]: {
+    folder: string;
+    files:
+      { name: string;
+        params: {
+          [key: string]: string | number | boolean | Array<string | number | boolean>;
+        };
+        response?: Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
+      }[];
+  };
+}
+
+class Loader(
+  assets: Assets,
+  assetsPath: string,
+  progressBarId: string,
+  progressTextId: string
+);
+
+loader.launch(): Promise<void> {}
+loader.getAsset(name: string): Asset | false {}
+loader.getList(type: string): Asset[] | false {}
+
 loader.resetProgress(): void;
 
 // Log levels from @lcluber Mouette.js logger library

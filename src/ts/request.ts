@@ -29,7 +29,7 @@ export class Request {
   public send(
     path: string,
     type: string
-  ): Promise<HTMLImageElement | AudioBuffer | string | Object | false> {
+  ): Promise<HTMLImageElement | AudioBuffer | string | Object | null> {
     // console.log(this.fsm);
     if (this.fsm["send"]()) {
       return this.ajax[type](path)
@@ -39,11 +39,11 @@ export class Request {
         })
         .catch((/*err: Error*/) => {
           this.fsm["error"]();
-          return false;
+          return null;
         });
     } else {
       return new Promise(() => {
-        return false;
+        return null;
       });
     }
   }
