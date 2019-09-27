@@ -32,7 +32,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "./scripts/branch.sh && pretty-quick --staged",
+      "pre-commit": "bash ./scripts/branch.sh && pretty-quick --staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": ""
     }
