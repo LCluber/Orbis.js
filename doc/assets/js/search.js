@@ -107,107 +107,99 @@ typedoc.search.data = {
     {
       id: 11,
       kind: 1,
-      name: '"asset"',
-      url: "modules/_asset_.html",
+      name: '"xhr"',
+      url: "modules/_xhr_.html",
       classes: "tsd-kind-external-module"
     },
     {
       id: 12,
       kind: 128,
-      name: "Asset",
-      url: "classes/_asset_.asset.html",
+      name: "XHR",
+      url: "classes/_xhr_.xhr.html",
       classes: "tsd-kind-class tsd-parent-kind-external-module",
-      parent: '"asset"'
+      parent: '"xhr"'
     },
     {
       id: 13,
       kind: 1024,
       name: "path",
-      url: "classes/_asset_.asset.html#path",
+      url: "classes/_xhr_.xhr.html#path",
       classes: "tsd-kind-property tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 14,
       kind: 1024,
-      name: "file",
-      url: "classes/_asset_.asset.html#file",
+      name: "extension",
+      url: "classes/_xhr_.xhr.html#extension",
       classes: "tsd-kind-property tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 15,
       kind: 1024,
-      name: "extension",
-      url: "classes/_asset_.asset.html#extension",
+      name: "type",
+      url: "classes/_xhr_.xhr.html#type",
       classes: "tsd-kind-property tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 16,
       kind: 1024,
-      name: "type",
-      url: "classes/_asset_.asset.html#type",
+      name: "response",
+      url: "classes/_xhr_.xhr.html#response",
       classes: "tsd-kind-property tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 17,
       kind: 1024,
-      name: "response",
-      url: "classes/_asset_.asset.html#response",
+      name: "request",
+      url: "classes/_xhr_.xhr.html#request",
       classes: "tsd-kind-property tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 18,
-      kind: 1024,
-      name: "request",
-      url: "classes/_asset_.asset.html#request",
-      classes: "tsd-kind-property tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      kind: 512,
+      name: "constructor",
+      url: "classes/_xhr_.xhr.html#constructor",
+      classes: "tsd-kind-constructor tsd-parent-kind-class",
+      parent: '"xhr".XHR'
     },
     {
       id: 19,
-      kind: 512,
-      name: "constructor",
-      url: "classes/_asset_.asset.html#constructor",
-      classes: "tsd-kind-constructor tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      kind: 2048,
+      name: "sendRequest",
+      url: "classes/_xhr_.xhr.html#sendrequest",
+      classes: "tsd-kind-method tsd-parent-kind-class",
+      parent: '"xhr".XHR'
     },
     {
       id: 20,
       kind: 2048,
-      name: "sendRequest",
-      url: "classes/_asset_.asset.html#sendrequest",
+      name: "getRequestStatus",
+      url: "classes/_xhr_.xhr.html#getrequeststatus",
       classes: "tsd-kind-method tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 21,
       kind: 2048,
-      name: "getRequestStatus",
-      url: "classes/_asset_.asset.html#getrequeststatus",
+      name: "isRequestSent",
+      url: "classes/_xhr_.xhr.html#isrequestsent",
       classes: "tsd-kind-method tsd-parent-kind-class",
-      parent: '"asset".Asset'
+      parent: '"xhr".XHR'
     },
     {
       id: 22,
-      kind: 2048,
-      name: "isRequestSent",
-      url: "classes/_asset_.asset.html#isrequestsent",
-      classes: "tsd-kind-method tsd-parent-kind-class",
-      parent: '"asset".Asset'
-    },
-    {
-      id: 23,
       kind: 1,
       name: '"progress"',
       url: "modules/_progress_.html",
       classes: "tsd-kind-external-module"
     },
     {
-      id: 24,
+      id: 23,
       kind: 128,
       name: "Progress",
       url: "classes/_progress_.progress.html",
@@ -215,7 +207,7 @@ typedoc.search.data = {
       parent: '"progress"'
     },
     {
-      id: 25,
+      id: 24,
       kind: 1024,
       name: "rate",
       url: "classes/_progress_.progress.html#rate",
@@ -223,7 +215,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 26,
+      id: 25,
       kind: 1024,
       name: "target",
       url: "classes/_progress_.progress.html#target",
@@ -231,7 +223,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 27,
+      id: 26,
       kind: 1024,
       name: "total",
       url: "classes/_progress_.progress.html#total",
@@ -239,7 +231,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 28,
+      id: 27,
       kind: 1024,
       name: "percentage",
       url: "classes/_progress_.progress.html#percentage",
@@ -247,7 +239,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 29,
+      id: 28,
       kind: 1024,
       name: "speed",
       url: "classes/_progress_.progress.html#speed",
@@ -255,7 +247,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 30,
+      id: 29,
       kind: 1024,
       name: "nbAssets",
       url: "classes/_progress_.progress.html#nbassets",
@@ -263,7 +255,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 31,
+      id: 30,
       kind: 1024,
       name: "bar",
       url: "classes/_progress_.progress.html#bar",
@@ -271,7 +263,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 32,
+      id: 31,
       kind: 1024,
       name: "barWidth",
       url: "classes/_progress_.progress.html#barwidth",
@@ -279,7 +271,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 33,
+      id: 32,
       kind: 1024,
       name: "number",
       url: "classes/_progress_.progress.html#number",
@@ -287,7 +279,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 34,
+      id: 33,
       kind: 1024,
       name: "text",
       url: "classes/_progress_.progress.html#text",
@@ -295,7 +287,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 35,
+      id: 34,
       kind: 1024,
       name: "animation",
       url: "classes/_progress_.progress.html#animation",
@@ -303,7 +295,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 36,
+      id: 35,
       kind: 1024,
       name: "finished",
       url: "classes/_progress_.progress.html#finished",
@@ -311,7 +303,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 37,
+      id: 36,
       kind: 512,
       name: "constructor",
       url: "classes/_progress_.progress.html#constructor",
@@ -319,7 +311,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 38,
+      id: 37,
       kind: 2048,
       name: "animateBar",
       url: "classes/_progress_.progress.html#animatebar",
@@ -327,7 +319,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 39,
+      id: 38,
       kind: 2048,
       name: "start",
       url: "classes/_progress_.progress.html#start",
@@ -335,7 +327,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 40,
+      id: 39,
       kind: 2048,
       name: "reset",
       url: "classes/_progress_.progress.html#reset",
@@ -343,7 +335,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 41,
+      id: 40,
       kind: 2048,
       name: "update",
       url: "classes/_progress_.progress.html#update",
@@ -351,7 +343,7 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 42,
+      id: 41,
       kind: 2048,
       name: "updateBar",
       url: "classes/_progress_.progress.html#updatebar",
@@ -359,14 +351,55 @@ typedoc.search.data = {
       parent: '"progress".Progress'
     },
     {
-      id: 43,
+      id: 42,
       kind: 1,
       name: '"orbis"',
       url: "modules/_orbis_.html",
       classes: "tsd-kind-external-module"
     },
     {
+      id: 43,
+      kind: 256,
+      name: "Asset",
+      url: "interfaces/_orbis_.asset.html",
+      classes: "tsd-kind-interface tsd-parent-kind-external-module",
+      parent: '"orbis"'
+    },
+    {
       id: 44,
+      kind: 1024,
+      name: "name",
+      url: "interfaces/_orbis_.asset.html#name",
+      classes: "tsd-kind-property tsd-parent-kind-interface",
+      parent: '"orbis".Asset'
+    },
+    {
+      id: 45,
+      kind: 1024,
+      name: "params",
+      url: "interfaces/_orbis_.asset.html#params",
+      classes: "tsd-kind-property tsd-parent-kind-interface",
+      parent: '"orbis".Asset'
+    },
+    {
+      id: 46,
+      kind: 65536,
+      name: "__type",
+      url: "interfaces/_orbis_.asset.html#params.__type",
+      classes:
+        "tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported",
+      parent: '"orbis".Asset.params'
+    },
+    {
+      id: 47,
+      kind: 1024,
+      name: "xhr",
+      url: "interfaces/_orbis_.asset.html#xhr",
+      classes: "tsd-kind-property tsd-parent-kind-interface",
+      parent: '"orbis".Asset'
+    },
+    {
+      id: 48,
       kind: 256,
       name: "Assets",
       url: "interfaces/_orbis_.assets.html",
@@ -374,7 +407,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 45,
+      id: 49,
       kind: 128,
       name: "Loader",
       url: "classes/_orbis_.loader.html",
@@ -382,7 +415,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 46,
+      id: 50,
       kind: 1024,
       name: "assets",
       url: "classes/_orbis_.loader.html#assets",
@@ -390,7 +423,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 47,
+      id: 51,
       kind: 1024,
       name: "path",
       url: "classes/_orbis_.loader.html#path",
@@ -398,7 +431,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 48,
+      id: 52,
       kind: 1024,
       name: "progress",
       url: "classes/_orbis_.loader.html#progress",
@@ -406,7 +439,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 49,
+      id: 53,
       kind: 1024,
       name: "pendingRequests",
       url: "classes/_orbis_.loader.html#pendingrequests",
@@ -414,7 +447,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 50,
+      id: 54,
       kind: 1024,
       name: "tick",
       url: "classes/_orbis_.loader.html#tick",
@@ -422,7 +455,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 51,
+      id: 55,
       kind: 1024,
       name: "maxPendingRequests",
       url: "classes/_orbis_.loader.html#maxpendingrequests",
@@ -430,7 +463,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 52,
+      id: 56,
       kind: 1024,
       name: "default",
       url: "classes/_orbis_.loader.html#default",
@@ -438,7 +471,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 53,
+      id: 57,
       kind: 1024,
       name: "validExtensions",
       url: "classes/_orbis_.loader.html#validextensions",
@@ -446,7 +479,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 54,
+      id: 58,
       kind: 1024,
       name: "log",
       url: "classes/_orbis_.loader.html#log",
@@ -454,7 +487,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 55,
+      id: 59,
       kind: 512,
       name: "constructor",
       url: "classes/_orbis_.loader.html#constructor",
@@ -462,7 +495,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 56,
+      id: 60,
       kind: 2048,
       name: "setLogLevel",
       url: "classes/_orbis_.loader.html#setloglevel",
@@ -470,7 +503,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 57,
+      id: 61,
       kind: 2048,
       name: "getLogLevel",
       url: "classes/_orbis_.loader.html#getloglevel",
@@ -478,7 +511,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 58,
+      id: 62,
       kind: 2048,
       name: "getAsset",
       url: "classes/_orbis_.loader.html#getasset",
@@ -486,7 +519,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 59,
+      id: 63,
       kind: 2048,
       name: "getList",
       url: "classes/_orbis_.loader.html#getlist",
@@ -494,7 +527,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 60,
+      id: 64,
       kind: 2048,
       name: "launch",
       url: "classes/_orbis_.loader.html#launch",
@@ -502,7 +535,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 61,
+      id: 65,
       kind: 2048,
       name: "resetProgress",
       url: "classes/_orbis_.loader.html#resetprogress",
@@ -510,7 +543,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 62,
+      id: 66,
       kind: 2048,
       name: "getAssetType",
       url: "classes/_orbis_.loader.html#getassettype",
@@ -518,7 +551,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 63,
+      id: 67,
       kind: 2048,
       name: "createAssets",
       url: "classes/_orbis_.loader.html#createassets",
@@ -526,7 +559,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 64,
+      id: 68,
       kind: 2048,
       name: "sendRequest",
       url: "classes/_orbis_.loader.html#sendrequest",
@@ -534,7 +567,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 65,
+      id: 69,
       kind: 2048,
       name: "getNextAssetToLoad",
       url: "classes/_orbis_.loader.html#getnextassettoload",
@@ -542,7 +575,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 66,
+      id: 70,
       kind: 2048,
       name: "removeTrailingSlash",
       url: "classes/_orbis_.loader.html#removetrailingslash",
@@ -550,7 +583,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 67,
+      id: 71,
       kind: 2048,
       name: "getExtension",
       url: "classes/_orbis_.loader.html#getextension",
@@ -558,7 +591,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 68,
+      id: 72,
       kind: 2048,
       name: "checkExtension",
       url: "classes/_orbis_.loader.html#checkextension",
@@ -566,7 +599,7 @@ typedoc.search.data = {
       parent: '"orbis".Loader'
     },
     {
-      id: 69,
+      id: 73,
       kind: 4194304,
       name: "ValidExtensions",
       url: "modules/_orbis_.html#validextensions",
@@ -574,7 +607,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 70,
+      id: 74,
       kind: 65536,
       name: "__type",
       url: "modules/_orbis_.html#validextensions.__type-1",
@@ -583,7 +616,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions'
     },
     {
-      id: 71,
+      id: 75,
       kind: 32,
       name: "file",
       url: "modules/_orbis_.html#validextensions.__type-1.file",
@@ -592,7 +625,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 72,
+      id: 76,
       kind: 32,
       name: "img",
       url: "modules/_orbis_.html#validextensions.__type-1.img",
@@ -601,7 +634,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 73,
+      id: 77,
       kind: 32,
       name: "sound",
       url: "modules/_orbis_.html#validextensions.__type-1.sound",
@@ -610,7 +643,7 @@ typedoc.search.data = {
       parent: '"orbis".ValidExtensions.__type'
     },
     {
-      id: 74,
+      id: 78,
       kind: 4194304,
       name: "Default",
       url: "modules/_orbis_.html#default",
@@ -618,7 +651,7 @@ typedoc.search.data = {
       parent: '"orbis"'
     },
     {
-      id: 75,
+      id: 79,
       kind: 65536,
       name: "__type",
       url: "modules/_orbis_.html#default.__type",
@@ -627,7 +660,7 @@ typedoc.search.data = {
       parent: '"orbis".Default'
     },
     {
-      id: 76,
+      id: 80,
       kind: 32,
       name: "maxPending",
       url: "modules/_orbis_.html#default.__type.maxpending",
@@ -636,7 +669,7 @@ typedoc.search.data = {
       parent: '"orbis".Default.__type'
     },
     {
-      id: 77,
+      id: 81,
       kind: 32,
       name: "tick",
       url: "modules/_orbis_.html#default.__type.tick",

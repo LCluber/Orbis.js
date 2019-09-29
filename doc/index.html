@@ -146,12 +146,19 @@
             >
               <h3>html</h3>
             </a>
-            <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressPanel'</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'launcher'</span> <span class="hljs-attr">type</span>=<span class="hljs-string">'button'</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'btn btn-default'</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">'loadAssets()'</span>&gt;</span>LOAD ASSETS<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressText'</span>&gt;</span>Loading<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressBar'</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressBarNumber'</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'progressBarPercentage'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"progressPanel"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span>
+    <span class="hljs-attr">id</span>=<span class="hljs-string">"launcher"</span>
+    <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span>
+    <span class="hljs-attr">class</span>=<span class="hljs-string">"btn btn-default"</span>
+    <span class="hljs-attr">onclick</span>=<span class="hljs-string">"loadAssets()"</span>
+  &gt;</span>
+    LOAD ASSETS
+  <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"progressText"</span>&gt;</span>Loading<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"progressBar"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"progressBarNumber"</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"progressBarPercentage"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
             <a
@@ -196,18 +203,24 @@
     <span class="hljs-attr">files</span>: [
       {
         <span class="hljs-attr">name</span>: <span class="hljs-string">"sprite1.png"</span>,
-        <span class="hljs-attr">texSize</span>: [<span class="hljs-number">124</span>, <span class="hljs-number">70</span>],
-        <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">62</span>, <span class="hljs-number">70</span>]
+        <span class="hljs-attr">params</span>: {
+          <span class="hljs-attr">texSize</span>: [<span class="hljs-number">124</span>, <span class="hljs-number">70</span>],
+          <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">62</span>, <span class="hljs-number">70</span>]
+        }
       },
       {
         <span class="hljs-attr">name</span>: <span class="hljs-string">"sprite2.png"</span>,
-        <span class="hljs-attr">texSize</span>: [<span class="hljs-number">540</span>, <span class="hljs-number">30</span>],
-        <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">30</span>]
+        <span class="hljs-attr">params</span>: {
+          <span class="hljs-attr">texSize</span>: [<span class="hljs-number">540</span>, <span class="hljs-number">30</span>],
+          <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">30</span>]
+        }
       },
       {
         <span class="hljs-attr">name</span>: <span class="hljs-string">"sprite3.png"</span>,
-        <span class="hljs-attr">texSize</span>: [<span class="hljs-number">540</span>, <span class="hljs-number">30</span>],
-        <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">30</span>]
+        <span class="hljs-attr">params</span>: {
+          <span class="hljs-attr">texSize</span>: [<span class="hljs-number">540</span>, <span class="hljs-number">30</span>],
+          <span class="hljs-attr">frameSize</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">30</span>]
+        }
       }
     ]
   },
@@ -216,21 +229,27 @@
     <span class="hljs-attr">files</span>: [
       {
         <span class="hljs-attr">name</span>: <span class="hljs-string">"sound1.mp3"</span>,
-        <span class="hljs-attr">volume</span>: <span class="hljs-number">0.2</span>,
-        <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+        <span class="hljs-attr">params</span>: {
+          <span class="hljs-attr">volume</span>: <span class="hljs-number">0.2</span>,
+          <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
+          <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+        }
       },
       {
         <span class="hljs-attr">name</span>: <span class="hljs-string">"sound2.mp3"</span>,
-        <span class="hljs-attr">volume</span>: <span class="hljs-number">0.3</span>,
-        <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+        <span class="hljs-attr">params</span>: {
+          <span class="hljs-attr">volume</span>: <span class="hljs-number">0.3</span>,
+          <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
+          <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+        }
       },
       {
         <span class="hljs-attr">name</span>: <span class="hljs-string">"sound3.mp3"</span>,
-        <span class="hljs-attr">volume</span>: <span class="hljs-number">0.7</span>,
-        <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+        <span class="hljs-attr">params</span>: {
+          <span class="hljs-attr">volume</span>: <span class="hljs-number">0.7</span>,
+          <span class="hljs-attr">loop</span>: <span class="hljs-number">0</span>,
+          <span class="hljs-attr">type</span>: <span class="hljs-number">0</span>
+        }
       }
     ]
   }
@@ -257,8 +276,7 @@
     <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
     <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
   });
-}
-</code></pre>
+}</code></pre>
             <a
               href="#iife"
               id="iife"
@@ -290,21 +308,42 @@
             </a>
             <pre><code class="language-javascript">
 interface Asset {
-  <span class="hljs-attr">path</span>: string;
+  path: string;
   file: string;
   extension: string;
   type: string;
-  response: <span class="hljs-built_in">Object</span> | HTMLImageElement | AudioBuffer | string | <span class="hljs-literal">null</span>;
+  response: Object | HTMLImageElement | AudioBuffer | string | null;
   request: Request;
 }
 
-loader.getAsset(name: string): Asset | <span class="hljs-literal">false</span>;
-loader.getList(type: string): Asset[] | <span class="hljs-literal">false</span>;
-loader.launch(): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-keyword">void</span>&gt;;
-loader.resetProgress(): <span class="hljs-keyword">void</span>;
+interface Assets {
+  [key: string]: {
+    folder: string;
+    files:
+      { name: string;
+        params: {
+          [key: string]: string | number | boolean | Array&lt;string | number | boolean&gt;;
+        };
+        response?: Promise&lt;HTMLImageElement | AudioBuffer | string | Object | null&gt;;
+      }[];
+  };
+}
 
-<span class="hljs-comment">// Log levels from @lcluber Mouette.js logger library</span>
-type LevelName = <span class="hljs-string">"info"</span> | <span class="hljs-string">"trace"</span> | <span class="hljs-string">"warn"</span> | <span class="hljs-string">"error"</span> | <span class="hljs-string">"off"</span>;
+class Loader(
+  assets: Assets,
+  assetsPath: string,
+  progressBarId: string,
+  progressTextId: string
+);
+
+loader.launch(): Promise&lt;void&gt; {}
+loader.getAsset(name: string): Asset | false {}
+loader.getList(type: string): Asset[] | false {}
+
+loader.resetProgress(): void;
+
+// Log levels from @lcluber Mouette.js logger library
+type LevelName = "info" | "trace" | "warn" | "error" | "off";
 loader.setLogLevel(name: LevelName): LevelName {}
 loader.getLogLevel(): LevelName {}
 </code></pre>
@@ -371,9 +410,6 @@ loader.getLogLevel(): LevelName {}
                 <span>Internals</span>
               </li>
               <li class=" tsd-kind-external-module">
-                <a href="modules/_asset_.html">"asset"</a>
-              </li>
-              <li class=" tsd-kind-external-module">
                 <a href="modules/_orbis_.html">"orbis"</a>
               </li>
               <li class=" tsd-kind-external-module">
@@ -381,6 +417,9 @@ loader.getLogLevel(): LevelName {}
               </li>
               <li class=" tsd-kind-external-module">
                 <a href="modules/_request_.html">"request"</a>
+              </li>
+              <li class=" tsd-kind-external-module">
+                <a href="modules/_xhr_.html">"xhr"</a>
               </li>
               <li class="label tsd-is-external">
                 <span>Externals</span>

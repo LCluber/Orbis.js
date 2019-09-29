@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>&quot;request&quot; | Orbis.js - Documentation</title>
+    <title>Asset | Orbis.js - Documentation</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../assets/css/main.css" />
@@ -78,40 +78,47 @@
               <a href="../globals.html">Globals</a>
             </li>
             <li>
-              <a href="_request_.html">&quot;request&quot;</a>
+              <a href="../modules/_orbis_.html">&quot;orbis&quot;</a>
+            </li>
+            <li>
+              <a href="_orbis_.asset.html">Asset</a>
             </li>
           </ul>
-          <h1>External module &quot;request&quot;</h1>
+          <h1>Interface Asset</h1>
         </div>
       </div>
     </header>
     <div class="container container-main">
       <div class="row">
         <div class="col-8 col-content">
+          <section class="tsd-panel tsd-hierarchy">
+            <h3>Hierarchy</h3>
+            <ul class="tsd-hierarchy">
+              <li>
+                <span class="target">Asset</span>
+              </li>
+            </ul>
+          </section>
           <section class="tsd-panel-group tsd-index-group">
             <h2>Index</h2>
             <section class="tsd-panel tsd-index-panel">
               <div class="tsd-index-content">
                 <section class="tsd-index-section ">
-                  <h3>Classes</h3>
+                  <h3>Properties</h3>
                   <ul class="tsd-index-list">
-                    <li class="tsd-kind-class tsd-parent-kind-external-module">
-                      <a
-                        href="../classes/_request_.request.html"
-                        class="tsd-kind-icon"
-                        >Request</a
+                    <li class="tsd-kind-property tsd-parent-kind-interface">
+                      <a href="_orbis_.asset.html#name" class="tsd-kind-icon"
+                        >name</a
                       >
                     </li>
-                  </ul>
-                </section>
-                <section class="tsd-index-section ">
-                  <h3>Type aliases</h3>
-                  <ul class="tsd-index-list">
-                    <li
-                      class="tsd-kind-type-alias tsd-parent-kind-external-module"
-                    >
-                      <a href="_request_.html#ajax" class="tsd-kind-icon"
-                        >Ajax</a
+                    <li class="tsd-kind-property tsd-parent-kind-interface">
+                      <a href="_orbis_.asset.html#params" class="tsd-kind-icon"
+                        >params</a
+                      >
+                    </li>
+                    <li class="tsd-kind-property tsd-parent-kind-interface">
+                      <a href="_orbis_.asset.html#xhr" class="tsd-kind-icon"
+                        >xhr</a
                       >
                     </li>
                   </ul>
@@ -120,14 +127,35 @@
             </section>
           </section>
           <section class="tsd-panel-group tsd-member-group ">
-            <h2>Type aliases</h2>
+            <h2>Properties</h2>
             <section
-              class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module"
+              class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"
             >
-              <a name="ajax" class="tsd-anchor"></a>
-              <h3>Ajax</h3>
+              <a name="name" class="tsd-anchor"></a>
+              <h3>name</h3>
               <div class="tsd-signature tsd-kind-icon">
-                Ajax<span class="tsd-signature-symbol">:</span>
+                name<span class="tsd-signature-symbol">:</span>
+                <span class="tsd-signature-type">string</span>
+              </div>
+              <aside class="tsd-sources">
+                <ul>
+                  <li>
+                    Defined in
+                    <a
+                      href="https://github.com/LCluber/Orbis.js/blob/fde249f/src/ts/orbis.ts#L18"
+                      >orbis.ts:18</a
+                    >
+                  </li>
+                </ul>
+              </aside>
+            </section>
+            <section
+              class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"
+            >
+              <a name="params" class="tsd-anchor"></a>
+              <h3>params</h3>
+              <div class="tsd-signature tsd-kind-icon">
+                params<span class="tsd-signature-symbol">:</span>
                 <span class="tsd-signature-type">object</span>
               </div>
               <aside class="tsd-sources">
@@ -135,8 +163,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/LCluber/Orbis.js/blob/fde249f/src/ts/request.ts#L6"
-                      >request.ts:6</a
+                      href="https://github.com/LCluber/Orbis.js/blob/fde249f/src/ts/orbis.ts#L19"
+                      >orbis.ts:19</a
                     >
                   </li>
                 </ul>
@@ -144,26 +172,54 @@
               <div class="tsd-type-declaration">
                 <h4>Type declaration</h4>
                 <ul class="tsd-parameters">
-                  <li class="tsd-parameter">
+                  <li class="tsd-parameter-index-signature">
                     <h5>
-                      file<span class="tsd-signature-symbol">: </span
-                      ><span class="tsd-signature-type">Function</span>
-                    </h5>
-                  </li>
-                  <li class="tsd-parameter">
-                    <h5>
-                      img<span class="tsd-signature-symbol">: </span
-                      ><span class="tsd-signature-type">Function</span>
-                    </h5>
-                  </li>
-                  <li class="tsd-parameter">
-                    <h5>
-                      sound<span class="tsd-signature-symbol">: </span
-                      ><span class="tsd-signature-type">Function</span>
+                      <span class="tsd-signature-symbol">[</span>key:
+                      <span class="tsd-signature-type">string</span
+                      ><span class="tsd-signature-symbol">]: </span
+                      ><span class="tsd-signature-type">string</span
+                      ><span class="tsd-signature-symbol"> | </span
+                      ><span class="tsd-signature-type">number</span
+                      ><span class="tsd-signature-symbol"> | </span
+                      ><span class="tsd-signature-type">boolean</span
+                      ><span class="tsd-signature-symbol"> | </span
+                      ><span class="tsd-signature-type">Array</span
+                      ><span class="tsd-signature-symbol">&lt;</span
+                      ><span class="tsd-signature-type">string</span
+                      ><span class="tsd-signature-symbol"> | </span
+                      ><span class="tsd-signature-type">number</span
+                      ><span class="tsd-signature-symbol"> | </span
+                      ><span class="tsd-signature-type">boolean</span
+                      ><span class="tsd-signature-symbol">&gt;</span>
                     </h5>
                   </li>
                 </ul>
               </div>
+            </section>
+            <section
+              class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"
+            >
+              <a name="xhr" class="tsd-anchor"></a>
+              <h3>
+                <span class="tsd-flag ts-flagOptional">Optional</span> xhr
+              </h3>
+              <div class="tsd-signature tsd-kind-icon">
+                xhr<span class="tsd-signature-symbol">:</span>
+                <a href="../classes/_xhr_.xhr.html" class="tsd-signature-type"
+                  >XHR</a
+                >
+              </div>
+              <aside class="tsd-sources">
+                <ul>
+                  <li>
+                    Defined in
+                    <a
+                      href="https://github.com/LCluber/Orbis.js/blob/fde249f/src/ts/orbis.ts#L22"
+                      >orbis.ts:22</a
+                    >
+                  </li>
+                </ul>
+              </aside>
             </section>
           </section>
         </div>
@@ -176,43 +232,79 @@
               <li class="label tsd-is-external">
                 <span>Internals</span>
               </li>
-              <li class=" tsd-kind-external-module">
-                <a href="_orbis_.html">"orbis"</a>
-              </li>
-              <li class=" tsd-kind-external-module">
-                <a href="_progress_.html">"progress"</a>
-              </li>
               <li class="current tsd-kind-external-module">
-                <a href="_request_.html">"request"</a>
+                <a href="../modules/_orbis_.html">"orbis"</a>
               </li>
               <li class=" tsd-kind-external-module">
-                <a href="_xhr_.html">"xhr"</a>
+                <a href="../modules/_progress_.html">"progress"</a>
+              </li>
+              <li class=" tsd-kind-external-module">
+                <a href="../modules/_request_.html">"request"</a>
+              </li>
+              <li class=" tsd-kind-external-module">
+                <a href="../modules/_xhr_.html">"xhr"</a>
               </li>
               <li class="label tsd-is-external">
                 <span>Externals</span>
               </li>
               <li class=" tsd-kind-external-module tsd-is-external">
-                <a href="_loaders_file_.html">"loaders/file"</a>
+                <a href="../modules/_loaders_file_.html">"loaders/file"</a>
               </li>
               <li class=" tsd-kind-external-module tsd-is-external">
-                <a href="_loaders_image_.html">"loaders/image"</a>
+                <a href="../modules/_loaders_image_.html">"loaders/image"</a>
               </li>
               <li class=" tsd-kind-external-module tsd-is-external">
-                <a href="_loaders_sound_.html">"loaders/sound"</a>
+                <a href="../modules/_loaders_sound_.html">"loaders/sound"</a>
               </li>
             </ul>
           </nav>
           <nav class="tsd-navigation secondary menu-sticky">
             <ul class="before-current">
               <li class=" tsd-kind-class tsd-parent-kind-external-module">
-                <a
-                  href="../classes/_request_.request.html"
-                  class="tsd-kind-icon"
-                  >Request</a
+                <a href="../classes/_orbis_.loader.html" class="tsd-kind-icon"
+                  >Loader</a
+                >
+              </li>
+            </ul>
+            <ul class="current">
+              <li
+                class="current tsd-kind-interface tsd-parent-kind-external-module"
+              >
+                <a href="_orbis_.asset.html" class="tsd-kind-icon">Asset</a>
+                <ul>
+                  <li class=" tsd-kind-property tsd-parent-kind-interface">
+                    <a href="_orbis_.asset.html#name" class="tsd-kind-icon"
+                      >name</a
+                    >
+                  </li>
+                  <li class=" tsd-kind-property tsd-parent-kind-interface">
+                    <a href="_orbis_.asset.html#params" class="tsd-kind-icon"
+                      >params</a
+                    >
+                  </li>
+                  <li class=" tsd-kind-property tsd-parent-kind-interface">
+                    <a href="_orbis_.asset.html#xhr" class="tsd-kind-icon"
+                      >xhr</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="after-current">
+              <li class=" tsd-kind-interface tsd-parent-kind-external-module">
+                <a href="_orbis_.assets.html" class="tsd-kind-icon">Assets</a>
+              </li>
+              <li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+                <a href="../modules/_orbis_.html#default" class="tsd-kind-icon"
+                  >Default</a
                 >
               </li>
               <li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-                <a href="_request_.html#ajax" class="tsd-kind-icon">Ajax</a>
+                <a
+                  href="../modules/_orbis_.html#validextensions"
+                  class="tsd-kind-icon"
+                  >Valid<wbr />Extensions</a
+                >
               </li>
             </ul>
           </nav>

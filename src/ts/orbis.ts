@@ -1,5 +1,5 @@
 import { Logger, Group, LevelName } from "@lcluber/mouettejs";
-import { Download } from "./download";
+import { XHR } from "./xhr";
 import { Progress } from "./progress";
 
 export type ValidExtensions = {
@@ -19,7 +19,7 @@ export interface Asset {
   params: {
     [key: string]: string | number | boolean | Array<string | number | boolean>;
   };
-  download?: Download;
+  xhr?: XHR;
 }
 
 export interface Assets {
@@ -145,14 +145,14 @@ export class Loader {
         let type = this.assets[property];
         let folder = type.folder ? type.folder + "/" : "";
         for (let file of type.files) {
-          if (!file.download && file.hasOwnProperty("name")) {
+          if (!file.xhr && file.hasOwnProperty("name")) {
             let extension = this.getExtension(file.name);
             if (extension) {
               let type = this.getAssetType(extension);
               if (type) {
-                file.download = new Download(
+                file.xhr = new XHR(
                   this.path + "/" + folder,
-                  file.name,
+                  //file.name,
                   extension,
                   type
                 );
@@ -173,7 +173,7 @@ export class Loader {
     if (this.pendingRequests < this.maxPendingRequests) {
       let nextAsset = this.getNextAssetToLoad();
       if (nextAsset) {
-        nextAsset.sendRequest().then(response => {
+        (<XHR>nextAsset.xhr).sendRequest(nextAsset.name).then(response => {
           // if(response) {
           this.pendingRequests--;
           this.progress.update(response);
@@ -191,8 +191,8 @@ export class Loader {
       if (this.assets.hasOwnProperty(property)) {
         let type = this.assets[property];
         for (let file of type.files) {
-          if (file.hasOwnProperty("asset") && !file.asset.isRequestSent()) {
-            return file.asset;
+          if (file.xhr && !file.xhr.isRequestSent()) {
+            return file;
           }
         }
       }
