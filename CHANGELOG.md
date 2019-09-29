@@ -1,3 +1,13 @@
+# [0.9.0](https://github.com/LCluber/Orbis.js/compare/v0.8.2...v0.9.0) (2019-09-29)
+
+
+### Features
+
+* **asset:** improved asset structure ([3b8ee35](https://github.com/LCluber/Orbis.js/commit/3b8ee35))
+* **errors:** better error handling for sound loader ([1297cb2](https://github.com/LCluber/Orbis.js/commit/1297cb2))
+* **logger:** added setloglevel and getloglevel methods ([e190541](https://github.com/LCluber/Orbis.js/commit/e190541))
+* **sound:** load sound as audiobuffer instead of audioelement ([fa064b7](https://github.com/LCluber/Orbis.js/commit/fa064b7))
+
 ## [0.8.2](https://github.com/LCluber/Orbis.js/compare/v0.8.1...v0.8.2) (2019-08-31)
 
 

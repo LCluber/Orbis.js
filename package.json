@@ -1,6 +1,6 @@
 {
   "name": "@lcluber/orbisjs",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Lazy loader written in TypeScript",
   "keywords": [
     "lazy loader",
