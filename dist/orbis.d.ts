@@ -22,19 +22,7 @@
 *
 * http://orbisjs.lcluber.com
 */
-
-export declare class Asset {
-    path: string;
-    file: string;
-    extension: string;
-    type: string;
-    response: Object | HTMLImageElement | HTMLAudioElement | string | null;
-    request: Request;
-    constructor(path: string, file: string, extension: string, type: string);
-    sendRequest(): Promise<string>;
-    getRequestStatus(): string;
-    isRequestSent(): boolean;
-}
+import { Group, LevelName } from "@lcluber/mouettejs";
 
 
 export declare type ValidExtensions = {
@@ -47,8 +35,18 @@ export declare type Default = {
     maxPending: number;
     tick: number;
 };
+export interface Asset {
+    name: string;
+    params: {
+        [key: string]: string | number | boolean | Array<string | number | boolean>;
+    };
+    xhr?: XHR;
+}
 export interface Assets {
-    [key: string]: any;
+    [key: string]: {
+        folder: string;
+        files: Asset[];
+    };
 }
 export declare class Loader {
     assets: Assets;
@@ -59,7 +57,10 @@ export declare class Loader {
     maxPendingRequests: number;
     default: Default;
     validExtensions: ValidExtensions;
+    log: Group;
     constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string);
+    setLogLevel(name: LevelName): LevelName;
+    getLogLevel(): LevelName;
     getAsset(name: string): Asset | false;
     getList(type: string): Asset[] | false;
     launch(): Promise<void>;
@@ -102,5 +103,17 @@ export declare class Request {
     fsm: FSM;
     ajax: Ajax;
     constructor();
-    send(path: string, type: string): Promise<HTMLImageElement | HTMLAudioElement | string | boolean>;
+    send(path: string, type: string): Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
+}
+
+export declare class XHR {
+    path: string;
+    extension: string;
+    type: string;
+    response: Object | HTMLImageElement | AudioBuffer | string | null;
+    request: Request;
+    constructor(path: string, extension: string, type: string);
+    sendRequest(fileName: string): Promise<string>;
+    getRequestStatus(): string | number | boolean;
+    isRequestSent(): boolean;
 }

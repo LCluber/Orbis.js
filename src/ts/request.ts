@@ -29,24 +29,21 @@ export class Request {
   public send(
     path: string,
     type: string
-  ): Promise<HTMLImageElement | HTMLAudioElement | string | boolean> {
+  ): Promise<HTMLImageElement | AudioBuffer | string | Object | null> {
     // console.log(this.fsm);
     if (this.fsm["send"]()) {
       return this.ajax[type](path)
-        .then((response: HTMLImageElement | HTMLAudioElement | string) => {
+        .then((response: HTMLImageElement | AudioBuffer | string | Object) => {
           this.fsm["success"]();
           return response;
         })
         .catch((/*err: Error*/) => {
-          //console.log('error', path);
-          //console.log('error', err.message);
-          //this.log.error(err.message);
           this.fsm["error"]();
-          return false;
+          return null;
         });
     } else {
       return new Promise(() => {
-        return false;
+        return null;
       });
     }
   }

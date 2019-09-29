@@ -8,27 +8,220 @@ The main purpose of this library is to provide a simple way to load assets only 
 
 ## Installation
 
+### npm
+
 ```bash
-$ npm install @lcluber/orbisjs
+$ npm i @lcluber/orbisjs
 ```
 
-Or download it **[here](http://orbisjs.lcluber.com/#download)**.
+### Yarn
 
-## Demo
-
-See a basic example **[here](http://orbisjs.lcluber.com/#example)**.
+```bash
+$ yarn add @lcluber/orbisjs
+```
 
 ## Usage
 
-Learn how to use it **[here](http://orbisjs.lcluber.com/#source)**.
+### html
+
+```html
+<div id="progressPanel">
+  <button
+    id="launcher"
+    type="button"
+    class="btn btn-default"
+    onclick="loadAssets()"
+  >
+    LOAD ASSETS
+  </button>
+  <div id="progressText">Loading</div>
+  <div id="progressBar">
+    <div id="progressBarNumber">0</div>
+    <div id="progressBarPercentage"></div>
+  </div>
+</div>
+```
+
+### assets object
+
+```javascript
+//example of assets to load :
+var list = {
+  shaders: {
+    folder: "shaders",
+    files: [
+      { name: "shader1.txt" },
+      { name: "shader2.txt" },
+      { name: "shader3.txt" }
+    ]
+  },
+  materials: {
+    folder: "materials",
+    files: [
+      { name: "material1.txt" },
+      { name: "material2.txt" },
+      { name: "material3.doc" }
+    ]
+  },
+  textures: {
+    folder: "textures",
+    files: [
+      { name: "texture1.png" },
+      { name: "texture2.png" },
+      { name: "texture3.png" }
+    ]
+  },
+  meshes: {
+    folder: "meshes",
+    files: [{ name: "mesh1.json" }, { name: "mesh2.json" }]
+  },
+  sprites: {
+    folder: "sprites",
+    files: [
+      {
+        name: "sprite1.png",
+        params: {
+          texSize: [124, 70],
+          frameSize: [62, 70]
+        }
+      },
+      {
+        name: "sprite2.png",
+        params: {
+          texSize: [540, 30],
+          frameSize: [30, 30]
+        }
+      },
+      {
+        name: "sprite3.png",
+        params: {
+          texSize: [540, 30],
+          frameSize: [30, 30]
+        }
+      }
+    ]
+  },
+  sounds: {
+    folder: "sounds",
+    files: [
+      {
+        name: "sound1.mp3",
+        params: {
+          volume: 0.2,
+          loop: 0,
+          type: 0
+        }
+      },
+      {
+        name: "sound2.mp3",
+        params: {
+          volume: 0.3,
+          loop: 0,
+          type: 0
+        }
+      },
+      {
+        name: "sound3.mp3",
+        params: {
+          volume: 0.7,
+          loop: 0,
+          type: 0
+        }
+      }
+    ]
+  }
+};
+```
+
+### ES6
+
+```javascript
+import { Loader } from "@lcluber/orbisjs";
+
+let loader = new Loader(
+  list,
+  "../public/assets/",
+  "progressBar",
+  "progressText"
+);
+
+function loadAssets() {
+  loader.launch().then(() => {
+    console.log("complete");
+    console.log(loader.getList("sounds"));
+    console.log(loader.getAsset("sound3.mp3"));
+  });
+}
+```
+
+### IIFE
+
+```html
+<script src="node-modules/@lcluber/orbisjs/dist/orbis.iife.min.js"></script>
+```
+
+```javascript
+var loader = new Orbis.Loader(
+  list,
+  "../public/assets/",
+  "progressBar",
+  "progressText"
+);
+
+function loadAssets() {
+  loader.launch().then(function() {
+    console.log("complete");
+    console.log(loader.getList("sounds"));
+    console.log(loader.getAsset("sound3.mp3"));
+  });
+}
+```
 
 ## API Reference
 
-Read the documentation **[here](http://orbisjs.lcluber.com/doc/)**.
+```javascript
 
-## Tests
+interface Assets {
+  [key: string]: {
+    folder: string;
+    files: Asset[];
+  };
+}
 
-No tests to run yet
+interface Asset {
+  name: string;
+  params: {
+    [key: string]: string | number | boolean | Array<string | number | boolean>;
+  };
+  xhr?: XHR;
+}
+
+class XHR {
+  path: string;
+  extension: string;
+  type: string;
+  response: Object | HTMLImageElement | AudioBuffer | string | null;
+}
+
+class Loader(
+  assets: Assets,
+  assetsPath: string,
+  progressBarId: string,
+  progressTextId: string
+);
+
+loader.launch(): Promise<void> {}
+loader.getAsset(name: string): Asset | false {}
+loader.getList(type: string): Asset[] | false {}
+
+loader.resetProgress(): void;
+
+// Log levels from @lcluber Mouette.js logger library
+type LevelName = "info" | "trace" | "warn" | "error" | "off";
+loader.setLogLevel(name: LevelName): LevelName {}
+loader.getLogLevel(): LevelName {}
+
+```
 
 ## Contributors
 

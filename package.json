@@ -1,7 +1,7 @@
 {
   "name": "@lcluber/orbisjs",
   "version": "0.8.2",
-  "description": "Lazy loader written in Javascript",
+  "description": "Lazy loader written in TypeScript",
   "keywords": [
     "lazy loader",
     "assets loader",
@@ -23,13 +23,7 @@
     "email": "http://www.lcluber.com/contact",
     "url": "http://www.lcluber.com/"
   },
-  "contributors": [
-    {
-      "name": "Estelle Picq",
-      "email": "",
-      "url": "http://www.estellepicq.com"
-    }
-  ],
+  "contributors": [],
   "scripts": {
     "start": "node ./bin/www",
     "pretty": "prettier --check 'src/ts/*.ts' --write",
@@ -38,7 +32,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
+      "pre-commit": "bash ./scripts/branch.sh && pretty-quick --staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": ""
     }
@@ -52,11 +46,11 @@
     "dist/"
   ],
   "dependencies": {
-    "@lcluber/mouettejs": "2.1.0",
-    "@lcluber/taipanjs": "0.3.10",
+    "@lcluber/mouettejs": "2.2.1",
+    "@lcluber/taipanjs": "0.3.11",
     "@lcluber/type6js": "1.0.6",
     "@lcluber/weejs": "1.0.0",
-    "@lcluber/aiasjs": "1.0.2",
+    "@lcluber/aiasjs": "2.3.0",
     "@lcluber/frameratjs": "0.3.8",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",

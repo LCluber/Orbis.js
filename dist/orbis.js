@@ -23,8 +23,8 @@
 * http://orbisjs.lcluber.com
 */
 
-import { FSM } from '@lcluber/taipanjs';
 import { Logger } from '@lcluber/mouettejs';
+import { FSM } from '@lcluber/taipanjs';
 import { HTTP } from '@lcluber/aiasjs';
 import { Binding, Dom } from '@lcluber/weejs';
 import { Utils } from '@lcluber/type6js';
@@ -38,12 +38,12 @@ function loadImage(path) {
         img.name = getName(path);
         log.info("xhr processing starting (" + path + ")");
         img.addEventListener("load", () => {
-            log.info("xhr done successfully (" + path + ")");
+            log.info("xhr (" + path + ") done");
             resolve(img);
         });
         img.addEventListener("error", () => {
-            log.error("xhr failed (" + path + ")");
-            reject(new Error("xhr failed (" + path + ")"));
+            log.error("xhr (" + path + ") failed");
+            reject(new Error("xhr (" + path + ") failed"));
         });
     });
 }
@@ -52,32 +52,11 @@ function getName(path) {
 }
 
 function loadSound(path) {
-    let log = Logger.addGroup("Orbis");
-    return new Promise((resolve, reject) => {
-        let snd = new Audio();
-        snd.src = path;
-        log.info("xhr processing starting (" + path + ")");
-        snd.addEventListener("canplaythrough", () => {
-            log.info("xhr done successfully (" + path + ")");
-            resolve(snd);
-        }, false);
-        snd.addEventListener("canplay", () => {
-            log.info("xhr done successfully (" + path + ")");
-            resolve(snd);
-        }, false);
-        snd.addEventListener("error", () => {
-            log.error("xhr failed (" + path + ")");
-            reject(new Error("xhr failed (" + path + ")"));
-        }, false);
-        snd.addEventListener("stalled", () => {
-            log.error("xhr failed (" + path + ")");
-            reject(new Error("xhr failed (" + path + ")"));
-        }, false);
-    });
+    return HTTP.GET(path, "audiobuffer");
 }
 
 function loadFile(path) {
-    return HTTP.GET(path);
+    return HTTP.GET(path, "text");
 }
 
 class Request {
@@ -102,48 +81,48 @@ class Request {
             })
                 .catch(() => {
                 this.fsm["error"]();
-                return false;
+                return null;
             });
         }
         else {
             return new Promise(() => {
-                return false;
+                return null;
             });
         }
     }
 }
 
-class Asset {
-    constructor(path, file, extension, type) {
+class XHR {
+    constructor(path, extension, type) {
         this.path = path;
-        this.file = file;
         this.extension = extension;
         this.type = type;
         this.request = new Request();
         this.response = null;
     }
-    sendRequest() {
+    sendRequest(fileName) {
         if (this.response) {
             return new Promise(() => {
-                return this.file;
+                return fileName;
             });
         }
         else {
             return this.request
-                .send(this.path + this.file, this.type)
+                .send(this.path + fileName, this.type)
                 .then(response => {
                 if (response) {
                     this.response = response;
                 }
-                return this.file;
+                return fileName;
             });
         }
     }
     getRequestStatus() {
-        return this.request.fsm.state;
+        return this.request ? this.request.fsm.state : "done";
     }
     isRequestSent() {
         if (this.getRequestStatus() != "idle") {
+            delete this.request;
             return true;
         }
         return false;
@@ -249,13 +228,20 @@ class Loader {
         this.tick = this.default.tick;
         this.maxPendingRequests = this.default.maxPending;
         this.progress = new Progress(progressBarId, progressTextId);
+        this.log = Logger.addGroup("Orbis");
         this.createAssets();
+    }
+    setLogLevel(name) {
+        return this.log.setLevel(name);
+    }
+    getLogLevel() {
+        return this.log.getLevel();
     }
     getAsset(name) {
         for (let property in this.assets) {
             if (this.assets.hasOwnProperty(property)) {
                 for (let file of this.assets[property].files) {
-                    if (file.name == name) {
+                    if (file.name === name) {
                         return file;
                     }
                 }
@@ -306,12 +292,12 @@ class Loader {
                 let type = this.assets[property];
                 let folder = type.folder ? type.folder + "/" : "";
                 for (let file of type.files) {
-                    if (!file.asset && file.hasOwnProperty("name")) {
+                    if (!file.xhr && file.hasOwnProperty("name")) {
                         let extension = this.getExtension(file.name);
                         if (extension) {
                             let type = this.getAssetType(extension);
                             if (type) {
-                                file.asset = new Asset(this.path + "/" + folder, file.name, extension, type);
+                                file.xhr = new XHR(this.path + "/" + folder, extension, type);
                                 this.progress.nbAssets++;
                             }
                         }
@@ -324,7 +310,7 @@ class Loader {
         if (this.pendingRequests < this.maxPendingRequests) {
             let nextAsset = this.getNextAssetToLoad();
             if (nextAsset) {
-                nextAsset.sendRequest().then(response => {
+                nextAsset.xhr.sendRequest(nextAsset.name).then(response => {
                     this.pendingRequests--;
                     this.progress.update(response);
                 });
@@ -338,8 +324,8 @@ class Loader {
             if (this.assets.hasOwnProperty(property)) {
                 let type = this.assets[property];
                 for (let file of type.files) {
-                    if (file.hasOwnProperty("asset") && !file.asset.isRequestSent()) {
-                        return file.asset;
+                    if (file.xhr && !file.xhr.isRequestSent()) {
+                        return file;
                     }
                 }
             }

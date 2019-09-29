@@ -1,5 +1,6 @@
-import { HTTP, DataType } from "@lcluber/aiasjs";
+import { HTTP, ResponseDataType } from "@lcluber/aiasjs";
 
-export function loadFile(path: string): Promise<DataType> {
-  return HTTP.GET(path);
+export function loadFile(path: string): Promise<ResponseDataType> {
+  // HTTP.setLogLevel("info");
+  return HTTP.GET(path, "text");
 }

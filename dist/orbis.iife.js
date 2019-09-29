@@ -56,15 +56,15 @@ var Orbis = (function (exports) {
     */
 
     var LEVELS = {
-        info: { id: 1, name: 'info', color: '#28a745' },
-        trace: { id: 2, name: 'trace', color: '#17a2b8' },
-        warn: { id: 3, name: 'warn', color: '#ffc107' },
-        error: { id: 4, name: 'error', color: '#dc3545' },
-        off: { id: 99, name: 'off', color: null }
+        info: { id: 1, name: "info", color: "#28a745" },
+        trace: { id: 2, name: "trace", color: "#17a2b8" },
+        warn: { id: 3, name: "warn", color: "#ffc107" },
+        error: { id: 4, name: "error", color: "#dc3545" },
+        off: { id: 99, name: "off", color: null }
     };
 
     function addZero(value) {
-        return value < 10 ? '0' + value : value;
+        return value < 10 ? "0" + value : value;
     }
     function formatDate() {
         var now = new Date();
@@ -85,9 +85,9 @@ var Orbis = (function (exports) {
         }
 
         _createClass(Message, [{
-            key: 'display',
+            key: "display",
             value: function display(groupName) {
-                console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
+                console[this.name]("%c[" + groupName + "] " + this.date + " : ", "color:" + this.color + ";", this.content);
             }
         }]);
 
@@ -101,45 +101,48 @@ var Orbis = (function (exports) {
             this.messages = [];
             this.name = name;
             this.messages = [];
-            this._level = level;
+            this.level = level;
         }
 
         _createClass(Group, [{
-            key: 'info',
+            key: "setLevel",
+            value: function setLevel(name) {
+                this.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this.level;
+                return this.getLevel();
+            }
+        }, {
+            key: "getLevel",
+            value: function getLevel() {
+                return this.level.name;
+            }
+        }, {
+            key: "info",
             value: function info(message) {
                 this.log(LEVELS.info, message);
             }
         }, {
-            key: 'trace',
+            key: "trace",
             value: function trace(message) {
                 this.log(LEVELS.trace, message);
             }
         }, {
-            key: 'warn',
+            key: "warn",
             value: function warn(message) {
                 this.log(LEVELS.warn, message);
             }
         }, {
-            key: 'error',
+            key: "error",
             value: function error(message) {
                 this.log(LEVELS.error, message);
             }
         }, {
-            key: 'log',
+            key: "log",
             value: function log(level, messageContent) {
                 var message = new Message(level, messageContent);
                 this.messages.push(message);
-                if (this._level.id <= message.id) {
+                if (this.level.id <= message.id) {
                     message.display(this.name);
                 }
-            }
-        }, {
-            key: 'level',
-            set: function set(name) {
-                this._level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this._level;
-            },
-            get: function get() {
-                return this._level.name;
             }
         }]);
 
@@ -152,9 +155,222 @@ var Orbis = (function (exports) {
         }
 
         _createClass(Logger, null, [{
-            key: 'setLevel',
+            key: "setLevel",
             value: function setLevel(name) {
                 Logger.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : Logger.level;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var group = _step.value;
+
+                        group.setLevel(Logger.level.name);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                return Logger.getLevel();
+            }
+        }, {
+            key: "getLevel",
+            value: function getLevel() {
+                return Logger.level.name;
+            }
+        }, {
+            key: "getGroup",
+            value: function getGroup(name) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var group = _step2.value;
+
+                        if (group.name === name) {
+                            return group;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }, {
+            key: "addGroup",
+            value: function addGroup(name) {
+                return this.getGroup(name) || this.pushGroup(name);
+            }
+        }, {
+            key: "pushGroup",
+            value: function pushGroup(name) {
+                var group = new Group(name, Logger.level);
+                Logger.groups.push(group);
+                return group;
+            }
+        }]);
+
+        return Logger;
+    }();
+
+    Logger.level = LEVELS.error;
+    Logger.groups = [];
+
+    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2015 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://mouettejs.lcluber.com
+    */
+
+    var LEVELS$1 = {
+        info: { id: 1, name: 'info', color: '#28a745' },
+        trace: { id: 2, name: 'trace', color: '#17a2b8' },
+        warn: { id: 3, name: 'warn', color: '#ffc107' },
+        error: { id: 4, name: 'error', color: '#dc3545' },
+        off: { id: 99, name: 'off', color: null }
+    };
+
+    function addZero$1(value) {
+        return value < 10 ? '0' + value : value;
+    }
+    function formatDate$1() {
+        var now = new Date();
+        var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
+        var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
+        return date.join("/") + " " + time.join(":");
+    }
+
+    var Message$1 = function () {
+        function Message(level, content) {
+            _classCallCheck$1(this, Message);
+
+            this.id = level.id;
+            this.name = level.name;
+            this.color = level.color;
+            this.content = content;
+            this.date = formatDate$1();
+        }
+
+        _createClass$1(Message, [{
+            key: 'display',
+            value: function display(groupName) {
+                console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
+            }
+        }]);
+
+        return Message;
+    }();
+
+    var Group$1 = function () {
+        function Group(name, level) {
+            _classCallCheck$1(this, Group);
+
+            this.messages = [];
+            this.name = name;
+            this.messages = [];
+            this._level = level;
+        }
+
+        _createClass$1(Group, [{
+            key: 'info',
+            value: function info(message) {
+                this.log(LEVELS$1.info, message);
+            }
+        }, {
+            key: 'trace',
+            value: function trace(message) {
+                this.log(LEVELS$1.trace, message);
+            }
+        }, {
+            key: 'warn',
+            value: function warn(message) {
+                this.log(LEVELS$1.warn, message);
+            }
+        }, {
+            key: 'error',
+            value: function error(message) {
+                this.log(LEVELS$1.error, message);
+            }
+        }, {
+            key: 'log',
+            value: function log(level, messageContent) {
+                var message = new Message$1(level, messageContent);
+                this.messages.push(message);
+                if (this._level.id <= message.id) {
+                    message.display(this.name);
+                }
+            }
+        }, {
+            key: 'level',
+            set: function set(name) {
+                this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
+            },
+            get: function get() {
+                return this._level.name;
+            }
+        }]);
+
+        return Group;
+    }();
+
+    var Logger$1 = function () {
+        function Logger() {
+            _classCallCheck$1(this, Logger);
+        }
+
+        _createClass$1(Logger, null, [{
+            key: 'setLevel',
+            value: function setLevel(name) {
+                Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
                 var _iteratorNormalCompletion = true;
                 var _didIteratorError = false;
                 var _iteratorError = undefined;
@@ -225,7 +441,7 @@ var Orbis = (function (exports) {
         }, {
             key: 'pushGroup',
             value: function pushGroup(name) {
-                var group = new Group(name, Logger.level);
+                var group = new Group$1(name, Logger.level);
                 Logger.groups.push(group);
                 return group;
             }
@@ -234,10 +450,10 @@ var Orbis = (function (exports) {
         return Logger;
     }();
 
-    Logger.level = LEVELS.error;
-    Logger.groups = [];
+    Logger$1.level = LEVELS$1.error;
+    Logger$1.groups = [];
 
-    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -267,10 +483,10 @@ var Orbis = (function (exports) {
     var FSM = function FSM(events) {
         var _this = this;
 
-        _classCallCheck$1(this, FSM);
+        _classCallCheck$2(this, FSM);
 
         this.state = events[0].from;
-        this.log = Logger.getGroup('Taipan') || Logger.addGroup('Taipan');
+        this.log = Logger$1.addGroup('Taipan');
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -312,263 +528,25 @@ var Orbis = (function (exports) {
         }
     };
 
-    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://mouettejs.lcluber.com
-    */
-
-    var LEVELS$1 = {
-        info: { id: 1, name: "info", color: "#28a745" },
-        trace: { id: 2, name: "trace", color: "#17a2b8" },
-        warn: { id: 3, name: "warn", color: "#ffc107" },
-        error: { id: 4, name: "error", color: "#dc3545" },
-        off: { id: 99, name: "off", color: null }
-    };
-
-    function addZero$1(value) {
-        return value < 10 ? "0" + value : value;
-    }
-    function formatDate$1() {
-        var now = new Date();
-        var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
-        var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
-        return date.join("/") + " " + time.join(":");
-    }
-
-    var Message$1 = function () {
-        function Message(level, content) {
-            _classCallCheck$2(this, Message);
-
-            this.id = level.id;
-            this.name = level.name;
-            this.color = level.color;
-            this.content = content;
-            this.date = formatDate$1();
-        }
-
-        _createClass$1(Message, [{
-            key: "display",
-            value: function display(groupName) {
-                console[this.name]("%c[" + groupName + "] " + this.date + " : ", "color:" + this.color + ";", this.content);
-            }
-        }]);
-
-        return Message;
-    }();
-
-    var Group$1 = function () {
-        function Group(name, level) {
-            _classCallCheck$2(this, Group);
-
-            this.messages = [];
-            this.name = name;
-            this.messages = [];
-            this._level = level;
-        }
-
-        _createClass$1(Group, [{
-            key: "info",
-            value: function info(message) {
-                this.log(LEVELS$1.info, message);
-            }
-        }, {
-            key: "trace",
-            value: function trace(message) {
-                this.log(LEVELS$1.trace, message);
-            }
-        }, {
-            key: "warn",
-            value: function warn(message) {
-                this.log(LEVELS$1.warn, message);
-            }
-        }, {
-            key: "error",
-            value: function error(message) {
-                this.log(LEVELS$1.error, message);
-            }
-        }, {
-            key: "log",
-            value: function log(level, messageContent) {
-                var message = new Message$1(level, messageContent);
-                this.messages.push(message);
-                if (this._level.id <= message.id) {
-                    message.display(this.name);
-                }
-            }
-        }, {
-            key: "level",
-            set: function set(name) {
-                this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
-            },
-            get: function get() {
-                return this._level.name;
-            }
-        }]);
-
-        return Group;
-    }();
-
-    var Logger$1 = function () {
-        function Logger() {
-            _classCallCheck$2(this, Logger);
-        }
-
-        _createClass$1(Logger, null, [{
-            key: "setLevel",
-            value: function setLevel(name) {
-                Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var group = _step.value;
-
-                        group.level = Logger.level.name;
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
-                return Logger.getLevel();
-            }
-        }, {
-            key: "getLevel",
-            value: function getLevel() {
-                return Logger.level.name;
-            }
-        }, {
-            key: "getGroup",
-            value: function getGroup(name) {
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-                    for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var group = _step2.value;
-
-                        if (group.name === name) {
-                            return group;
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                            _iterator2.return();
-                        }
-                    } finally {
-                        if (_didIteratorError2) {
-                            throw _iteratorError2;
-                        }
-                    }
-                }
-
-                return null;
-            }
-        }, {
-            key: "addGroup",
-            value: function addGroup(name) {
-                return this.getGroup(name) || this.pushGroup(name);
-            }
-        }, {
-            key: "pushGroup",
-            value: function pushGroup(name) {
-                var group = new Group$1(name, Logger.level);
-                Logger.groups.push(group);
-                return group;
-            }
-        }]);
-
-        return Logger;
-    }();
-
-    Logger$1.level = LEVELS$1.error;
-    Logger$1.groups = [];
-
     function loadImage(path) {
-        var log = Logger$1.addGroup("Orbis");
+        var log = Logger.addGroup("Orbis");
         return new Promise(function (resolve, reject) {
             var img = new Image();
             img.src = path;
             img.name = getName(path);
             log.info("xhr processing starting (" + path + ")");
             img.addEventListener("load", function () {
-                log.info("xhr done successfully (" + path + ")");
+                log.info("xhr (" + path + ") done");
                 resolve(img);
             });
             img.addEventListener("error", function () {
-                log.error("xhr failed (" + path + ")");
-                reject(new Error("xhr failed (" + path + ")"));
+                log.error("xhr (" + path + ") failed");
+                reject(new Error("xhr (" + path + ") failed"));
             });
         });
     }
     function getName(path) {
         return path.replace(/^.*[\\\/]/, "");
-    }
-
-    function loadSound(path) {
-        var log = Logger$1.addGroup("Orbis");
-        return new Promise(function (resolve, reject) {
-            var snd = new Audio();
-            snd.src = path;
-            log.info("xhr processing starting (" + path + ")");
-            snd.addEventListener("canplaythrough", function () {
-                log.info("xhr done successfully (" + path + ")");
-                resolve(snd);
-            }, false);
-            snd.addEventListener("canplay", function () {
-                log.info("xhr done successfully (" + path + ")");
-                resolve(snd);
-            }, false);
-            snd.addEventListener("error", function () {
-                log.error("xhr failed (" + path + ")");
-                reject(new Error("xhr failed (" + path + ")"));
-            }, false);
-            snd.addEventListener("stalled", function () {
-                log.error("xhr failed (" + path + ")");
-                reject(new Error("xhr failed (" + path + ")"));
-            }, false);
-        });
     }
 
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -701,11 +679,10 @@ var Orbis = (function (exports) {
         function Method(method, defaultHeaders) {
             _classCallCheck$3(this, Method);
 
-            this.log = Logger$1.addGroup("Aias");
+            this.log = Logger.addGroup("Aias");
             this.method = method;
             this.async = true;
             this.noCache = false;
-            this.responseType = "text";
             this.headers = defaultHeaders;
         }
 
@@ -724,43 +701,79 @@ var Orbis = (function (exports) {
                 return this.headers;
             }
         }, {
-            key: 'setResponseType',
-            value: function setResponseType(responseType) {
-                this.responseType = responseType;
-            }
-        }, {
-            key: 'getResponseType',
-            value: function getResponseType() {
-                return this.responseType;
-            }
-        }, {
             key: 'call',
-            value: function call(url, data) {
+            value: function call(url, responseType, data) {
                 var _this = this;
 
                 return new Promise(function (resolve, reject) {
-                    var msg = ["Aias xhr ", " (" + _this.method + ":" + url + ")"];
                     var http = new XMLHttpRequest();
                     url += _this.noCache ? "?cache=" + new Date().getTime() : "";
                     http.open(_this.method, url, _this.async);
-                    http.responseType = _this.responseType;
+                    http.responseType = responseType === "audiobuffer" ? "arraybuffer" : responseType;
                     _this.setRequestHeaders(http);
-                    http.onreadystatechange = function () {
-                        if (http.readyState == 4) {
-                            if (http.status == 200) {
-                                _this.log.info(msg[0] + "successful" + msg[1]);
-                                resolve(http.responseText);
-                            } else {
-                                _this.log.error(msg[0] + "failed" + msg[1]);
-                                reject(http.status);
-                            }
-                        }
-                    };
+                    switch (responseType) {
+                        case "json":
+                        case "arraybuffer":
+                        case "audiobuffer":
+                        case "blob":
+                            http.onload = function () {
+                                if (http.readyState == 4) {
+                                    if (http.status == 200) {
+                                        var response = http.response;
+                                        if (response) {
+                                            _this.logInfo(url, http.status, http.statusText);
+                                            if (responseType === "audiobuffer") {
+                                                var context = new AudioContext();
+                                                context.decodeAudioData(response, function (buffer) {
+                                                    resolve(buffer);
+                                                }, function (error) {
+                                                    _this.log.error("xhr (" + _this.method + ":" + url + ") failed with decodeAudioData error : " + error.message);
+                                                    reject({
+                                                        status: error.name,
+                                                        statusText: error.message
+                                                    });
+                                                });
+                                            } else {
+                                                resolve(response);
+                                            }
+                                        } else {
+                                            _this.logError(url, http.status, http.statusText);
+                                            reject({
+                                                status: http.status,
+                                                statusText: http.statusText
+                                            });
+                                        }
+                                    } else {
+                                        _this.logError(url, http.status, http.statusText);
+                                        reject({
+                                            status: http.status,
+                                            statusText: http.statusText
+                                        });
+                                    }
+                                }
+                            };
+                            break;
+                        default:
+                            http.onreadystatechange = function () {
+                                if (http.readyState == 4) {
+                                    if (http.status == 200) {
+                                        _this.logInfo(url, http.status, http.statusText);
+                                        resolve(http.responseText);
+                                    } else {
+                                        _this.logError(url, http.status, http.statusText);
+                                        reject({
+                                            status: http.status,
+                                            statusText: http.statusText
+                                        });
+                                    }
+                                }
+                            };
+                    }
                     if (isObject(data)) {
                         data = JSON.stringify(data);
                     }
                     http.send(data || null);
-                    _this.log.info(msg[0] + "sent" + msg[1]);
+                    _this.log.info("xhr (" + _this.method + ":" + url + ")" + "sent");
                 });
             }
         }, {
@@ -771,6 +784,16 @@ var Orbis = (function (exports) {
                         http.setRequestHeader(property, this.headers[property]);
                     }
                 }
+            }
+        }, {
+            key: 'logInfo',
+            value: function logInfo(url, status, statusText) {
+                this.log.info("xhr (" + this.method + ":" + url + ") done with status " + status + " " + statusText);
+            }
+        }, {
+            key: 'logError',
+            value: function logError(url, status, statusText) {
+                this.log.error("xhr (" + this.method + ":" + url + ") failed with status " + status + " " + statusText);
             }
         }]);
 
@@ -783,55 +806,66 @@ var Orbis = (function (exports) {
         }
 
         _createClass$2(HTTP, null, [{
+            key: 'setLogLevel',
+            value: function setLogLevel(name) {
+                return this.log.setLevel(name);
+            }
+        }, {
+            key: 'getLogLevel',
+            value: function getLogLevel() {
+                return this.log.getLevel();
+            }
+        }, {
             key: 'GET',
-            value: function GET(url) {
-                return this.get.call(url);
+            value: function GET(url, responseType) {
+                return this.get.call(url, responseType);
             }
         }, {
             key: 'HEAD',
-            value: function HEAD(url) {
-                return this.head.call(url);
+            value: function HEAD(url, responseType) {
+                return this.head.call(url, responseType);
             }
         }, {
             key: 'POST',
-            value: function POST(url, data) {
-                return this.post.call(url, data);
+            value: function POST(url, responseType, data) {
+                return this.post.call(url, responseType, data);
             }
         }, {
             key: 'PUT',
-            value: function PUT(url, data) {
-                return this.put.call(url, data);
+            value: function PUT(url, responseType, data) {
+                return this.put.call(url, responseType, data);
             }
         }, {
             key: 'DELETE',
-            value: function DELETE(url) {
-                return this.delete.call(url);
+            value: function DELETE(url, responseType) {
+                return this.delete.call(url, responseType);
             }
         }, {
             key: 'CONNECT',
-            value: function CONNECT(url) {
-                return this.connect.call(url);
+            value: function CONNECT(url, responseType) {
+                return this.connect.call(url, responseType);
             }
         }, {
             key: 'OPTIONS',
-            value: function OPTIONS(url) {
-                return this.options.call(url);
+            value: function OPTIONS(url, responseType) {
+                return this.options.call(url, responseType);
             }
         }, {
             key: 'TRACE',
-            value: function TRACE(url) {
-                return this.trace.call(url);
+            value: function TRACE(url, responseType) {
+                return this.trace.call(url, responseType);
             }
         }, {
             key: 'PATCH',
-            value: function PATCH(url, data) {
-                return this.patch.call(url, data);
+            value: function PATCH(url, responseType, data) {
+                return this.patch.call(url, responseType, data);
             }
         }]);
 
         return HTTP;
     }();
 
+    HTTP.log = Logger.addGroup("Aias");
     HTTP.get = new Method("GET", {
         "Content-Type": "application/x-www-form-urlencoded"
     });
@@ -860,8 +894,12 @@ var Orbis = (function (exports) {
         "Content-Type": "application/json"
     });
 
+    function loadSound(path) {
+        return HTTP.GET(path, "audiobuffer");
+    }
+
     function loadFile(path) {
-        return HTTP.GET(path);
+        return HTTP.GET(path, "text");
     }
 
     var Request = function () {
@@ -881,51 +919,51 @@ var Orbis = (function (exports) {
                     return response;
                 }).catch(function () {
                     _this.fsm["error"]();
-                    return false;
+                    return null;
                 });
             } else {
                 return new Promise(function () {
-                    return false;
+                    return null;
                 });
             }
         };
         return Request;
     }();
 
-    var Asset = function () {
-        function Asset(path, file, extension, type) {
+    var XHR = function () {
+        function XHR(path, extension, type) {
             this.path = path;
-            this.file = file;
             this.extension = extension;
             this.type = type;
             this.request = new Request();
             this.response = null;
         }
-        Asset.prototype.sendRequest = function () {
+        XHR.prototype.sendRequest = function (fileName) {
             var _this = this;
             if (this.response) {
                 return new Promise(function () {
-                    return _this.file;
+                    return fileName;
                 });
             } else {
-                return this.request.send(this.path + this.file, this.type).then(function (response) {
+                return this.request.send(this.path + fileName, this.type).then(function (response) {
                     if (response) {
                         _this.response = response;
                     }
-                    return _this.file;
+                    return fileName;
                 });
             }
         };
-        Asset.prototype.getRequestStatus = function () {
-            return this.request.fsm.state;
+        XHR.prototype.getRequestStatus = function () {
+            return this.request ? this.request.fsm.state : "done";
         };
-        Asset.prototype.isRequestSent = function () {
+        XHR.prototype.isRequestSent = function () {
             if (this.getRequestStatus() != "idle") {
+                delete this.request;
                 return true;
             }
             return false;
         };
-        return Asset;
+        return XHR;
     }();
 
     var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4566,9 +4604,84 @@ var Orbis = (function (exports) {
     Logger$2.level = LEVELS$2.error;
     Logger$2.groups = [];
 
+    function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2015 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://taipanjs.lcluber.com
+    */
+
+    var FSM$1 = function FSM(events) {
+        var _this = this;
+
+        _classCallCheck$8(this, FSM);
+
+        this.state = events[0].from;
+        this.log = Logger$2.getGroup('Taipan') || Logger$2.addGroup('Taipan');
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            var _loop = function _loop() {
+                var event = _step.value;
+
+                if (!_this.hasOwnProperty(event.name)) {
+                    _this[event.name] = function () {
+                        _this.log.info('- Event ' + event.name + ' triggered');
+                        if (_this.state === event.from) {
+                            _this.state = event.to;
+                            _this.log.info('from ' + event.from + ' to ' + _this.state);
+                            return true;
+                        }
+                        _this.log.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
+                        return false;
+                    };
+                }
+            };
+
+            for (var _iterator = events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                _loop();
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    };
+
     var _createClass$7 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$9(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -4597,7 +4710,7 @@ var Orbis = (function (exports) {
 
     var Clock = function () {
         function Clock(refreshRate) {
-            _classCallCheck$8(this, Clock);
+            _classCallCheck$9(this, Clock);
 
             this.minimumTick = 16.7;
             this.minimumTick = refreshRate ? Time$1.framePerSecondToMillisecond(refreshRate) : this.minimumTick;
@@ -4692,12 +4805,12 @@ var Orbis = (function (exports) {
 
     var Player = function () {
         function Player(onAnimate, refreshRate) {
-            _classCallCheck$8(this, Player);
+            _classCallCheck$9(this, Player);
 
             this.frameId = 0;
             this.clock = new Clock(refreshRate);
             this.onAnimate = onAnimate;
-            this.fsm = new FSM([{ name: 'play', from: 'paused', to: 'running' }, { name: 'pause', from: 'running', to: 'paused' }]);
+            this.fsm = new FSM$1([{ name: 'play', from: 'paused', to: 'running' }, { name: 'pause', from: 'running', to: 'paused' }]);
         }
 
         _createClass$7(Player, [{
@@ -4869,14 +4982,21 @@ var Orbis = (function (exports) {
             this.tick = this.default.tick;
             this.maxPendingRequests = this.default.maxPending;
             this.progress = new Progress(progressBarId, progressTextId);
+            this.log = Logger.addGroup("Orbis");
             this.createAssets();
         }
+        Loader.prototype.setLogLevel = function (name) {
+            return this.log.setLevel(name);
+        };
+        Loader.prototype.getLogLevel = function () {
+            return this.log.getLevel();
+        };
         Loader.prototype.getAsset = function (name) {
             for (var property in this.assets) {
                 if (this.assets.hasOwnProperty(property)) {
                     for (var _i = 0, _a = this.assets[property].files; _i < _a.length; _i++) {
                         var file = _a[_i];
-                        if (file.name == name) {
+                        if (file.name === name) {
                             return file;
                         }
                     }
@@ -4928,12 +5048,12 @@ var Orbis = (function (exports) {
                     var folder = type.folder ? type.folder + "/" : "";
                     for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
                         var file = _a[_i];
-                        if (!file.asset && file.hasOwnProperty("name")) {
+                        if (!file.xhr && file.hasOwnProperty("name")) {
                             var extension = this.getExtension(file.name);
                             if (extension) {
                                 var type_1 = this.getAssetType(extension);
                                 if (type_1) {
-                                    file.asset = new Asset(this.path + "/" + folder, file.name, extension, type_1);
+                                    file.xhr = new XHR(this.path + "/" + folder, extension, type_1);
                                     this.progress.nbAssets++;
                                 }
                             }
@@ -4947,7 +5067,7 @@ var Orbis = (function (exports) {
             if (this.pendingRequests < this.maxPendingRequests) {
                 var nextAsset = this.getNextAssetToLoad();
                 if (nextAsset) {
-                    nextAsset.sendRequest().then(function (response) {
+                    nextAsset.xhr.sendRequest(nextAsset.name).then(function (response) {
                         _this.pendingRequests--;
                         _this.progress.update(response);
                     });
@@ -4962,8 +5082,8 @@ var Orbis = (function (exports) {
                     var type = this.assets[property];
                     for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
                         var file = _a[_i];
-                        if (file.hasOwnProperty("asset") && !file.asset.isRequestSent()) {
-                            return file.asset;
+                        if (file.xhr && !file.xhr.isRequestSent()) {
+                            return file;
                         }
                     }
                 }

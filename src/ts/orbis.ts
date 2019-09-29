@@ -1,4 +1,5 @@
-import { Asset } from "./asset";
+import { Logger, Group, LevelName } from "@lcluber/mouettejs";
+import { XHR } from "./xhr";
 import { Progress } from "./progress";
 
 export type ValidExtensions = {
@@ -13,29 +14,33 @@ export type Default = {
   tick: number;
 };
 
+export interface Asset {
+  name: string;
+  params: {
+    [key: string]: string | number | boolean | Array<string | number | boolean>;
+  };
+  xhr?: XHR;
+}
+
 export interface Assets {
-  [key: string]: any;
+  [key: string]: {
+    folder: string;
+    files: Asset[];
+  };
 }
 
 export class Loader {
   assets: Assets; //data from the assets file
   path: string;
   progress: Progress;
-  //assetsPath: string;
-  // requests        : {}, //requests list
-
-  // sentRequests    : 0,
-  // onProgress         : Function;
-  // onComplete         : Function;
   pendingRequests: number;
 
   tick: number;
   maxPendingRequests: number;
   default: Default;
 
-  // logs             : {},
   validExtensions: ValidExtensions;
-  // log: Group;
+  log: Group;
 
   constructor(
     assets: Assets,
@@ -60,8 +65,7 @@ export class Loader {
     this.tick = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
     this.progress = new Progress(progressBarId, progressTextId);
-    // this.log = Logger.addGroup("Orbis");
-    // Logger.setLevel('error');
+    this.log = Logger.addGroup("Orbis");
     this.createAssets();
   }
 
@@ -73,11 +77,19 @@ export class Loader {
   //   this.maxPendingRequests = maxPendingRequests;
   // }
 
+  public setLogLevel(name: LevelName): LevelName {
+    return this.log.setLevel(name);
+  }
+
+  public getLogLevel(): LevelName {
+    return this.log.getLevel();
+  }
+
   public getAsset(name: string): Asset | false {
     for (let property in this.assets) {
       if (this.assets.hasOwnProperty(property)) {
         for (let file of this.assets[property].files) {
-          if (file.name == name) {
+          if (file.name === name) {
             return file;
           }
         }
@@ -133,14 +145,14 @@ export class Loader {
         let type = this.assets[property];
         let folder = type.folder ? type.folder + "/" : "";
         for (let file of type.files) {
-          if (!file.asset && file.hasOwnProperty("name")) {
+          if (!file.xhr && file.hasOwnProperty("name")) {
             let extension = this.getExtension(file.name);
             if (extension) {
               let type = this.getAssetType(extension);
               if (type) {
-                file.asset = new Asset(
+                file.xhr = new XHR(
                   this.path + "/" + folder,
-                  file.name,
+                  //file.name,
                   extension,
                   type
                 );
@@ -161,7 +173,7 @@ export class Loader {
     if (this.pendingRequests < this.maxPendingRequests) {
       let nextAsset = this.getNextAssetToLoad();
       if (nextAsset) {
-        nextAsset.sendRequest().then(response => {
+        (<XHR>nextAsset.xhr).sendRequest(nextAsset.name).then(response => {
           // if(response) {
           this.pendingRequests--;
           this.progress.update(response);
@@ -179,8 +191,8 @@ export class Loader {
       if (this.assets.hasOwnProperty(property)) {
         let type = this.assets[property];
         for (let file of type.files) {
-          if (file.hasOwnProperty("asset") && !file.asset.isRequestSent()) {
-            return file.asset;
+          if (file.xhr && !file.xhr.isRequestSent()) {
+            return file;
           }
         }
       }
@@ -208,43 +220,4 @@ export class Loader {
     }
     return false;
   }
-
-  // /**
-  // * Set the scope used by onProgress, onAnimate, onComplete callbacks.
-  // * @since 0.4.0
-  // * @method
-  // * @param {object} The scope of the callbacks.
-  // */
-  // setScope : function(scope){
-  //   if ( ORBIS.Utils.isObject(scope) ){
-  //     this.onProgress = this.onProgress.bind(scope);
-  //     this.progress.onAnimate = this.progress.onAnimate.bind(scope);
-  //     this.onComplete = this.onComplete.bind(scope);
-  //   }else
-  //     return false;
-  // },
-
-  // /**
-  // * Set the maximum number of simultaneous pending requests the loader can handle. Once reached new requests will not start before a previous request completes. Six being the maximum on most browsers.
-  // * @since 0.2.0
-  // * @method
-  // * @param {integer} [max = 6] The maximum number of simultaneous pending requests the loader can handle.
-  // */
-  // setMaxPending : function(max){
-  //   this.maxPendingRequests = ORBIS.Utils.valueValidation(max)?ORBIS.Utils.valueValidation(max):this.defaultMaxPending;
-  // },
-  //
-  // /**
-
-  // /**
-  // * set the speed of the progress bar in pixels per seconds.
-  // * @since 0.4.4
-  // * @method
-  // * @param {integer} [speed = 10] an integer between 10 and 100.
-  // * @returns {string} return the speed
-  // */
-  // setProgressSpeed : function( speed ){
-  //   this.progress.speed = TYPE6.MathUtils.clamp( ORBIS.Utils.valueValidation( speed ), 10, 100 );
-  //   return this.progress.speed;
-  // }
 }
