@@ -181,26 +181,26 @@ function loadAssets() {
 
 ```javascript
 
-interface Asset {
-  path: string;
-  file: string;
-  extension: string;
-  type: string;
-  response: Object | HTMLImageElement | AudioBuffer | string | null;
-  request: Request;
-}
-
 interface Assets {
   [key: string]: {
     folder: string;
-    files:
-      { name: string;
-        params: {
-          [key: string]: string | number | boolean | Array<string | number | boolean>;
-        };
-        response?: Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
-      }[];
+    files: Asset[];
   };
+}
+
+interface Asset {
+  name: string;
+  params: {
+    [key: string]: string | number | boolean | Array<string | number | boolean>;
+  };
+  xhr?: XHR;
+}
+
+class XHR {
+  path: string;
+  extension: string;
+  type: string;
+  response: Object | HTMLImageElement | AudioBuffer | string | null;
 }
 
 class Loader(
