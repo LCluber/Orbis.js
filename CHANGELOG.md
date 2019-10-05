@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/LCluber/Orbis.js/compare/v0.9.0...v0.9.1) (2019-10-05)
+
+
+### Bug Fixes
+
+* **audiobuffer:** can load audio buffer on safari ([0c65244](https://github.com/LCluber/Orbis.js/commit/0c65244))
+
 # [0.9.0](https://github.com/LCluber/Orbis.js/compare/v0.8.2...v0.9.0) (2019-09-29)
 
 
