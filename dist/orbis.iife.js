@@ -587,6 +587,8 @@ var Orbis = (function (exports) {
     * https://github.com/LCluber/Aias.js
     */
 
+    var AudioContext = window.AudioContext || window.webkitAudioContext || false;
+
     var Method = function () {
         function Method(method, defaultHeaders) {
             _classCallCheck$3(this, Method);
@@ -635,13 +637,14 @@ var Orbis = (function (exports) {
                                         if (response) {
                                             _this.logInfo(url, http.status, http.statusText);
                                             if (responseType === "audiobuffer") {
-                                                var AudioContext = window.AudioContext || window.webkitAudioContext || false;
                                                 if (AudioContext) {
-                                                    var context = new AudioContext();
-                                                    context.decodeAudioData(response, function (buffer) {
+                                                    var audioContext = new AudioContext();
+                                                    audioContext.decodeAudioData(response, function (buffer) {
+                                                        audioContext.close();
                                                         resolve(buffer);
                                                     }, function (error) {
                                                         _this.log.error("xhr (" + _this.method + ":" + url + ") failed with decodeAudioData error : " + error.message);
+                                                        audioContext.close();
                                                         reject({
                                                             status: error.name,
                                                             statusText: error.message

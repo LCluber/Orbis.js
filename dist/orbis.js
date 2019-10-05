@@ -159,7 +159,9 @@ class Progress {
         this.text = textId ? new Binding(textId, "", "Loading") : null;
     }
     animateBar() {
-        return this.running = this.animation ? this.updateBar(this.animation.getDelta()) : false;
+        return (this.running = this.animation
+            ? this.updateBar(this.animation.getDelta())
+            : false);
     }
     start() {
         if (this.animation) {
