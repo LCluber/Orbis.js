@@ -85,13 +85,13 @@ export declare class Progress {
     private number;
     private text;
     private animation;
-    finished: boolean;
+    running: boolean;
     constructor(barId: string | null, textId: string | null);
     private animateBar;
     start(): void;
     reset(): void;
     update(text: string): void;
-    updateBar(delta: number): boolean;
+    private updateBar;
 }
 import { FSM } from "@lcluber/taipanjs";
 export declare type Ajax = {

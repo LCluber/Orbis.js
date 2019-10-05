@@ -138,7 +138,7 @@ class Progress {
         this.speed = 40;
         this.nbAssets = 0;
         this.barWidth = 0;
-        this.finished = false;
+        this.running = false;
         this.bar = null;
         this.number = null;
         this.animation = null;
@@ -152,19 +152,14 @@ class Progress {
                     : null;
                 let number = bar.children[0];
                 this.number = number ? new Binding(number, "", 0) : null;
-                this.animation = new Player(this.animateBar, 0);
+                this.animation = new Player(this.animateBar);
                 this.animation.setScope(this);
             }
         }
         this.text = textId ? new Binding(textId, "", "Loading") : null;
     }
     animateBar() {
-        if (this.animation) {
-            this.finished = this.updateBar(this.animation.getDelta());
-            if (!this.finished) {
-                this.animation.requestNewFrame();
-            }
-        }
+        return this.running = this.animation ? this.updateBar(this.animation.getDelta()) : false;
     }
     start() {
         if (this.animation) {
@@ -172,7 +167,7 @@ class Progress {
         }
     }
     reset() {
-        this.finished = false;
+        this.running = false;
         this.percentage = 0.0;
         if (this.text) {
             this.text.update("Loading");
@@ -191,7 +186,7 @@ class Progress {
         if (this.percentage >= this.target) {
             this.percentage = this.target;
         }
-        let flooredPercentage = Utils.floor(this.percentage, 0);
+        const flooredPercentage = Utils.floor(this.percentage, 0);
         if (this.bar) {
             this.bar.update(Utils.map(this.percentage, 0, 100, 0, this.barWidth) + "px");
         }
@@ -205,9 +200,9 @@ class Progress {
             if (this.text) {
                 this.text.update("Loading complete");
             }
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }
 
@@ -261,7 +256,7 @@ class Loader {
                 this.progress.start();
                 let intervalID = setInterval(() => {
                     this.sendRequest();
-                    if (this.progress.finished) {
+                    if (!this.progress.running) {
                         clearInterval(intervalID);
                         resolve();
                     }

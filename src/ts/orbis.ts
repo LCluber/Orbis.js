@@ -111,8 +111,7 @@ export class Loader {
         this.progress.start();
         let intervalID = setInterval(() => {
           this.sendRequest();
-          // let percentage = this.progress.updateBar();
-          if (this.progress.finished) {
+          if (!this.progress.running) {
             clearInterval(intervalID);
             resolve();
           }
