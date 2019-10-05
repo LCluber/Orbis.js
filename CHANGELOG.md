@@ -1,3 +1,10 @@
+## [0.9.2](https://github.com/LCluber/Orbis.js/compare/v0.9.1...v0.9.2) (2019-10-05)
+
+
+### Bug Fixes
+
+* **aiasjs:** updated aias.js library for better audio context handling ([5abf7e4](https://github.com/LCluber/Orbis.js/commit/5abf7e4))
+
 ## [0.9.1](https://github.com/LCluber/Orbis.js/compare/v0.9.0...v0.9.1) (2019-10-05)
 
 
