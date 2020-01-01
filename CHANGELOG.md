@@ -1,3 +1,15 @@
+# [1.0.0](https://github.com/LCluber/Orbis.js/compare/v0.9.2...v1.0.0) (2020-01-01)
+
+
+### Features
+
+* **loader:** add getContent() method ([daa1bc2](https://github.com/LCluber/Orbis.js/commit/daa1bc2efbc5fda6ec1f3264d1c7a0010a6356c2))
+
+
+### BREAKING CHANGES
+
+* **loader:** change Loader.launch() to Loader.start()
+
 ## [0.9.2](https://github.com/LCluber/Orbis.js/compare/v0.9.1...v0.9.2) (2019-10-05)
 
 
