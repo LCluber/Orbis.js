@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/LCluber/Orbis.js/compare/v1.0.0...v1.0.1) (2020-01-01)
+
+
+### Bug Fixes
+
+* **asset:** fix optional parameters of Asset type ([cd21bc7](https://github.com/LCluber/Orbis.js/commit/cd21bc7a62ee5cbfb854e73978f13289ed9d4350))
+
 # [1.0.0](https://github.com/LCluber/Orbis.js/compare/v0.9.2...v1.0.0) (2020-01-01)
 
 
