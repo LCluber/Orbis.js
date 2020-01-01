@@ -181,7 +181,7 @@ class XHR {
     }
     sendRequest(fileName) {
         if (this.response) {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 resolve(fileName);
             });
         }
@@ -346,7 +346,9 @@ class Loader {
         if (this.pendingRequests < this.maxPendingRequests) {
             let nextAsset = this.getNextAssetToLoad();
             if (nextAsset) {
-                nextAsset.xhr.sendRequest(nextAsset.name).then((response) => {
+                nextAsset.xhr
+                    .sendRequest(nextAsset.name)
+                    .then((response) => {
                     this.pendingRequests--;
                     this.progress.update(response);
                 });

@@ -28,9 +28,9 @@ declare type Params = {
 } | null;
 export declare class Asset {
     name: string;
-    params: Params;
-    xhr: XHR | null;
-    isValid: boolean;
+    params?: Params;
+    xhr?: XHR | null;
+    isValid?: boolean;
     constructor(name: string, path: string, params?: Params);
     getContent(): Object | HTMLImageElement | AudioBuffer | string | null | false;
 }

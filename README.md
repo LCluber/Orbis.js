@@ -246,16 +246,7 @@ interface Assets {
 
 interface Asset {
   name: string;
-  params: { [key: string]: string | number | boolean | Array<string | number | boolean>;} | null;
-  xhr: XHR | null;
-  isValid: boolean = false;
-}
-
-interface XHR {
-  path: string;
-  extension: string;
-  type: string;
-  response: Object | HTMLImageElement | AudioBuffer | string | null;
+  params?: { [key: string]: string | number | boolean | Array<string | number | boolean>;} | null;
 }
 
 class Loader(

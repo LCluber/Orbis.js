@@ -7,9 +7,9 @@ type Params = {
 
 export class Asset {
   name: string;
-  params: Params;
-  xhr: XHR | null = null;
-  isValid: boolean = false;
+  params?: Params;
+  xhr?: XHR | null = null;
+  isValid?: boolean = false;
 
   constructor(name: string, path: string, params?: Params) {
     this.name = name;
