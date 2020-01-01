@@ -121,10 +121,11 @@ var button = Wee.Dom.findById("launcher");
 
 function loadAssets() {
   button.disabled = true;
-  loader.launch().then(function() {
+  loader.start().then(function() {
     console.log("complete");
     console.log(loader.getList("sounds"));
     console.log(loader.getAsset("sound3.mp3"));
+    console.log(loader.getContent("sound3.mp3"));
     button.disabled = false;
   });
 }

@@ -18,24 +18,22 @@ export class XHR {
 
   public sendRequest(fileName: string): Promise<string> {
     if (this.response) {
-      return new Promise(() => {
-        return fileName;
+      return new Promise(resolve => {
+        resolve(fileName);
       });
     } else {
       return this.request
         .send(this.path + fileName, this.type)
-        .then(response => {
-          if (response) {
-            this.response = response;
-            // if(this.type === 'file') {
-            //   let json = Is.json(response as string);
-            //   if (json) {
-            //     this.response = json;
-            //   }
-            // }
+        .then(
+          (
+            response: Object | HTMLImageElement | AudioBuffer | string | null
+          ) => {
+            if (response) {
+              this.response = response;
+            }
+            return fileName;
           }
-          return fileName;
-        });
+        );
     }
   }
 

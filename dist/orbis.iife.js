@@ -242,669 +242,21 @@ var Orbis = (function (exports) {
     Logger.level = LEVELS.error;
     Logger.groups = [];
 
-    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://mouettejs.lcluber.com
-    */
-
-    var LEVELS$1 = {
-        info: { id: 1, name: 'info', color: '#28a745' },
-        trace: { id: 2, name: 'trace', color: '#17a2b8' },
-        warn: { id: 3, name: 'warn', color: '#ffc107' },
-        error: { id: 4, name: 'error', color: '#dc3545' },
-        off: { id: 99, name: 'off', color: null }
-    };
-
-    function addZero$1(value) {
-        return value < 10 ? '0' + value : value;
-    }
-    function formatDate$1() {
-        var now = new Date();
-        var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
-        var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
-        return date.join("/") + " " + time.join(":");
-    }
-
-    var Message$1 = function () {
-        function Message(level, content) {
-            _classCallCheck$1(this, Message);
-
-            this.id = level.id;
-            this.name = level.name;
-            this.color = level.color;
-            this.content = content;
-            this.date = formatDate$1();
-        }
-
-        _createClass$1(Message, [{
-            key: 'display',
-            value: function display(groupName) {
-                console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
-            }
-        }]);
-
-        return Message;
-    }();
-
-    var Group$1 = function () {
-        function Group(name, level) {
-            _classCallCheck$1(this, Group);
-
-            this.messages = [];
-            this.name = name;
-            this.messages = [];
-            this._level = level;
-        }
-
-        _createClass$1(Group, [{
-            key: 'info',
-            value: function info(message) {
-                this.log(LEVELS$1.info, message);
-            }
-        }, {
-            key: 'trace',
-            value: function trace(message) {
-                this.log(LEVELS$1.trace, message);
-            }
-        }, {
-            key: 'warn',
-            value: function warn(message) {
-                this.log(LEVELS$1.warn, message);
-            }
-        }, {
-            key: 'error',
-            value: function error(message) {
-                this.log(LEVELS$1.error, message);
-            }
-        }, {
-            key: 'log',
-            value: function log(level, messageContent) {
-                var message = new Message$1(level, messageContent);
-                this.messages.push(message);
-                if (this._level.id <= message.id) {
-                    message.display(this.name);
-                }
-            }
-        }, {
-            key: 'level',
-            set: function set(name) {
-                this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
-            },
-            get: function get() {
-                return this._level.name;
-            }
-        }]);
-
-        return Group;
-    }();
-
-    var Logger$1 = function () {
-        function Logger() {
-            _classCallCheck$1(this, Logger);
-        }
-
-        _createClass$1(Logger, null, [{
-            key: 'setLevel',
-            value: function setLevel(name) {
-                Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var group = _step.value;
-
-                        group.level = Logger.level.name;
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-        }, {
-            key: 'getLevel',
-            value: function getLevel() {
-                return Logger.level.name;
-            }
-        }, {
-            key: 'getGroup',
-            value: function getGroup(name) {
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-                    for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var group = _step2.value;
-
-                        if (group.name === name) {
-                            return group;
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                            _iterator2.return();
-                        }
-                    } finally {
-                        if (_didIteratorError2) {
-                            throw _iteratorError2;
-                        }
-                    }
-                }
-
-                return null;
-            }
-        }, {
-            key: 'addGroup',
-            value: function addGroup(name) {
-                return this.getGroup(name) || this.pushGroup(name);
-            }
-        }, {
-            key: 'pushGroup',
-            value: function pushGroup(name) {
-                var group = new Group$1(name, Logger.level);
-                Logger.groups.push(group);
-                return group;
-            }
-        }]);
-
-        return Logger;
-    }();
-
-    Logger$1.level = LEVELS$1.error;
-    Logger$1.groups = [];
-
-    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://taipanjs.lcluber.com
-    */
-
-    var FSM = function FSM(events) {
-        var _this = this;
-
-        _classCallCheck$2(this, FSM);
-
-        this.state = events[0].from;
-        this.log = Logger$1.addGroup('Taipan');
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            var _loop = function _loop() {
-                var event = _step.value;
-
-                if (!_this.hasOwnProperty(event.name)) {
-                    _this[event.name] = function () {
-                        _this.log.info('- Event ' + event.name + ' triggered');
-                        if (_this.state === event.from) {
-                            _this.state = event.to;
-                            _this.log.info('from ' + event.from + ' to ' + _this.state);
-                            return true;
-                        }
-                        _this.log.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
-                        return false;
-                    };
-                }
-            };
-
-            for (var _iterator = events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                _loop();
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-    };
-
-    function loadImage(path) {
-        var log = Logger.addGroup("Orbis");
-        return new Promise(function (resolve, reject) {
-            var img = new Image();
-            img.src = path;
-            img.name = getName(path);
-            log.info("xhr processing starting (" + path + ")");
-            img.addEventListener("load", function () {
-                log.info("xhr (" + path + ") done");
-                resolve(img);
-            });
-            img.addEventListener("error", function () {
-                log.error("xhr (" + path + ") failed");
-                reject(new Error("xhr (" + path + ") failed"));
-            });
-        });
-    }
-    function getName(path) {
-        return path.replace(/^.*[\\\/]/, "");
-    }
-
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-    function isObject(object) {
-        return object !== null && (typeof object === "undefined" ? "undefined" : _typeof(object)) === "object" && !isArray(object);
-    }
     function isArray(array) {
         return array !== null && array.constructor === Array;
     }
-
-    var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2010 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * https://github.com/LCluber/Aias.js
-    */
-
-    var AudioContext = window.AudioContext || window.webkitAudioContext || false;
-
-    var Method = function () {
-        function Method(method, defaultHeaders) {
-            _classCallCheck$3(this, Method);
-
-            this.log = Logger.addGroup("Aias");
-            this.method = method;
-            this.async = true;
-            this.noCache = false;
-            this.headers = defaultHeaders;
-        }
-
-        _createClass$2(Method, [{
-            key: 'setHeaders',
-            value: function setHeaders(headers) {
-                for (var property in headers) {
-                    if (headers.hasOwnProperty(property)) {
-                        this.headers[property] = headers[property];
-                    }
-                }
-            }
-        }, {
-            key: 'getHeaders',
-            value: function getHeaders() {
-                return this.headers;
-            }
-        }, {
-            key: 'call',
-            value: function call(url, responseType, data) {
-                var _this = this;
-
-                return new Promise(function (resolve, reject) {
-                    var http = new XMLHttpRequest();
-                    url += _this.noCache ? "?cache=" + new Date().getTime() : "";
-                    http.open(_this.method, url, _this.async);
-                    http.responseType = responseType === "audiobuffer" ? "arraybuffer" : responseType;
-                    _this.setRequestHeaders(http);
-                    switch (responseType) {
-                        case "json":
-                        case "arraybuffer":
-                        case "audiobuffer":
-                        case "blob":
-                            http.onload = function () {
-                                if (http.readyState == 4) {
-                                    if (http.status == 200) {
-                                        var response = http.response;
-                                        if (response) {
-                                            _this.logInfo(url, http.status, http.statusText);
-                                            if (responseType === "audiobuffer") {
-                                                if (AudioContext) {
-                                                    var audioContext = new AudioContext();
-                                                    audioContext.decodeAudioData(response, function (buffer) {
-                                                        audioContext.close();
-                                                        resolve(buffer);
-                                                    }, function (error) {
-                                                        _this.log.error("xhr (" + _this.method + ":" + url + ") failed with decodeAudioData error : " + error.message);
-                                                        audioContext.close();
-                                                        reject({
-                                                            status: error.name,
-                                                            statusText: error.message
-                                                        });
-                                                    });
-                                                } else {
-                                                    _this.log.error("xhr (" + _this.method + ":" + url + ") failed with error : " + "Web Audio API is not supported by your browser.");
-                                                    reject({
-                                                        status: "Web Audio API not supported by your browser",
-                                                        statusText: "Web Audio API is not supported by your browser"
-                                                    });
-                                                }
-                                            } else {
-                                                resolve(response);
-                                            }
-                                        } else {
-                                            _this.logError(url, http.status, http.statusText);
-                                            reject({
-                                                status: http.status,
-                                                statusText: http.statusText
-                                            });
-                                        }
-                                    } else {
-                                        _this.logError(url, http.status, http.statusText);
-                                        reject({
-                                            status: http.status,
-                                            statusText: http.statusText
-                                        });
-                                    }
-                                }
-                            };
-                            break;
-                        default:
-                            http.onreadystatechange = function () {
-                                if (http.readyState == 4) {
-                                    if (http.status == 200) {
-                                        _this.logInfo(url, http.status, http.statusText);
-                                        resolve(http.responseText);
-                                    } else {
-                                        _this.logError(url, http.status, http.statusText);
-                                        reject({
-                                            status: http.status,
-                                            statusText: http.statusText
-                                        });
-                                    }
-                                }
-                            };
-                    }
-                    if (isObject(data)) {
-                        data = JSON.stringify(data);
-                    }
-                    http.send(data || null);
-                    _this.log.info("xhr (" + _this.method + ":" + url + ")" + "sent");
-                });
-            }
-        }, {
-            key: 'setRequestHeaders',
-            value: function setRequestHeaders(http) {
-                for (var property in this.headers) {
-                    if (this.headers.hasOwnProperty(property)) {
-                        http.setRequestHeader(property, this.headers[property]);
-                    }
-                }
-            }
-        }, {
-            key: 'logInfo',
-            value: function logInfo(url, status, statusText) {
-                this.log.info("xhr (" + this.method + ":" + url + ") done with status " + status + " " + statusText);
-            }
-        }, {
-            key: 'logError',
-            value: function logError(url, status, statusText) {
-                this.log.error("xhr (" + this.method + ":" + url + ") failed with status " + status + " " + statusText);
-            }
-        }]);
-
-        return Method;
-    }();
-
-    var HTTP = function () {
-        function HTTP() {
-            _classCallCheck$3(this, HTTP);
-        }
-
-        _createClass$2(HTTP, null, [{
-            key: 'setLogLevel',
-            value: function setLogLevel(name) {
-                return this.log.setLevel(name);
-            }
-        }, {
-            key: 'getLogLevel',
-            value: function getLogLevel() {
-                return this.log.getLevel();
-            }
-        }, {
-            key: 'GET',
-            value: function GET(url, responseType) {
-                return this.get.call(url, responseType);
-            }
-        }, {
-            key: 'HEAD',
-            value: function HEAD(url, responseType) {
-                return this.head.call(url, responseType);
-            }
-        }, {
-            key: 'POST',
-            value: function POST(url, responseType, data) {
-                return this.post.call(url, responseType, data);
-            }
-        }, {
-            key: 'PUT',
-            value: function PUT(url, responseType, data) {
-                return this.put.call(url, responseType, data);
-            }
-        }, {
-            key: 'DELETE',
-            value: function DELETE(url, responseType) {
-                return this.delete.call(url, responseType);
-            }
-        }, {
-            key: 'CONNECT',
-            value: function CONNECT(url, responseType) {
-                return this.connect.call(url, responseType);
-            }
-        }, {
-            key: 'OPTIONS',
-            value: function OPTIONS(url, responseType) {
-                return this.options.call(url, responseType);
-            }
-        }, {
-            key: 'TRACE',
-            value: function TRACE(url, responseType) {
-                return this.trace.call(url, responseType);
-            }
-        }, {
-            key: 'PATCH',
-            value: function PATCH(url, responseType, data) {
-                return this.patch.call(url, responseType, data);
-            }
-        }]);
-
-        return HTTP;
-    }();
-
-    HTTP.log = Logger.addGroup("Aias");
-    HTTP.get = new Method("GET", {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
-    HTTP.head = new Method("HEAD", {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
-    HTTP.post = new Method("POST", {
-        "Content-Type": "application/json"
-    });
-    HTTP.put = new Method("PUT", {
-        "Content-Type": "application/json"
-    });
-    HTTP.delete = new Method("DELETE", {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
-    HTTP.connect = new Method("CONNECT", {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
-    HTTP.options = new Method("OPTIONS", {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
-    HTTP.trace = new Method("TRACE", {
-        "Content-Type": "application/x-www-form-urlencoded"
-    });
-    HTTP.patch = new Method("PATCH", {
-        "Content-Type": "application/json"
-    });
-
-    function loadSound(path) {
-        return HTTP.GET(path, "audiobuffer");
-    }
-
-    function loadFile(path) {
-        return HTTP.GET(path, "text");
-    }
-
-    var Request = function () {
-        function Request() {
-            this.fsm = new FSM([{ name: "send", from: "idle", to: "pending" }, { name: "success", from: "pending", to: "success" }, { name: "error", from: "pending", to: "error" }]);
-            this.ajax = {
-                file: loadFile,
-                img: loadImage,
-                sound: loadSound
-            };
-        }
-        Request.prototype.send = function (path, type) {
-            var _this = this;
-            if (this.fsm["send"]()) {
-                return this.ajax[type](path).then(function (response) {
-                    _this.fsm["success"]();
-                    return response;
-                }).catch(function () {
-                    _this.fsm["error"]();
-                    return null;
-                });
-            } else {
-                return new Promise(function () {
-                    return null;
-                });
-            }
-        };
-        return Request;
-    }();
-
-    var XHR = function () {
-        function XHR(path, extension, type) {
-            this.path = path;
-            this.extension = extension;
-            this.type = type;
-            this.request = new Request();
-            this.response = null;
-        }
-        XHR.prototype.sendRequest = function (fileName) {
-            var _this = this;
-            if (this.response) {
-                return new Promise(function () {
-                    return fileName;
-                });
-            } else {
-                return this.request.send(this.path + fileName, this.type).then(function (response) {
-                    if (response) {
-                        _this.response = response;
-                    }
-                    return fileName;
-                });
-            }
-        };
-        XHR.prototype.getRequestStatus = function () {
-            return this.request ? this.request.fsm.state : "done";
-        };
-        XHR.prototype.isRequestSent = function () {
-            if (this.getRequestStatus() != "idle") {
-                delete this.request;
-                return true;
-            }
-            return false;
-        };
-        return XHR;
-    }();
-
-    var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-    function isArray$1(array) {
-        return array !== null && array.constructor === Array;
-    }
-    function isString$1(string) {
+    function isString(string) {
         return typeof string === "string";
     }
-    function isHtmlElement$1(htmlElement) {
+    function isHtmlElement(htmlElement) {
         if (htmlElement) {
-            return (typeof HTMLElement === "undefined" ? "undefined" : _typeof$1(HTMLElement)) === "object" ? htmlElement instanceof HTMLElement : htmlElement && (typeof htmlElement === "undefined" ? "undefined" : _typeof$1(htmlElement)) === "object" && htmlElement !== null && htmlElement.nodeType === 1 && typeof htmlElement.nodeName === "string";
+            return (typeof HTMLElement === "undefined" ? "undefined" : _typeof(HTMLElement)) === "object" ? htmlElement instanceof HTMLElement : htmlElement && (typeof htmlElement === "undefined" ? "undefined" : _typeof(htmlElement)) === "object" && htmlElement !== null && htmlElement.nodeType === 1 && typeof htmlElement.nodeName === "string";
         }
         return false;
     }
-    function isHtmlEventAttribute$1(htmlEventAttribute) {
+    function isHtmlEventAttribute(htmlEventAttribute) {
         switch (htmlEventAttribute) {
             case "onafterprint":
             case "onbeforeprint":
@@ -984,9 +336,9 @@ var Orbis = (function (exports) {
         }
     }
 
-    var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -1015,10 +367,10 @@ var Orbis = (function (exports) {
 
     var Dom = function () {
         function Dom() {
-            _classCallCheck$4(this, Dom);
+            _classCallCheck$1(this, Dom);
         }
 
-        _createClass$3(Dom, null, [{
+        _createClass$1(Dom, null, [{
             key: "scrollToBottom",
             value: function scrollToBottom(HtmlElement) {
                 HtmlElement.scrollTop = HtmlElement.scrollHeight;
@@ -1107,7 +459,7 @@ var Orbis = (function (exports) {
                     var newElement = document.createElement(childElementType);
                     if (childElementAttributes) {
                         Object.keys(childElementAttributes).forEach(function (key) {
-                            if (key === "textContent" || key === "innerHTML" || isHtmlEventAttribute$1(key)) {
+                            if (key === "textContent" || key === "innerHTML" || isHtmlEventAttribute(key)) {
                                 newElement[key] = childElementAttributes[key];
                             } else {
                                 newElement.setAttribute(key, childElementAttributes[key]);
@@ -1140,7 +492,7 @@ var Orbis = (function (exports) {
         }, {
             key: "checkElement",
             value: function checkElement(element) {
-                if (isString$1(element)) {
+                if (isString(element)) {
                     return this.findById(element);
                 }
                 return element;
@@ -1152,7 +504,7 @@ var Orbis = (function (exports) {
 
     var Binding = function () {
         function Binding(element, property, value) {
-            _classCallCheck$4(this, Binding);
+            _classCallCheck$1(this, Binding);
 
             this._value = "";
             this.elements = this.getElements(element);
@@ -1166,7 +518,7 @@ var Orbis = (function (exports) {
             this.value = value;
         }
 
-        _createClass$3(Binding, [{
+        _createClass$1(Binding, [{
             key: "addPropertyToElement",
             value: function addPropertyToElement() {
                 if (this.elements) {
@@ -1206,7 +558,7 @@ var Orbis = (function (exports) {
                                     element.value = str;
                                 } else {
                                     var pattern = /<\s*.*[^>]*>(.*?)<\s*.*\s*>/gi;
-                                    if (isString$1(this._value) && str.match(pattern)) {
+                                    if (isString(this._value) && str.match(pattern)) {
                                         element.innerHTML = str;
                                     } else {
                                         element.textContent = str;
@@ -1234,7 +586,7 @@ var Orbis = (function (exports) {
             key: "getElements",
             value: function getElements(element) {
                 var elements = [];
-                if (isArray$1(element)) {
+                if (isArray(element)) {
                     var _iteratorNormalCompletion2 = true;
                     var _didIteratorError2 = false;
                     var _iteratorError2 = undefined;
@@ -1243,7 +595,7 @@ var Orbis = (function (exports) {
                         for (var _iterator2 = element[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                             var elt = _step2.value;
 
-                            if (isHtmlElement$1(elt)) {
+                            if (isHtmlElement(elt)) {
                                 elements.push(elt);
                             }
                         }
@@ -1261,14 +613,14 @@ var Orbis = (function (exports) {
                             }
                         }
                     }
-                } else if (isString$1(element)) {
+                } else if (isString(element)) {
                     var htmlElement = Dom.findById(element);
                     if (htmlElement) {
                         elements.push(htmlElement);
                     } else {
                         elements = Dom.findByClass(element);
                     }
-                } else if (isHtmlElement$1(element)) {
+                } else if (isHtmlElement(element)) {
                     elements.push(element);
                 }
                 return elements;
@@ -1287,11 +639,11 @@ var Orbis = (function (exports) {
         return Binding;
     }();
 
-    var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
     function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-    function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -1320,10 +672,10 @@ var Orbis = (function (exports) {
 
     var Utils = function () {
         function Utils() {
-            _classCallCheck$5(this, Utils);
+            _classCallCheck$2(this, Utils);
         }
 
-        _createClass$4(Utils, null, [{
+        _createClass$2(Utils, null, [{
             key: 'round',
             value: function round(x, decimals) {
                 decimals = Math.pow(10, decimals);
@@ -1428,10 +780,10 @@ var Orbis = (function (exports) {
 
     var Trigonometry = function () {
         function Trigonometry() {
-            _classCallCheck$5(this, Trigonometry);
+            _classCallCheck$2(this, Trigonometry);
         }
 
-        _createClass$4(Trigonometry, null, [{
+        _createClass$2(Trigonometry, null, [{
             key: 'init',
             value: function init() {
                 Trigonometry.createRoundedPis();
@@ -1618,10 +970,10 @@ var Orbis = (function (exports) {
 
     var Time = function () {
         function Time() {
-            _classCallCheck$5(this, Time);
+            _classCallCheck$2(this, Time);
         }
 
-        _createClass$4(Time, null, [{
+        _createClass$2(Time, null, [{
             key: 'millisecondToSecond',
             value: function millisecondToSecond(millisecond) {
                 return millisecond * 0.001;
@@ -1648,10 +1000,10 @@ var Orbis = (function (exports) {
 
     var Random = function () {
         function Random() {
-            _classCallCheck$5(this, Random);
+            _classCallCheck$2(this, Random);
         }
 
-        _createClass$4(Random, null, [{
+        _createClass$2(Random, null, [{
             key: 'float',
             value: function float(min, max) {
                 return min + Math.random() * (max - min);
@@ -1682,10 +1034,10 @@ var Orbis = (function (exports) {
 
     var NumArray = function () {
         function NumArray() {
-            _classCallCheck$5(this, NumArray);
+            _classCallCheck$2(this, NumArray);
         }
 
-        _createClass$4(NumArray, null, [{
+        _createClass$2(NumArray, null, [{
             key: 'min',
             value: function min(array) {
                 return Math.min.apply(Math, _toConsumableArray(array));
@@ -1721,10 +1073,10 @@ var Orbis = (function (exports) {
 
     var Bezier = function () {
         function Bezier() {
-            _classCallCheck$5(this, Bezier);
+            _classCallCheck$2(this, Bezier);
         }
 
-        _createClass$4(Bezier, null, [{
+        _createClass$2(Bezier, null, [{
             key: 'quadratic',
             value: function quadratic(p0, p1, p2, t) {
                 var oneMinusT = 1 - t;
@@ -1744,13 +1096,13 @@ var Orbis = (function (exports) {
 
     var Vector2 = function () {
         function Vector2(x, y) {
-            _classCallCheck$5(this, Vector2);
+            _classCallCheck$2(this, Vector2);
 
             this.x = x || 0.0;
             this.y = y || 0.0;
         }
 
-        _createClass$4(Vector2, [{
+        _createClass$2(Vector2, [{
             key: 'isOrigin',
             value: function isOrigin() {
                 return Utils.isOrigin(this.x) && Utils.isOrigin(this.y) ? true : false;
@@ -2107,7 +1459,7 @@ var Orbis = (function (exports) {
 
     var Circle = function () {
         function Circle(positionX, positionY, radius) {
-            _classCallCheck$5(this, Circle);
+            _classCallCheck$2(this, Circle);
 
             this.shape = 'circle';
             this._radius = 0.0;
@@ -2116,7 +1468,7 @@ var Orbis = (function (exports) {
             this.radius = radius;
         }
 
-        _createClass$4(Circle, [{
+        _createClass$2(Circle, [{
             key: 'clone',
             value: function clone() {
                 return new Circle(this.position.x, this.position.y, this.radius);
@@ -2193,7 +1545,7 @@ var Orbis = (function (exports) {
 
     var Rectangle = function () {
         function Rectangle(positionX, positionY, sizeX, sizeY) {
-            _classCallCheck$5(this, Rectangle);
+            _classCallCheck$2(this, Rectangle);
 
             this.shape = 'aabb';
             this.size = new Vector2(sizeX, sizeY);
@@ -2204,7 +1556,7 @@ var Orbis = (function (exports) {
             this.bottomRightCorner = new Vector2(positionX + this.halfSize.x, positionY + this.halfSize.y);
         }
 
-        _createClass$4(Rectangle, [{
+        _createClass$2(Rectangle, [{
             key: 'clone',
             value: function clone() {
                 return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -2321,14 +1673,14 @@ var Orbis = (function (exports) {
 
     var Vector3 = function () {
         function Vector3(x, y, z) {
-            _classCallCheck$5(this, Vector3);
+            _classCallCheck$2(this, Vector3);
 
             this.x = x || 0.0;
             this.y = y || 0.0;
             this.z = z || 0.0;
         }
 
-        _createClass$4(Vector3, [{
+        _createClass$2(Vector3, [{
             key: 'fromArray',
             value: function fromArray(array, offset) {
                 if (offset === undefined) {
@@ -2610,7 +1962,7 @@ var Orbis = (function (exports) {
 
     var Matrix4x3 = function () {
         function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
-            _classCallCheck$5(this, Matrix4x3);
+            _classCallCheck$2(this, Matrix4x3);
 
             this.m = new Float32Array(16);
             this.xAxis = new Vector3();
@@ -2619,7 +1971,7 @@ var Orbis = (function (exports) {
             this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
         }
 
-        _createClass$4(Matrix4x3, [{
+        _createClass$2(Matrix4x3, [{
             key: 'make',
             value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
                 this.m[0] = x1 || 0.0;
@@ -2722,13 +2074,13 @@ var Orbis = (function (exports) {
 
     var Matrix4x4 = function () {
         function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
-            _classCallCheck$5(this, Matrix4x4);
+            _classCallCheck$2(this, Matrix4x4);
 
             this.m = new Float32Array(16);
             this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
         }
 
-        _createClass$4(Matrix4x4, [{
+        _createClass$2(Matrix4x4, [{
             key: 'make',
             value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
                 this.m[0] = x1 || 0.0;
@@ -2840,25 +2192,311 @@ var Orbis = (function (exports) {
         return Matrix4x4;
     }();
 
-    function isInteger$2(number) {
+    var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2015 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://mouettejs.lcluber.com
+    */
+
+    var LEVELS$1 = {
+        info: { id: 1, name: 'info', color: '#28a745' },
+        trace: { id: 2, name: 'trace', color: '#17a2b8' },
+        warn: { id: 3, name: 'warn', color: '#ffc107' },
+        error: { id: 4, name: 'error', color: '#dc3545' },
+        off: { id: 99, name: 'off', color: null }
+    };
+
+    function addZero$1(value) {
+        return value < 10 ? '0' + value : value;
+    }
+    function formatDate$1() {
+        var now = new Date();
+        var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
+        var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
+        return date.join("/") + " " + time.join(":");
+    }
+
+    var Message$1 = function () {
+        function Message(level, content) {
+            _classCallCheck$3(this, Message);
+
+            this.id = level.id;
+            this.name = level.name;
+            this.color = level.color;
+            this.content = content;
+            this.date = formatDate$1();
+        }
+
+        _createClass$3(Message, [{
+            key: 'display',
+            value: function display(groupName) {
+                console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
+            }
+        }]);
+
+        return Message;
+    }();
+
+    var Group$1 = function () {
+        function Group(name, level) {
+            _classCallCheck$3(this, Group);
+
+            this.messages = [];
+            this.name = name;
+            this.messages = [];
+            this._level = level;
+        }
+
+        _createClass$3(Group, [{
+            key: 'info',
+            value: function info(message) {
+                this.log(LEVELS$1.info, message);
+            }
+        }, {
+            key: 'trace',
+            value: function trace(message) {
+                this.log(LEVELS$1.trace, message);
+            }
+        }, {
+            key: 'warn',
+            value: function warn(message) {
+                this.log(LEVELS$1.warn, message);
+            }
+        }, {
+            key: 'error',
+            value: function error(message) {
+                this.log(LEVELS$1.error, message);
+            }
+        }, {
+            key: 'log',
+            value: function log(level, messageContent) {
+                var message = new Message$1(level, messageContent);
+                this.messages.push(message);
+                if (this._level.id <= message.id) {
+                    message.display(this.name);
+                }
+            }
+        }, {
+            key: 'level',
+            set: function set(name) {
+                this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
+            },
+            get: function get() {
+                return this._level.name;
+            }
+        }]);
+
+        return Group;
+    }();
+
+    var Logger$1 = function () {
+        function Logger() {
+            _classCallCheck$3(this, Logger);
+        }
+
+        _createClass$3(Logger, null, [{
+            key: 'setLevel',
+            value: function setLevel(name) {
+                Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var group = _step.value;
+
+                        group.level = Logger.level.name;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        }, {
+            key: 'getLevel',
+            value: function getLevel() {
+                return Logger.level.name;
+            }
+        }, {
+            key: 'getGroup',
+            value: function getGroup(name) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var group = _step2.value;
+
+                        if (group.name === name) {
+                            return group;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }, {
+            key: 'addGroup',
+            value: function addGroup(name) {
+                return this.getGroup(name) || this.pushGroup(name);
+            }
+        }, {
+            key: 'pushGroup',
+            value: function pushGroup(name) {
+                var group = new Group$1(name, Logger.level);
+                Logger.groups.push(group);
+                return group;
+            }
+        }]);
+
+        return Logger;
+    }();
+
+    Logger$1.level = LEVELS$1.error;
+    Logger$1.groups = [];
+
+    function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2015 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * http://taipanjs.lcluber.com
+    */
+
+    var FSM = function FSM(events) {
+        var _this = this;
+
+        _classCallCheck$4(this, FSM);
+
+        this.state = events[0].from;
+        this.log = Logger$1.addGroup('Taipan');
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            var _loop = function _loop() {
+                var event = _step.value;
+
+                if (!_this.hasOwnProperty(event.name)) {
+                    _this[event.name] = function () {
+                        _this.log.info('- Event ' + event.name + ' triggered');
+                        if (_this.state === event.from) {
+                            _this.state = event.to;
+                            _this.log.info('from ' + event.from + ' to ' + _this.state);
+                            return true;
+                        }
+                        _this.log.warn('Cannot transition from ' + _this.state + ' to ' + event.to);
+                        return false;
+                    };
+                }
+            };
+
+            for (var _iterator = events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                _loop();
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    };
+
+    function isInteger$1(number) {
         var typeCheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
         var int = parseInt(number, 10);
         return typeCheck ? number === int : number == int;
     }
-    function isFloat$2(number) {
+    function isFloat$1(number) {
         var typeCheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
         var moduloCheck = number % 1 !== 0;
         return typeCheck ? Number(number) === number && moduloCheck : Number(number) == number && moduloCheck;
     }
-    function isNumber$2(number) {
-        return isInteger$2(number) || isFloat$2(number);
+    function isNumber$1(number) {
+        return isInteger$1(number) || isFloat$1(number);
     }
 
-    var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
     * 
@@ -2887,14 +2525,14 @@ var Orbis = (function (exports) {
 
     var Clock = function () {
         function Clock() {
-            _classCallCheck$6(this, Clock);
+            _classCallCheck$5(this, Clock);
 
             this.fpsArrayLength = 60;
             this.fpsArray = Array(this.fpsArrayLength);
             this.reset();
         }
 
-        _createClass$5(Clock, [{
+        _createClass$4(Clock, [{
             key: 'reset',
             value: function reset() {
                 this.now = 0;
@@ -2933,7 +2571,7 @@ var Orbis = (function (exports) {
 
     var Player = function () {
         function Player(callback) {
-            _classCallCheck$6(this, Player);
+            _classCallCheck$5(this, Player);
 
             this.frameId = 0;
             this.minDelta = 0;
@@ -2942,10 +2580,10 @@ var Orbis = (function (exports) {
             this.fsm = new FSM([{ name: 'play', from: false, to: true }, { name: 'stop', from: true, to: false }]);
         }
 
-        _createClass$5(Player, [{
+        _createClass$4(Player, [{
             key: 'setMaxRefreshRate',
             value: function setMaxRefreshRate(maxFPS) {
-                this.minDelta = isNumber$2(maxFPS) ? Time.framePerSecondToMillisecond(maxFPS) : this.minDelta;
+                this.minDelta = isNumber$1(maxFPS) ? Time.framePerSecondToMillisecond(maxFPS) : this.minDelta;
             }
         }, {
             key: 'getDelta',
@@ -3114,16 +2752,440 @@ var Orbis = (function (exports) {
         return Progress;
     }();
 
+    function loadImage(path) {
+        var log = Logger.addGroup("Orbis");
+        return new Promise(function (resolve, reject) {
+            var img = new Image();
+            img.src = path;
+            img.name = getName(path);
+            log.info("xhr processing starting (" + path + ")");
+            img.addEventListener("load", function () {
+                log.info("xhr (" + path + ") done");
+                resolve(img);
+            });
+            img.addEventListener("error", function () {
+                log.error("xhr (" + path + ") failed");
+                reject(new Error("xhr (" + path + ") failed"));
+            });
+        });
+    }
+    function getName(path) {
+        return path.replace(/^.*[\\\/]/, "");
+    }
+
+    var _typeof$2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+    function isObject$2(object) {
+        return object !== null && (typeof object === "undefined" ? "undefined" : _typeof$2(object)) === "object" && !isArray$2(object);
+    }
+    function isArray$2(array) {
+        return array !== null && array.constructor === Array;
+    }
+
+    var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    /** MIT License
+    * 
+    * Copyright (c) 2010 Ludovic CLUBER 
+    * 
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    *
+    * https://github.com/LCluber/Aias.js
+    */
+
+    var AudioContext = window.AudioContext || window.webkitAudioContext || false;
+
+    var Method = function () {
+        function Method(method, defaultHeaders) {
+            _classCallCheck$6(this, Method);
+
+            this.log = Logger.addGroup("Aias");
+            this.method = method;
+            this.async = true;
+            this.noCache = false;
+            this.headers = defaultHeaders;
+        }
+
+        _createClass$5(Method, [{
+            key: 'setHeaders',
+            value: function setHeaders(headers) {
+                for (var property in headers) {
+                    if (headers.hasOwnProperty(property)) {
+                        this.headers[property] = headers[property];
+                    }
+                }
+            }
+        }, {
+            key: 'getHeaders',
+            value: function getHeaders() {
+                return this.headers;
+            }
+        }, {
+            key: 'call',
+            value: function call(url, responseType, data) {
+                var _this = this;
+
+                return new Promise(function (resolve, reject) {
+                    var http = new XMLHttpRequest();
+                    url += _this.noCache ? "?cache=" + new Date().getTime() : "";
+                    http.open(_this.method, url, _this.async);
+                    http.responseType = responseType === "audiobuffer" ? "arraybuffer" : responseType;
+                    _this.setRequestHeaders(http);
+                    switch (responseType) {
+                        case "json":
+                        case "arraybuffer":
+                        case "audiobuffer":
+                        case "blob":
+                            http.onload = function () {
+                                if (http.readyState == 4) {
+                                    if (http.status == 200) {
+                                        var response = http.response;
+                                        if (response) {
+                                            _this.logInfo(url, http.status, http.statusText);
+                                            if (responseType === "audiobuffer") {
+                                                if (AudioContext) {
+                                                    var audioContext = new AudioContext();
+                                                    audioContext.decodeAudioData(response, function (buffer) {
+                                                        audioContext.close();
+                                                        resolve(buffer);
+                                                    }, function (error) {
+                                                        _this.log.error("xhr (" + _this.method + ":" + url + ") failed with decodeAudioData error : " + error.message);
+                                                        audioContext.close();
+                                                        reject({
+                                                            status: error.name,
+                                                            statusText: error.message
+                                                        });
+                                                    });
+                                                } else {
+                                                    _this.log.error("xhr (" + _this.method + ":" + url + ") failed with error : " + "Web Audio API is not supported by your browser.");
+                                                    reject({
+                                                        status: "Web Audio API not supported by your browser",
+                                                        statusText: "Web Audio API is not supported by your browser"
+                                                    });
+                                                }
+                                            } else {
+                                                resolve(response);
+                                            }
+                                        } else {
+                                            _this.logError(url, http.status, http.statusText);
+                                            reject({
+                                                status: http.status,
+                                                statusText: http.statusText
+                                            });
+                                        }
+                                    } else {
+                                        _this.logError(url, http.status, http.statusText);
+                                        reject({
+                                            status: http.status,
+                                            statusText: http.statusText
+                                        });
+                                    }
+                                }
+                            };
+                            break;
+                        default:
+                            http.onreadystatechange = function () {
+                                if (http.readyState == 4) {
+                                    if (http.status == 200) {
+                                        _this.logInfo(url, http.status, http.statusText);
+                                        resolve(http.responseText);
+                                    } else {
+                                        _this.logError(url, http.status, http.statusText);
+                                        reject({
+                                            status: http.status,
+                                            statusText: http.statusText
+                                        });
+                                    }
+                                }
+                            };
+                    }
+                    if (isObject$2(data)) {
+                        data = JSON.stringify(data);
+                    }
+                    http.send(data || null);
+                    _this.log.info("xhr (" + _this.method + ":" + url + ")" + "sent");
+                });
+            }
+        }, {
+            key: 'setRequestHeaders',
+            value: function setRequestHeaders(http) {
+                for (var property in this.headers) {
+                    if (this.headers.hasOwnProperty(property)) {
+                        http.setRequestHeader(property, this.headers[property]);
+                    }
+                }
+            }
+        }, {
+            key: 'logInfo',
+            value: function logInfo(url, status, statusText) {
+                this.log.info("xhr (" + this.method + ":" + url + ") done with status " + status + " " + statusText);
+            }
+        }, {
+            key: 'logError',
+            value: function logError(url, status, statusText) {
+                this.log.error("xhr (" + this.method + ":" + url + ") failed with status " + status + " " + statusText);
+            }
+        }]);
+
+        return Method;
+    }();
+
+    var HTTP = function () {
+        function HTTP() {
+            _classCallCheck$6(this, HTTP);
+        }
+
+        _createClass$5(HTTP, null, [{
+            key: 'setLogLevel',
+            value: function setLogLevel(name) {
+                return this.log.setLevel(name);
+            }
+        }, {
+            key: 'getLogLevel',
+            value: function getLogLevel() {
+                return this.log.getLevel();
+            }
+        }, {
+            key: 'getMockupData',
+            value: function getMockupData() {
+                var _this2 = this;
+
+                return new Promise(function (resolve, reject) {
+                    _this2.mockupData ? resolve(_this2.mockupData) : reject(null);
+                });
+            }
+        }, {
+            key: 'setMockupData',
+            value: function setMockupData(mockupData) {
+                this.mockupData = mockupData;
+            }
+        }, {
+            key: 'GET',
+            value: function GET(url, responseType) {
+                return this.mockupData ? this.getMockupData() : this.get.call(url, responseType);
+            }
+        }, {
+            key: 'HEAD',
+            value: function HEAD(url, responseType) {
+                return this.mockupData ? this.getMockupData() : this.head.call(url, responseType);
+            }
+        }, {
+            key: 'POST',
+            value: function POST(url, responseType, data) {
+                return this.mockupData ? this.getMockupData() : this.post.call(url, responseType, data);
+            }
+        }, {
+            key: 'PUT',
+            value: function PUT(url, responseType, data) {
+                return this.mockupData ? this.getMockupData() : this.put.call(url, responseType, data);
+            }
+        }, {
+            key: 'DELETE',
+            value: function DELETE(url, responseType) {
+                return this.mockupData ? this.getMockupData() : this.delete.call(url, responseType);
+            }
+        }, {
+            key: 'CONNECT',
+            value: function CONNECT(url, responseType) {
+                return this.mockupData ? this.getMockupData() : this.connect.call(url, responseType);
+            }
+        }, {
+            key: 'OPTIONS',
+            value: function OPTIONS(url, responseType) {
+                return this.mockupData ? this.getMockupData() : this.options.call(url, responseType);
+            }
+        }, {
+            key: 'TRACE',
+            value: function TRACE(url, responseType) {
+                return this.mockupData ? this.getMockupData() : this.trace.call(url, responseType);
+            }
+        }, {
+            key: 'PATCH',
+            value: function PATCH(url, responseType, data) {
+                return this.mockupData ? this.getMockupData() : this.patch.call(url, responseType, data);
+            }
+        }]);
+
+        return HTTP;
+    }();
+
+    HTTP.log = Logger.addGroup("Aias");
+    HTTP.mockupData = null;
+    HTTP.get = new Method("GET", {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
+    HTTP.head = new Method("HEAD", {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
+    HTTP.post = new Method("POST", {
+        "Content-Type": "application/json"
+    });
+    HTTP.put = new Method("PUT", {
+        "Content-Type": "application/json"
+    });
+    HTTP.delete = new Method("DELETE", {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
+    HTTP.connect = new Method("CONNECT", {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
+    HTTP.options = new Method("OPTIONS", {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
+    HTTP.trace = new Method("TRACE", {
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
+    HTTP.patch = new Method("PATCH", {
+        "Content-Type": "application/json"
+    });
+
+    function loadSound(path) {
+        return HTTP.GET(path, "audiobuffer");
+    }
+
+    function loadFile(path) {
+        return HTTP.GET(path, "text");
+    }
+
+    var Request = function () {
+        function Request() {
+            this.fsm = new FSM([{ name: "send", from: "idle", to: "pending" }, { name: "success", from: "pending", to: "success" }, { name: "error", from: "pending", to: "error" }]);
+            this.ajax = {
+                file: loadFile,
+                img: loadImage,
+                sound: loadSound
+            };
+        }
+        Request.prototype.send = function (path, type) {
+            var _this = this;
+            if (this.fsm["send"]()) {
+                return this.ajax[type](path).then(function (response) {
+                    _this.fsm["success"]();
+                    return response;
+                }).catch(function () {
+                    _this.fsm["error"]();
+                    return null;
+                });
+            } else {
+                return new Promise(function () {
+                    return null;
+                });
+            }
+        };
+        return Request;
+    }();
+
+    var XHR = function () {
+        function XHR(path, extension, type) {
+            this.path = path;
+            this.extension = extension;
+            this.type = type;
+            this.request = new Request();
+            this.response = null;
+        }
+        XHR.prototype.sendRequest = function (fileName) {
+            var _this = this;
+            if (this.response) {
+                return new Promise(function (resolve) {
+                    resolve(fileName);
+                });
+            } else {
+                return this.request.send(this.path + fileName, this.type).then(function (response) {
+                    if (response) {
+                        _this.response = response;
+                    }
+                    return fileName;
+                });
+            }
+        };
+        XHR.prototype.getRequestStatus = function () {
+            return this.request ? this.request.fsm.state : "done";
+        };
+        XHR.prototype.isRequestSent = function () {
+            if (this.getRequestStatus() != "idle") {
+                delete this.request;
+                return true;
+            }
+            return false;
+        };
+        return XHR;
+    }();
+
+    var Extension = function () {
+        function Extension() {}
+        Extension.get = function (path) {
+            return path.split(".").pop();
+        };
+        Extension.getAssetType = function (extension) {
+            for (var property in this.validExtensions) {
+                if (this.validExtensions.hasOwnProperty(property)) {
+                    if (this.check(extension, this.validExtensions[property])) {
+                        return property;
+                    }
+                }
+            }
+            return false;
+        };
+        Extension.check = function (extension, validExtensions) {
+            return validExtensions.some(function (validExtension) {
+                return extension === validExtension;
+            });
+        };
+        Extension.validExtensions = {
+            file: ["txt", "text", "json", "glsl", "babylon"],
+            img: ["png", "jpg", "jpeg", "gif"],
+            sound: ["mp3", "ogg", "wav"]
+        };
+        return Extension;
+    }();
+
+    var Asset = function () {
+        function Asset(name, path, params) {
+            this.xhr = null;
+            this.isValid = false;
+            this.name = name;
+            this.params = params || null;
+            var extension = Extension.get(name);
+            if (extension) {
+                var type = Extension.getAssetType(extension);
+                if (type) {
+                    this.xhr = new XHR(path, extension, type);
+                    this.isValid = true;
+                }
+            }
+        }
+        Asset.prototype.getContent = function () {
+            if (this.xhr) {
+                return this.xhr.response;
+            }
+            return false;
+        };
+        return Asset;
+    }();
+
     var Loader = function () {
         function Loader(assets, assetsPath, progressBarId, progressTextId) {
             this.default = {
                 maxPending: 6,
                 tick: 100
-            };
-            this.validExtensions = {
-                file: ["txt", "text", "json", "glsl", "babylon"],
-                img: ["png", "jpg", "jpeg", "gif"],
-                sound: ["mp3", "ogg", "wav"]
             };
             this.assets = assets;
             this.path = this.removeTrailingSlash(assetsPath);
@@ -3153,13 +3215,20 @@ var Orbis = (function (exports) {
             }
             return false;
         };
+        Loader.prototype.getContent = function (name) {
+            var asset = this.getAsset(name);
+            if (asset) {
+                return asset.getContent();
+            }
+            return false;
+        };
         Loader.prototype.getList = function (type) {
             if (this.assets.hasOwnProperty(type)) {
                 return this.assets[type].files;
             }
             return false;
         };
-        Loader.prototype.launch = function () {
+        Loader.prototype.start = function () {
             var _this = this;
             return new Promise(function (resolve, reject) {
                 if (_this.progress.nbAssets) {
@@ -3168,26 +3237,19 @@ var Orbis = (function (exports) {
                         _this.sendRequest();
                         if (!_this.progress.running) {
                             clearInterval(intervalID_1);
-                            resolve();
+                            resolve({
+                                success: true,
+                                message: _this.progress.total + " assets loaded"
+                            });
                         }
                     }, _this.tick);
                 } else {
-                    reject("!! nothing to load here");
+                    reject({ success: false, message: "!! nothing to load here" });
                 }
             });
         };
         Loader.prototype.resetProgress = function () {
             this.progress.reset();
-        };
-        Loader.prototype.getAssetType = function (extension) {
-            for (var property in this.validExtensions) {
-                if (this.validExtensions.hasOwnProperty(property)) {
-                    if (this.checkExtension(extension, this.validExtensions[property])) {
-                        return property;
-                    }
-                }
-            }
-            return false;
         };
         Loader.prototype.createAssets = function () {
             this.progress.nbAssets = 0;
@@ -3195,16 +3257,12 @@ var Orbis = (function (exports) {
                 if (this.assets.hasOwnProperty(property)) {
                     var type = this.assets[property];
                     var folder = type.folder ? type.folder + "/" : "";
-                    for (var _i = 0, _a = type.files; _i < _a.length; _i++) {
-                        var file = _a[_i];
+                    for (var i = 0; i < type.files.length; i++) {
+                        var file = type.files[i];
                         if (!file.xhr && file.hasOwnProperty("name")) {
-                            var extension = this.getExtension(file.name);
-                            if (extension) {
-                                var type_1 = this.getAssetType(extension);
-                                if (type_1) {
-                                    file.xhr = new XHR(this.path + "/" + folder, extension, type_1);
-                                    this.progress.nbAssets++;
-                                }
+                            type.files[i] = new Asset(file.name, this.path + "/" + folder, file.params);
+                            if (type.files[i].isValid) {
+                                this.progress.nbAssets++;
                             }
                         }
                     }
@@ -3241,18 +3299,6 @@ var Orbis = (function (exports) {
         };
         Loader.prototype.removeTrailingSlash = function (path) {
             return path.replace(/\/+$/, "");
-        };
-        Loader.prototype.getExtension = function (path) {
-            return path.split(".").pop();
-        };
-        Loader.prototype.checkExtension = function (extension, validExtensions) {
-            for (var _i = 0, validExtensions_1 = validExtensions; _i < validExtensions_1.length; _i++) {
-                var validExtension = validExtensions_1[_i];
-                if (extension === validExtension) {
-                    return true;
-                }
-            }
-            return false;
         };
         return Loader;
     }();

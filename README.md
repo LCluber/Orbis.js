@@ -146,7 +146,7 @@ let loader = new Loader(
 );
 
 function loadAssets() {
-  loader.launch().then(() => {
+  loader.start().then(() => {
     console.log("complete");
     console.log(loader.getList("sounds"));
     console.log(loader.getAsset("sound3.mp3"));
@@ -169,7 +169,7 @@ var loader = new Orbis.Loader(
 );
 
 function loadAssets() {
-  loader.launch().then(function() {
+  loader.start().then(function() {
     console.log("complete");
     console.log(loader.getList("sounds"));
     console.log(loader.getAsset("sound3.mp3"));
@@ -177,12 +177,68 @@ function loadAssets() {
 }
 ```
 
+### ANGULAR
+
+Example of a service to load several assets when needed.
+
+```javascript
+import { Injectable } from '@angular/core';
+import { Loader, Assets, Response } from "@lcluber/orbisjs";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AssetsLoaderService {
+
+  list: Assets = {
+    shaders: {
+      folder: "shader",
+      files: [
+        { name: "vertex.glsl" },
+        { name: "fragment.glsl" }
+      ]
+    }
+  };
+
+  loader: Loader = new Loader(
+    this.list,
+    '../assets/',
+    null,
+    null
+  );
+
+  constructor() { }
+
+  public load(): Promise<boolean> {
+    return this.loader.start().then((response: Response) => {
+      console.log("complete");
+      return response.success;
+    });
+  }
+
+  public get vertexShader(): string | false {
+    return this.loader.getContent("vertex.glsl");
+  }
+
+  public get fragmentShader(): string | false {
+    return this.loader.getContent("fragment.glsl");
+  }
+}
+
+```
+
 ## API Reference
 
 ```javascript
 
+// the structure of loader.start() promise response.
+type Response = {
+  success: boolean,
+  message: string
+};
+
 interface Assets {
-  [key: string]: {
+  [key: string]: { // type
     folder: string;
     files: Asset[];
   };
@@ -190,13 +246,12 @@ interface Assets {
 
 interface Asset {
   name: string;
-  params: {
-    [key: string]: string | number | boolean | Array<string | number | boolean>;
-  };
-  xhr?: XHR;
+  params: { [key: string]: string | number | boolean | Array<string | number | boolean>;} | null;
+  xhr: XHR | null;
+  isValid: boolean = false;
 }
 
-class XHR {
+interface XHR {
   path: string;
   extension: string;
   type: string;
@@ -206,14 +261,20 @@ class XHR {
 class Loader(
   assets: Assets,
   assetsPath: string,
-  progressBarId: string,
-  progressTextId: string
+  progressBarId?: string,
+  progressTextId?: string
 );
 
-loader.launch(): Promise<void> {}
+// Starts loading the assets
+loader.start(): Promise<Response> {}
+// Returns the asset object
 loader.getAsset(name: string): Asset | false {}
+// Returns only the response of the xhr request.
+loader.getContent(name: string): Object | HTMLImageElement | AudioBuffer | string | null | false {}
+// Returns a list of assets by type
 loader.getList(type: string): Asset[] | false {}
 
+// Reset the progress bar before starting a new loading process
 loader.resetProgress(): void;
 
 // Log levels from @lcluber Mouette.js logger library

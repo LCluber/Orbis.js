@@ -24,110 +24,11 @@
 */
 
 import { Logger } from '@lcluber/mouettejs';
-import { FSM } from '@lcluber/taipanjs';
-import { HTTP } from '@lcluber/aiasjs';
 import { Binding, Dom } from '@lcluber/weejs';
 import { Utils } from '@lcluber/type6js';
 import { Player } from '@lcluber/frameratjs';
-
-function loadImage(path) {
-    let log = Logger.addGroup("Orbis");
-    return new Promise((resolve, reject) => {
-        let img = new Image();
-        img.src = path;
-        img.name = getName(path);
-        log.info("xhr processing starting (" + path + ")");
-        img.addEventListener("load", () => {
-            log.info("xhr (" + path + ") done");
-            resolve(img);
-        });
-        img.addEventListener("error", () => {
-            log.error("xhr (" + path + ") failed");
-            reject(new Error("xhr (" + path + ") failed"));
-        });
-    });
-}
-function getName(path) {
-    return path.replace(/^.*[\\\/]/, "");
-}
-
-function loadSound(path) {
-    return HTTP.GET(path, "audiobuffer");
-}
-
-function loadFile(path) {
-    return HTTP.GET(path, "text");
-}
-
-class Request {
-    constructor() {
-        this.fsm = new FSM([
-            { name: "send", from: "idle", to: "pending" },
-            { name: "success", from: "pending", to: "success" },
-            { name: "error", from: "pending", to: "error" }
-        ]);
-        this.ajax = {
-            file: loadFile,
-            img: loadImage,
-            sound: loadSound
-        };
-    }
-    send(path, type) {
-        if (this.fsm["send"]()) {
-            return this.ajax[type](path)
-                .then((response) => {
-                this.fsm["success"]();
-                return response;
-            })
-                .catch(() => {
-                this.fsm["error"]();
-                return null;
-            });
-        }
-        else {
-            return new Promise(() => {
-                return null;
-            });
-        }
-    }
-}
-
-class XHR {
-    constructor(path, extension, type) {
-        this.path = path;
-        this.extension = extension;
-        this.type = type;
-        this.request = new Request();
-        this.response = null;
-    }
-    sendRequest(fileName) {
-        if (this.response) {
-            return new Promise(() => {
-                return fileName;
-            });
-        }
-        else {
-            return this.request
-                .send(this.path + fileName, this.type)
-                .then(response => {
-                if (response) {
-                    this.response = response;
-                }
-                return fileName;
-            });
-        }
-    }
-    getRequestStatus() {
-        return this.request ? this.request.fsm.state : "done";
-    }
-    isRequestSent() {
-        if (this.getRequestStatus() != "idle") {
-            delete this.request;
-            return true;
-        }
-        return false;
-    }
-}
+import { FSM } from '@lcluber/taipanjs';
+import { HTTP } from '@lcluber/aiasjs';
 
 class Progress {
     constructor(barId, textId) {
@@ -208,16 +109,157 @@ class Progress {
     }
 }
 
+function loadImage(path) {
+    let log = Logger.addGroup("Orbis");
+    return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.src = path;
+        img.name = getName(path);
+        log.info("xhr processing starting (" + path + ")");
+        img.addEventListener("load", () => {
+            log.info("xhr (" + path + ") done");
+            resolve(img);
+        });
+        img.addEventListener("error", () => {
+            log.error("xhr (" + path + ") failed");
+            reject(new Error("xhr (" + path + ") failed"));
+        });
+    });
+}
+function getName(path) {
+    return path.replace(/^.*[\\\/]/, "");
+}
+
+function loadSound(path) {
+    return HTTP.GET(path, "audiobuffer");
+}
+
+function loadFile(path) {
+    return HTTP.GET(path, "text");
+}
+
+class Request {
+    constructor() {
+        this.fsm = new FSM([
+            { name: "send", from: "idle", to: "pending" },
+            { name: "success", from: "pending", to: "success" },
+            { name: "error", from: "pending", to: "error" }
+        ]);
+        this.ajax = {
+            file: loadFile,
+            img: loadImage,
+            sound: loadSound
+        };
+    }
+    send(path, type) {
+        if (this.fsm["send"]()) {
+            return this.ajax[type](path)
+                .then((response) => {
+                this.fsm["success"]();
+                return response;
+            })
+                .catch(() => {
+                this.fsm["error"]();
+                return null;
+            });
+        }
+        else {
+            return new Promise(() => {
+                return null;
+            });
+        }
+    }
+}
+
+class XHR {
+    constructor(path, extension, type) {
+        this.path = path;
+        this.extension = extension;
+        this.type = type;
+        this.request = new Request();
+        this.response = null;
+    }
+    sendRequest(fileName) {
+        if (this.response) {
+            return new Promise((resolve) => {
+                resolve(fileName);
+            });
+        }
+        else {
+            return this.request
+                .send(this.path + fileName, this.type)
+                .then((response) => {
+                if (response) {
+                    this.response = response;
+                }
+                return fileName;
+            });
+        }
+    }
+    getRequestStatus() {
+        return this.request ? this.request.fsm.state : "done";
+    }
+    isRequestSent() {
+        if (this.getRequestStatus() != "idle") {
+            delete this.request;
+            return true;
+        }
+        return false;
+    }
+}
+
+class Extension {
+    static get(path) {
+        return path.split(".").pop();
+    }
+    static getAssetType(extension) {
+        for (let property in this.validExtensions) {
+            if (this.validExtensions.hasOwnProperty(property)) {
+                if (this.check(extension, this.validExtensions[property])) {
+                    return property;
+                }
+            }
+        }
+        return false;
+    }
+    static check(extension, validExtensions) {
+        return validExtensions.some(validExtension => extension === validExtension);
+    }
+}
+Extension.validExtensions = {
+    file: ["txt", "text", "json", "glsl", "babylon"],
+    img: ["png", "jpg", "jpeg", "gif"],
+    sound: ["mp3", "ogg", "wav"]
+};
+
+class Asset {
+    constructor(name, path, params) {
+        this.xhr = null;
+        this.isValid = false;
+        this.name = name;
+        this.params = params || null;
+        let extension = Extension.get(name);
+        if (extension) {
+            let type = Extension.getAssetType(extension);
+            if (type) {
+                this.xhr = new XHR(path, extension, type);
+                this.isValid = true;
+            }
+        }
+    }
+    getContent() {
+        if (this.xhr) {
+            return this.xhr.response;
+        }
+        return false;
+    }
+}
+
 class Loader {
     constructor(assets, assetsPath, progressBarId, progressTextId) {
         this.default = {
             maxPending: 6,
             tick: 100
-        };
-        this.validExtensions = {
-            file: ["txt", "text", "json", "glsl", "babylon"],
-            img: ["png", "jpg", "jpeg", "gif"],
-            sound: ["mp3", "ogg", "wav"]
         };
         this.assets = assets;
         this.path = this.removeTrailingSlash(assetsPath);
@@ -246,13 +288,20 @@ class Loader {
         }
         return false;
     }
+    getContent(name) {
+        let asset = this.getAsset(name);
+        if (asset) {
+            return asset.getContent();
+        }
+        return false;
+    }
     getList(type) {
         if (this.assets.hasOwnProperty(type)) {
             return this.assets[type].files;
         }
         return false;
     }
-    launch() {
+    start() {
         return new Promise((resolve, reject) => {
             if (this.progress.nbAssets) {
                 this.progress.start();
@@ -260,43 +309,33 @@ class Loader {
                     this.sendRequest();
                     if (!this.progress.running) {
                         clearInterval(intervalID);
-                        resolve();
+                        resolve({
+                            success: true,
+                            message: `${this.progress.total} assets loaded`
+                        });
                     }
                 }, this.tick);
             }
             else {
-                reject("!! nothing to load here");
+                reject({ success: false, message: "!! nothing to load here" });
             }
         });
     }
     resetProgress() {
         this.progress.reset();
     }
-    getAssetType(extension) {
-        for (let property in this.validExtensions) {
-            if (this.validExtensions.hasOwnProperty(property)) {
-                if (this.checkExtension(extension, this.validExtensions[property])) {
-                    return property;
-                }
-            }
-        }
-        return false;
-    }
     createAssets() {
         this.progress.nbAssets = 0;
         for (let property in this.assets) {
             if (this.assets.hasOwnProperty(property)) {
                 let type = this.assets[property];
-                let folder = type.folder ? type.folder + "/" : "";
-                for (let file of type.files) {
+                let folder = type.folder ? `${type.folder}/` : "";
+                for (let i = 0; i < type.files.length; i++) {
+                    let file = type.files[i];
                     if (!file.xhr && file.hasOwnProperty("name")) {
-                        let extension = this.getExtension(file.name);
-                        if (extension) {
-                            let type = this.getAssetType(extension);
-                            if (type) {
-                                file.xhr = new XHR(this.path + "/" + folder, extension, type);
-                                this.progress.nbAssets++;
-                            }
+                        type.files[i] = new Asset(file.name, `${this.path}/${folder}`, file.params);
+                        if (type.files[i].isValid) {
+                            this.progress.nbAssets++;
                         }
                     }
                 }
@@ -307,7 +346,7 @@ class Loader {
         if (this.pendingRequests < this.maxPendingRequests) {
             let nextAsset = this.getNextAssetToLoad();
             if (nextAsset) {
-                nextAsset.xhr.sendRequest(nextAsset.name).then(response => {
+                nextAsset.xhr.sendRequest(nextAsset.name).then((response) => {
                     this.pendingRequests--;
                     this.progress.update(response);
                 });
@@ -331,17 +370,6 @@ class Loader {
     }
     removeTrailingSlash(path) {
         return path.replace(/\/+$/, "");
-    }
-    getExtension(path) {
-        return path.split(".").pop();
-    }
-    checkExtension(extension, validExtensions) {
-        for (let validExtension of validExtensions) {
-            if (extension === validExtension) {
-                return true;
-            }
-        }
-        return false;
     }
 }
 

@@ -5,7 +5,7 @@ import { Player } from "@lcluber/frameratjs";
 export class Progress {
   private rate: number;
   private target: number;
-  private total: number;
+  public total: number;
 
   private percentage: number;
   private speed: number; //pixels per seconds
@@ -19,7 +19,7 @@ export class Progress {
   private animation: Player | null;
   public running: boolean;
 
-  constructor(barId: string | null, textId: string | null) {
+  constructor(barId?: string | null, textId?: string | null) {
     this.rate = 0.0;
     this.total = 0;
     this.percentage = 0.0;

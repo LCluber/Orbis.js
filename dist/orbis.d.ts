@@ -22,9 +22,88 @@
 *
 * http://orbisjs.lcluber.com
 */
+
+declare type Params = {
+    [key: string]: string | number | boolean | Array<string | number | boolean>;
+} | null;
+export declare class Asset {
+    name: string;
+    params: Params;
+    xhr: XHR | null;
+    isValid: boolean;
+    constructor(name: string, path: string, params?: Params);
+    getContent(): Object | HTMLImageElement | AudioBuffer | string | null | false;
+}
+export {};
+
+export declare class Extension {
+    static validExtensions: ValidExtensions;
+    static get(path: string): string | undefined;
+    static getAssetType(extension: string): string | false;
+    private static check;
+}
+
+export interface Assets {
+    [key: string]: {
+        folder: string;
+        files: Asset[];
+    };
+}
 import { Group, LevelName } from "@lcluber/mouettejs";
 
 
+
+
+export declare class Loader {
+    assets: Assets;
+    path: string;
+    progress: Progress;
+    pendingRequests: number;
+    tick: number;
+    maxPendingRequests: number;
+    default: Default;
+    log: Group;
+    constructor(assets: Assets, assetsPath: string, progressBarId?: string, progressTextId?: string);
+    setLogLevel(name: LevelName): LevelName;
+    getLogLevel(): LevelName;
+    getAsset(name: string): Asset | false;
+    getContent(name: string): Object | HTMLImageElement | AudioBuffer | string | null | false;
+    getList(type: string): Asset[] | false;
+    start(): Promise<Response>;
+    resetProgress(): void;
+    private createAssets;
+    private sendRequest;
+    private getNextAssetToLoad;
+    private removeTrailingSlash;
+}
+export declare class Progress {
+    private rate;
+    private target;
+    total: number;
+    private percentage;
+    private speed;
+    nbAssets: number;
+    private bar;
+    private barWidth;
+    private number;
+    private text;
+    private animation;
+    running: boolean;
+    constructor(barId?: string | null, textId?: string | null);
+    private animateBar;
+    start(): void;
+    reset(): void;
+    update(text: string): void;
+    private updateBar;
+}
+import { FSM } from "@lcluber/taipanjs";
+
+export declare class Request {
+    fsm: FSM;
+    ajax: Ajax;
+    constructor();
+    send(path: string, type: string): Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
+}
 export declare type ValidExtensions = {
     file: string[];
     img: string[];
@@ -35,76 +114,15 @@ export declare type Default = {
     maxPending: number;
     tick: number;
 };
-export interface Asset {
-    name: string;
-    params: {
-        [key: string]: string | number | boolean | Array<string | number | boolean>;
-    };
-    xhr?: XHR;
-}
-export interface Assets {
-    [key: string]: {
-        folder: string;
-        files: Asset[];
-    };
-}
-export declare class Loader {
-    assets: Assets;
-    path: string;
-    progress: Progress;
-    pendingRequests: number;
-    tick: number;
-    maxPendingRequests: number;
-    default: Default;
-    validExtensions: ValidExtensions;
-    log: Group;
-    constructor(assets: Assets, assetsPath: string, progressBarId: string, progressTextId: string);
-    setLogLevel(name: LevelName): LevelName;
-    getLogLevel(): LevelName;
-    getAsset(name: string): Asset | false;
-    getList(type: string): Asset[] | false;
-    launch(): Promise<void>;
-    resetProgress(): void;
-    private getAssetType;
-    private createAssets;
-    private sendRequest;
-    private getNextAssetToLoad;
-    private removeTrailingSlash;
-    private getExtension;
-    private checkExtension;
-}
-export declare class Progress {
-    private rate;
-    private target;
-    private total;
-    private percentage;
-    private speed;
-    nbAssets: number;
-    private bar;
-    private barWidth;
-    private number;
-    private text;
-    private animation;
-    running: boolean;
-    constructor(barId: string | null, textId: string | null);
-    private animateBar;
-    start(): void;
-    reset(): void;
-    update(text: string): void;
-    private updateBar;
-}
-import { FSM } from "@lcluber/taipanjs";
 export declare type Ajax = {
     file: Function;
     img: Function;
     sound: Function;
 };
-export declare class Request {
-    fsm: FSM;
-    ajax: Ajax;
-    constructor();
-    send(path: string, type: string): Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
-}
+export declare type Response = {
+    success: boolean;
+    message: string;
+};
 
 export declare class XHR {
     path: string;

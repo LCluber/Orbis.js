@@ -2,12 +2,7 @@ import { FSM } from "@lcluber/taipanjs";
 import { loadImage } from "./loaders/image";
 import { loadSound } from "./loaders/sound";
 import { loadFile } from "./loaders/file";
-
-export type Ajax = {
-  file: Function;
-  img: Function;
-  sound: Function;
-};
+import { Ajax } from "./types";
 
 export class Request {
   fsm: FSM;
