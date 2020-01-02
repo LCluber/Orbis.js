@@ -136,7 +136,7 @@ var list = {
 ### ES6
 
 ```javascript
-import { Loader } from "@lcluber/orbisjs";
+import { Loader, IResponse } from "@lcluber/orbisjs";
 
 let loader = new Loader(
   list,
@@ -146,10 +146,13 @@ let loader = new Loader(
 );
 
 function loadAssets() {
-  loader.start().then(() => {
-    console.log("complete");
-    console.log(loader.getList("sounds"));
-    console.log(loader.getAsset("sound3.mp3"));
+  loader.start().then((response: IResponse) => {
+    console.log(response.message);
+    if (response.success) {
+      console.log(loader.getList("sounds"));
+      console.log(loader.getAsset("sound3.mp3"));
+      console.log(loader.getContent("sound3.mp3"));
+    }
   });
 }
 ```
@@ -169,10 +172,13 @@ var loader = new Orbis.Loader(
 );
 
 function loadAssets() {
-  loader.start().then(function() {
-    console.log("complete");
-    console.log(loader.getList("sounds"));
-    console.log(loader.getAsset("sound3.mp3"));
+  loader.start().then(function(response) {
+    console.log(response.message);
+    if (response.success) {
+      console.log(loader.getList("sounds"));
+      console.log(loader.getAsset("sound3.mp3"));
+      console.log(loader.getContent("sound3.mp3"));
+    }
   });
 }
 ```
@@ -183,14 +189,14 @@ Example of a service to load several assets when needed.
 
 ```javascript
 import { Injectable } from '@angular/core';
-import { Loader, Assets, Response } from "@lcluber/orbisjs";
+import { Loader, IAssets, IResponse } from "@lcluber/orbisjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssetsLoaderService {
 
-  list: Assets = {
+  list: IAssets = {
     shaders: {
       folder: "shader",
       files: [
@@ -210,17 +216,17 @@ export class AssetsLoaderService {
   constructor() { }
 
   public load(): Promise<boolean> {
-    return this.loader.start().then((response: Response) => {
+    return this.loader.start().then((response: IResponse) => {
       console.log("complete");
       return response.success;
     });
   }
 
-  public get vertexShader(): string | false {
+  public get vertexShader(): Object | HTMLImageElement | AudioBuffer | string | null | false {
     return this.loader.getContent("vertex.glsl");
   }
 
-  public get fragmentShader(): string | false {
+  public get fragmentShader(): Object | HTMLImageElement | AudioBuffer | string | null | false {
     return this.loader.getContent("fragment.glsl");
   }
 }
@@ -246,18 +252,20 @@ interface IAssets {
 
 interface IAsset {
   name: string;
-  params?: { [key: string]: string | number | boolean | Array<string | number | boolean>;} | null;
+  params?: {
+    [key: string]: string | number | boolean | Array<string | number | boolean>;
+  } | null;
 }
 
 class Loader(
-  assets: Assets,
+  assets: IAssets,
   assetsPath: string,
   progressBarId?: string,
   progressTextId?: string
 );
 
 // Starts loading the assets
-loader.start(): Promise<Response> {}
+loader.start(): Promise<IResponse> {}
 // Returns the asset object
 loader.getAsset(name: string): Asset | false {}
 // Returns only the response of the xhr request.
