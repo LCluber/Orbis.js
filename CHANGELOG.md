@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/LCluber/Orbis.js/compare/v1.0.1...v1.0.2) (2020-01-02)
+
+
+### Bug Fixes
+
+* **typing:** improve typing with better interfaces for Angular ([181f728](https://github.com/LCluber/Orbis.js/commit/181f728fca642a309b1e795b9f8e6ce1f71dd4ab))
+
 ## [1.0.1](https://github.com/LCluber/Orbis.js/compare/v1.0.0...v1.0.1) (2020-01-01)
 
 
