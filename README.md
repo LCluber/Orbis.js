@@ -232,19 +232,19 @@ export class AssetsLoaderService {
 ```javascript
 
 // the structure of loader.start() promise response.
-type Response = {
+interface IResponse {
   success: boolean,
   message: string
 };
 
-interface Assets {
+interface IAssets {
   [key: string]: { // type
     folder: string;
     files: Asset[];
   };
 }
 
-interface Asset {
+interface IAsset {
   name: string;
   params?: { [key: string]: string | number | boolean | Array<string | number | boolean>;} | null;
 }

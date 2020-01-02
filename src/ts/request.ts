@@ -2,11 +2,11 @@ import { FSM } from "@lcluber/taipanjs";
 import { loadImage } from "./loaders/image";
 import { loadSound } from "./loaders/sound";
 import { loadFile } from "./loaders/file";
-import { Ajax } from "./types";
+import { IAjax } from "./interfaces";
 
 export class Request {
   fsm: FSM;
-  ajax: Ajax;
+  ajax: IAjax;
 
   constructor() {
     this.fsm = new FSM([

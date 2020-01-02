@@ -22,54 +22,77 @@
 *
 * http://orbisjs.lcluber.com
 */
-
-declare type Params = {
-    [key: string]: string | number | boolean | Array<string | number | boolean>;
-} | null;
-export declare class Asset {
+import { XHR } from "./xhr";
+import { IAsset, IParams } from "./interfaces";
+export declare class Asset implements IAsset {
     name: string;
-    params?: Params;
-    xhr?: XHR | null;
-    isValid?: boolean;
-    constructor(name: string, path: string, params?: Params);
+    params: IParams | null;
+    xhr: XHR | null;
+    isValid: boolean;
+    constructor(name: string, path: string, params?: IParams | null);
     getContent(): Object | HTMLImageElement | AudioBuffer | string | null | false;
 }
-export {};
-
+import { IValidExtensions } from "./interfaces";
 export declare class Extension {
-    static validExtensions: ValidExtensions;
+    static validExtensions: IValidExtensions;
     static get(path: string): string | undefined;
     static getAssetType(extension: string): string | false;
     private static check;
 }
-
-export interface Assets {
+import { Asset } from "./asset";
+export interface IAssets {
     [key: string]: {
         folder: string;
         files: Asset[];
     };
 }
+export interface IAsset {
+    name: string;
+    params?: IParams | null;
+    [key: string]: any;
+}
+export interface IValidExtensions {
+    file: string[];
+    img: string[];
+    sound: string[];
+    [key: string]: string[];
+}
+export interface IDefault {
+    maxPending: number;
+    tick: number;
+}
+export interface IAjax {
+    file: Function;
+    img: Function;
+    sound: Function;
+}
+export interface IResponse {
+    success: boolean;
+    message: string;
+}
+export interface IParams {
+    [key: string]: string | number | boolean | Array<string | number | boolean>;
+}
 import { Group, LevelName } from "@lcluber/mouettejs";
-
-
-
-
+import { Progress } from "./progress";
+import { IAssets, IDefault, IResponse } from "./interfaces";
+import { Asset } from "./asset";
 export declare class Loader {
-    assets: Assets;
+    assets: IAssets;
     path: string;
     progress: Progress;
     pendingRequests: number;
     tick: number;
     maxPendingRequests: number;
-    default: Default;
+    default: IDefault;
     log: Group;
-    constructor(assets: Assets, assetsPath: string, progressBarId?: string, progressTextId?: string);
+    constructor(assets: IAssets, assetsPath: string, progressBarId?: string, progressTextId?: string);
     setLogLevel(name: LevelName): LevelName;
     getLogLevel(): LevelName;
     getAsset(name: string): Asset | false;
     getContent(name: string): Object | HTMLImageElement | AudioBuffer | string | null | false;
     getList(type: string): Asset[] | false;
-    start(): Promise<Response>;
+    start(): Promise<IResponse>;
     resetProgress(): void;
     private createAssets;
     private sendRequest;
@@ -97,33 +120,14 @@ export declare class Progress {
     private updateBar;
 }
 import { FSM } from "@lcluber/taipanjs";
-
+import { IAjax } from "./interfaces";
 export declare class Request {
     fsm: FSM;
-    ajax: Ajax;
+    ajax: IAjax;
     constructor();
     send(path: string, type: string): Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
 }
-export declare type ValidExtensions = {
-    file: string[];
-    img: string[];
-    sound: string[];
-    [key: string]: string[];
-};
-export declare type Default = {
-    maxPending: number;
-    tick: number;
-};
-export declare type Ajax = {
-    file: Function;
-    img: Function;
-    sound: Function;
-};
-export declare type Response = {
-    success: boolean;
-    message: string;
-};
-
+import { Request } from "./request";
 export declare class XHR {
     path: string;
     extension: string;

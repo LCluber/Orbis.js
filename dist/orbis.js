@@ -333,7 +333,7 @@ class Loader {
                 for (let i = 0; i < type.files.length; i++) {
                     let file = type.files[i];
                     if (!file.xhr && file.hasOwnProperty("name")) {
-                        type.files[i] = new Asset(file.name, `${this.path}/${folder}`, file.params);
+                        type.files[i] = new Asset(file.name, `${this.path}/${folder}`, file.params || null);
                         if (type.files[i].isValid) {
                             this.progress.nbAssets++;
                         }

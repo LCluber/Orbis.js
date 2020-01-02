@@ -1,7 +1,7 @@
-import { ValidExtensions } from "./types";
+import { IValidExtensions } from "./interfaces";
 
 export class Extension {
-  public static validExtensions: ValidExtensions = {
+  public static validExtensions: IValidExtensions = {
     file: ["txt", "text", "json", "glsl", "babylon"],
     img: ["png", "jpg", "jpeg", "gif"],
     sound: ["mp3", "ogg", "wav"]

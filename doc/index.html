@@ -282,19 +282,19 @@
 				</a>
 				<pre><code class="language-javascript">
 // the structure of loader.start() promise response.
-type Response = {
+interface IResponse {
   success: boolean,
   message: string
 };
 
-interface Assets {
+interface IAssets {
   [key: string]: { // type
     folder: string;
     files: Asset[];
   };
 }
 
-interface Asset {
+interface IAsset {
   name: string;
   params?: { [key: string]: string | number | boolean | Array&lt;string | number | boolean&gt;;} | null;
 }
@@ -376,9 +376,6 @@ loader.getLogLevel(): LevelName {}
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_request_.html">"request"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_types_.html">"types"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_xhr_.html">"xhr"</a>

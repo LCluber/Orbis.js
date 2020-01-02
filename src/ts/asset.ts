@@ -1,17 +1,14 @@
 import { XHR } from "./xhr";
 import { Extension } from "./extension";
+import { IAsset, IParams } from "./interfaces";
 
-type Params = {
-  [key: string]: string | number | boolean | Array<string | number | boolean>;
-} | null;
-
-export class Asset {
+export class Asset implements IAsset {
   name: string;
-  params?: Params;
-  xhr?: XHR | null = null;
-  isValid?: boolean = false;
+  params: IParams | null;
+  xhr: XHR | null = null;
+  isValid: boolean = false;
 
-  constructor(name: string, path: string, params?: Params) {
+  constructor(name: string, path: string, params?: IParams | null) {
     this.name = name;
     this.params = params || null;
     let extension = Extension.get(name);

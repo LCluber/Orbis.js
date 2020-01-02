@@ -77,6 +77,12 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_interfaces_.iasset.html" class="tsd-signature-type">IAsset</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -111,13 +117,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Asset<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, params<span class="tsd-signature-symbol">?: </span><a href="../modules/_asset_.html#params" class="tsd-signature-type">Params</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_asset_.asset.html" class="tsd-signature-type">Asset</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Asset<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, params<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_interfaces_.iparams.html" class="tsd-signature-type">IParams</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_asset_.asset.html" class="tsd-signature-type">Asset</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/95c197b/src/ts/asset.ts#L12">asset.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/d8ec1ae/src/ts/asset.ts#L9">asset.ts:9</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -129,7 +135,7 @@
 									<h5>path: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> params: <a href="../modules/_asset_.html#params" class="tsd-signature-type">Params</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> params: <a href="../interfaces/_interfaces_.iparams.html" class="tsd-signature-type">IParams</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_asset_.asset.html" class="tsd-signature-type">Asset</a></h4>
@@ -141,11 +147,11 @@
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="isvalid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Valid</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+					<h3>is<wbr>Valid</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/95c197b/src/ts/asset.ts#L12">asset.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/d8ec1ae/src/ts/asset.ts#L9">asset.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -154,28 +160,30 @@
 					<h3>name</h3>
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_interfaces_.iasset.html">IAsset</a>.<a href="../interfaces/_interfaces_.iasset.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/95c197b/src/ts/asset.ts#L9">asset.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/d8ec1ae/src/ts/asset.ts#L6">asset.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="params" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> params</h3>
-					<div class="tsd-signature tsd-kind-icon">params<span class="tsd-signature-symbol">:</span> <a href="../modules/_asset_.html#params" class="tsd-signature-type">Params</a></div>
+					<h3>params</h3>
+					<div class="tsd-signature tsd-kind-icon">params<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_interfaces_.iparams.html" class="tsd-signature-type">IParams</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_interfaces_.iasset.html">IAsset</a>.<a href="../interfaces/_interfaces_.iasset.html#params">params</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/95c197b/src/ts/asset.ts#L10">asset.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/d8ec1ae/src/ts/asset.ts#L7">asset.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="xhr" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> xhr</h3>
+					<h3>xhr</h3>
 					<div class="tsd-signature tsd-kind-icon">xhr<span class="tsd-signature-symbol">:</span> <a href="_xhr_.xhr.html" class="tsd-signature-type">XHR</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/95c197b/src/ts/asset.ts#L11">asset.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/d8ec1ae/src/ts/asset.ts#L8">asset.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -192,7 +200,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/95c197b/src/ts/asset.ts#L27">asset.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/Orbis.js/blob/d8ec1ae/src/ts/asset.ts#L24">asset.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Object</span>
@@ -240,9 +248,6 @@
 						<a href="../modules/_request_.html">"request"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_types_.html">"types"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="../modules/_xhr_.html">"xhr"</a>
 					</li>
 					<li class="label tsd-is-external">
@@ -288,9 +293,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_asset_.html#params" class="tsd-kind-icon">Params</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

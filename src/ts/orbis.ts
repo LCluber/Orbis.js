@@ -1,24 +1,23 @@
 import { Logger, Group, LevelName } from "@lcluber/mouettejs";
 import { XHR } from "./xhr";
 import { Progress } from "./progress";
-import { Assets } from "./interfaces";
-import { Default, Response } from "./types";
+import { IAssets, IDefault, IResponse } from "./interfaces";
 import { Asset } from "./asset";
 
 export class Loader {
-  assets: Assets; //data from the assets file
+  assets: IAssets; //data from the assets file
   path: string;
   progress: Progress;
   pendingRequests: number;
 
   tick: number;
   maxPendingRequests: number;
-  default: Default;
+  default: IDefault;
 
   log: Group;
 
   constructor(
-    assets: Assets,
+    assets: IAssets,
     assetsPath: string,
     progressBarId?: string,
     progressTextId?: string
@@ -84,7 +83,7 @@ export class Loader {
     return false;
   }
 
-  public start(): Promise<Response> {
+  public start(): Promise<IResponse> {
     return new Promise((resolve: Function, reject: Function) => {
       if (this.progress.nbAssets) {
         this.progress.start();
@@ -117,10 +116,10 @@ export class Loader {
         for (let i = 0; i < type.files.length; i++) {
           let file = type.files[i];
           if (!file.xhr && file.hasOwnProperty("name")) {
-            type.files[i] = new Asset(
+            (type.files[i] as Asset) = new Asset(
               file.name,
               `${this.path}/${folder}`,
-              file.params
+              file.params || null
             );
             if (type.files[i].isValid) {
               this.progress.nbAssets++;
