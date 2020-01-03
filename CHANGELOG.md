@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/LCluber/Orbis.js/compare/v1.0.2...v1.0.3) (2020-01-02)
+
+
+### Bug Fixes
+
+* **readme:** update readme.md with improved angular service example ([ab066d9](https://github.com/LCluber/Orbis.js/commit/ab066d97f0b7016b0e11513c71e8b5a6c8cc5f48))
+
 ## [1.0.2](https://github.com/LCluber/Orbis.js/compare/v1.0.1...v1.0.2) (2020-01-02)
 
 
