@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/LCluber/Orbis.js/compare/v1.0.3...v1.0.4) (2020-01-03)
+
+
+### Bug Fixes
+
+* **declaration:** fix declaration file imports ([2a0ae51](https://github.com/LCluber/Orbis.js/commit/2a0ae513b3a516eeff6c188812c66f7132d77d9a))
+
 ## [1.0.3](https://github.com/LCluber/Orbis.js/compare/v1.0.2...v1.0.3) (2020-01-02)
 
 
