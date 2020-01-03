@@ -196,7 +196,7 @@
 				<a href="#es6" id="es6" style="color: inherit; text-decoration: none;">
 					<h3>ES6</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { Loader } <span class="hljs-keyword">from</span> <span class="hljs-string">"@lcluber/orbisjs"</span>;
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { Loader, IResponse } <span class="hljs-keyword">from</span> <span class="hljs-string">"@lcluber/orbisjs"</span>;
 
 <span class="hljs-keyword">let</span> loader = <span class="hljs-keyword">new</span> Loader(
   list,
@@ -206,10 +206,13 @@
 );
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadAssets</span>(<span class="hljs-params"></span>) </span>{
-  loader.start().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"complete"</span>);
-    <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
-    <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
+  loader.start().then(<span class="hljs-function">(<span class="hljs-params">response: IResponse</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(response.message);
+    <span class="hljs-keyword">if</span> (response.success) {
+      <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
+      <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
+      <span class="hljs-built_in">console</span>.log(loader.getContent(<span class="hljs-string">"sound3.mp3"</span>));
+    }
   });
 }</code></pre>
 				<a href="#iife" id="iife" style="color: inherit; text-decoration: none;">
@@ -224,10 +227,13 @@
 );
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadAssets</span>(<span class="hljs-params"></span>) </span>{
-  loader.start().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"complete"</span>);
-    <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
-    <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
+  loader.start().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">response</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(response.message);
+    <span class="hljs-keyword">if</span> (response.success) {
+      <span class="hljs-built_in">console</span>.log(loader.getList(<span class="hljs-string">"sounds"</span>));
+      <span class="hljs-built_in">console</span>.log(loader.getAsset(<span class="hljs-string">"sound3.mp3"</span>));
+      <span class="hljs-built_in">console</span>.log(loader.getContent(<span class="hljs-string">"sound3.mp3"</span>));
+    }
   });
 }</code></pre>
 				<a href="#angular" id="angular" style="color: inherit; text-decoration: none;">
@@ -235,14 +241,14 @@
 				</a>
 				<p>Example of a service to load several assets when needed.</p>
 				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { Injectable } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
-<span class="hljs-keyword">import</span> { Loader, Assets, Response } <span class="hljs-keyword">from</span> <span class="hljs-string">"@lcluber/orbisjs"</span>;
+<span class="hljs-keyword">import</span> { Loader, IAssets, IResponse } <span class="hljs-keyword">from</span> <span class="hljs-string">"@lcluber/orbisjs"</span>;
 
 @Injectable({
   <span class="hljs-attr">providedIn</span>: <span class="hljs-string">'root'</span>
 })
 <span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AssetsLoaderService</span> </span>{
 
-  list: Assets = {
+  list: IAssets = {
     <span class="hljs-attr">shaders</span>: {
       <span class="hljs-attr">folder</span>: <span class="hljs-string">"shader"</span>,
       <span class="hljs-attr">files</span>: [
@@ -262,17 +268,17 @@
   <span class="hljs-keyword">constructor</span>() { }
 
   public load(): <span class="hljs-built_in">Promise</span>&lt;boolean&gt; {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.loader.start().then(<span class="hljs-function">(<span class="hljs-params">response: Response</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.loader.start().then(<span class="hljs-function">(<span class="hljs-params">response: IResponse</span>) =&gt;</span> {
       <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"complete"</span>);
       <span class="hljs-keyword">return</span> response.success;
     });
   }
 
-  public <span class="hljs-keyword">get</span> vertexShader(): string | false {
+  public <span class="hljs-keyword">get</span> vertexShader(): Object | HTMLImageElement | AudioBuffer | string | null | false {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.loader.getContent(<span class="hljs-string">"vertex.glsl"</span>);
   }
 
-  public <span class="hljs-keyword">get</span> fragmentShader(): string | false {
+  public <span class="hljs-keyword">get</span> fragmentShader(): Object | HTMLImageElement | AudioBuffer | string | null | false {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.loader.getContent(<span class="hljs-string">"fragment.glsl"</span>);
   }
 }
@@ -296,18 +302,20 @@ interface IAssets {
 
 interface IAsset {
   name: string;
-  params?: { [key: string]: string | number | boolean | Array&lt;string | number | boolean&gt;;} | null;
+  params?: {
+    [key: string]: string | number | boolean | Array&lt;string | number | boolean&gt;;
+  } | null;
 }
 
 class Loader(
-  assets: Assets,
+  assets: IAssets,
   assetsPath: string,
   progressBarId?: string,
   progressTextId?: string
 );
 
 // Starts loading the assets
-loader.start(): Promise&lt;Response&gt; {}
+loader.start(): Promise&lt;IResponse&gt; {}
 // Returns the asset object
 loader.getAsset(name: string): Asset | false {}
 // Returns only the response of the xhr request.

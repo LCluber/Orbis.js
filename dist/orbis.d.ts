@@ -22,8 +22,8 @@
 *
 * http://orbisjs.lcluber.com
 */
-import { XHR } from "./xhr";
-import { IAsset, IParams } from "./interfaces";
+
+
 export declare class Asset implements IAsset {
     name: string;
     params: IParams | null;
@@ -32,14 +32,14 @@ export declare class Asset implements IAsset {
     constructor(name: string, path: string, params?: IParams | null);
     getContent(): Object | HTMLImageElement | AudioBuffer | string | null | false;
 }
-import { IValidExtensions } from "./interfaces";
+
 export declare class Extension {
     static validExtensions: IValidExtensions;
     static get(path: string): string | undefined;
     static getAssetType(extension: string): string | false;
     private static check;
 }
-import { Asset } from "./asset";
+
 export interface IAssets {
     [key: string]: {
         folder: string;
@@ -74,9 +74,9 @@ export interface IParams {
     [key: string]: string | number | boolean | Array<string | number | boolean>;
 }
 import { Group, LevelName } from "@lcluber/mouettejs";
-import { Progress } from "./progress";
-import { IAssets, IDefault, IResponse } from "./interfaces";
-import { Asset } from "./asset";
+
+
+
 export declare class Loader {
     assets: IAssets;
     path: string;
@@ -120,14 +120,14 @@ export declare class Progress {
     private updateBar;
 }
 import { FSM } from "@lcluber/taipanjs";
-import { IAjax } from "./interfaces";
+
 export declare class Request {
     fsm: FSM;
     ajax: IAjax;
     constructor();
     send(path: string, type: string): Promise<HTMLImageElement | AudioBuffer | string | Object | null>;
 }
-import { Request } from "./request";
+
 export declare class XHR {
     path: string;
     extension: string;

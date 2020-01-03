@@ -2964,49 +2964,63 @@ var Orbis = (function (exports) {
                 return this.log.getLevel();
             }
         }, {
+            key: 'getMockupData',
+            value: function getMockupData() {
+                var _this2 = this;
+
+                return new Promise(function (resolve, reject) {
+                    _this2.mockupData ? resolve(_this2.mockupData) : reject(null);
+                });
+            }
+        }, {
+            key: 'setMockupData',
+            value: function setMockupData(mockupData) {
+                this.mockupData = mockupData;
+            }
+        }, {
             key: 'GET',
             value: function GET(url, responseType) {
-                return this.get.call(url, responseType);
+                return this.mockupData ? this.getMockupData() : this.get.call(url, responseType);
             }
         }, {
             key: 'HEAD',
             value: function HEAD(url, responseType) {
-                return this.head.call(url, responseType);
+                return this.mockupData ? this.getMockupData() : this.head.call(url, responseType);
             }
         }, {
             key: 'POST',
             value: function POST(url, responseType, data) {
-                return this.post.call(url, responseType, data);
+                return this.mockupData ? this.getMockupData() : this.post.call(url, responseType, data);
             }
         }, {
             key: 'PUT',
             value: function PUT(url, responseType, data) {
-                return this.put.call(url, responseType, data);
+                return this.mockupData ? this.getMockupData() : this.put.call(url, responseType, data);
             }
         }, {
             key: 'DELETE',
             value: function DELETE(url, responseType) {
-                return this.delete.call(url, responseType);
+                return this.mockupData ? this.getMockupData() : this.delete.call(url, responseType);
             }
         }, {
             key: 'CONNECT',
             value: function CONNECT(url, responseType) {
-                return this.connect.call(url, responseType);
+                return this.mockupData ? this.getMockupData() : this.connect.call(url, responseType);
             }
         }, {
             key: 'OPTIONS',
             value: function OPTIONS(url, responseType) {
-                return this.options.call(url, responseType);
+                return this.mockupData ? this.getMockupData() : this.options.call(url, responseType);
             }
         }, {
             key: 'TRACE',
             value: function TRACE(url, responseType) {
-                return this.trace.call(url, responseType);
+                return this.mockupData ? this.getMockupData() : this.trace.call(url, responseType);
             }
         }, {
             key: 'PATCH',
             value: function PATCH(url, responseType, data) {
-                return this.patch.call(url, responseType, data);
+                return this.mockupData ? this.getMockupData() : this.patch.call(url, responseType, data);
             }
         }]);
 
@@ -3014,6 +3028,7 @@ var Orbis = (function (exports) {
     }();
 
     HTTP.log = Logger.addGroup("Aias");
+    HTTP.mockupData = null;
     HTTP.get = new Method("GET", {
         "Content-Type": "application/x-www-form-urlencoded"
     });
