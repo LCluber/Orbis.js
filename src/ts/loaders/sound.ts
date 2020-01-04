@@ -3,5 +3,5 @@ import { HTTP, ResponseDataType } from "@lcluber/aiasjs";
 
 export function loadSound(path: string): Promise<ResponseDataType> {
   // HTTP.setLogLevel("info");
-  return HTTP.GET(path, "audiobuffer");
+  return HTTP.GET(path, "audiobuffer") as Promise<ResponseDataType>;
 }
