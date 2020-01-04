@@ -246,16 +246,32 @@ interface IResponse {
 interface IAssets {
   [key: string]: { // type
     folder: string;
-    files: Asset[];
+    files: IAsset[];
   };
 }
 
 interface IAsset {
   name: string;
-  params?: {
-    [key: string]: string | number | boolean | Array<string | number | boolean>;
-  } | null;
+  params?: IParams | null;
 }
+
+interface IParams {
+  [key: string]: string | number | boolean | Array<string | number | boolean>;
+}
+
+class Asset implements IAsset {
+    name: string;
+    params: IParams | null;
+    xhr: XHR | null;
+    isValid: boolean;
+}
+
+class XHR {
+    path: string;
+    extension: string;
+    type: string;
+    response: Object | HTMLImageElement | AudioBuffer | string | null;
+    request: Request;
 
 class Loader(
   assets: IAssets,

@@ -58,7 +58,7 @@ export class Loader {
       if (this.assets.hasOwnProperty(property)) {
         for (let file of this.assets[property].files) {
           if (file.name === name) {
-            return file;
+            return file as Asset;
           }
         }
       }
@@ -78,7 +78,7 @@ export class Loader {
 
   public getList(type: string): Asset[] | false {
     if (this.assets.hasOwnProperty(type)) {
-      return this.assets[type].files;
+      return this.assets[type].files as Asset[];
     }
     return false;
   }
@@ -156,7 +156,7 @@ export class Loader {
         let type = this.assets[property];
         for (let file of type.files) {
           if (file.xhr && !file.xhr.isRequestSent()) {
-            return file;
+            return file as Asset;
           }
         }
       }

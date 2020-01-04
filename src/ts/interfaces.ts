@@ -1,9 +1,9 @@
-import { Asset } from "./asset";
+// import { Asset } from "./asset";
 
 export interface IAssets {
   [key: string]: {
     folder: string;
-    files: Asset[];
+    files: IAsset[];
   };
 }
 

@@ -39,11 +39,10 @@ export declare class Extension {
     static getAssetType(extension: string): string | false;
     private static check;
 }
-
 export interface IAssets {
     [key: string]: {
         folder: string;
-        files: Asset[];
+        files: IAsset[];
     };
 }
 export interface IAsset {
