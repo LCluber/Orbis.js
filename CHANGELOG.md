@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/LCluber/Orbis.js/compare/v1.0.4...v1.0.5) (2020-01-04)
+
+
+### Bug Fixes
+
+* **typings:** fix Loader assets list typings ([3a66425](https://github.com/LCluber/Orbis.js/commit/3a66425cb6b4b678304b754cbb9eb9b3e88e2422))
+
 ## [1.0.4](https://github.com/LCluber/Orbis.js/compare/v1.0.3...v1.0.4) (2020-01-03)
 
 
