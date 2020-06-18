@@ -71,18 +71,6 @@ module.exports = function(grunt) {
         src: [publicDir + "fonts/*"]
       }
     },
-    typedoc: {
-      build: {
-        options: {
-          out: docDir,
-          target: "es6",
-          name: projectName + ".js - Documentation",
-          includeDeclarations: false,
-          hideGenerator: true
-        },
-        src: [srcDir + "ts/*.ts"]
-      }
-    },
     jshint: {
       options: {
         // jshintrc: 'config/.jshintrc'
@@ -443,7 +431,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-open");
   grunt.loadNpmTasks("grunt-ts");
   grunt.loadNpmTasks("grunt-rollup");
-  grunt.loadNpmTasks("grunt-typedoc");
   grunt.loadNpmTasks("grunt-sass");
 
   grunt.registerTask("lib", "build the library in the dist/ folder", [
@@ -509,7 +496,7 @@ module.exports = function(grunt) {
     //build site
     grunt.task.run("website");
     //build documentation
-    grunt.task.run("doc");
+    // grunt.task.run("doc");
     // launch server and watch for changes
     grunt.task.run("serve");
   });

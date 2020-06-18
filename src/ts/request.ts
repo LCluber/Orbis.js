@@ -25,7 +25,6 @@ export class Request {
     path: string,
     type: string
   ): Promise<HTMLImageElement | AudioBuffer | string | Object | null> {
-    // console.log(this.fsm);
     if (this.fsm["send"]()) {
       return this.ajax[type](path)
         .then((response: HTMLImageElement | AudioBuffer | string | Object) => {

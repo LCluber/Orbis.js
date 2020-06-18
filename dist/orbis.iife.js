@@ -714,6 +714,1531 @@ var Orbis = (function (exports) {
               return (1 - ratio) * x + ratio * y;
           }
       }, {
+          key: 'getSign',
+          value: function getSign(x) {
+              return x ? x < 0 ? -1 : 1 : 0;
+          }
+      }, {
+          key: 'opposite',
+          value: function opposite(x) {
+              return -x;
+          }
+      }, {
+          key: 'clamp',
+          value: function clamp(x, min, max) {
+              return Math.min(Math.max(x, min), max);
+          }
+      }, {
+          key: 'normalize',
+          value: function normalize(x, min, max) {
+              return (x - min) / (max - min);
+          }
+      }, {
+          key: 'lerp',
+          value: function lerp(min, max, amount) {
+              return (max - min) * amount + min;
+          }
+      }, {
+          key: 'map',
+          value: function map(x, sourceMin, sourceMax, destMin, destMax) {
+              return this.lerp(destMin, destMax, this.normalize(x, sourceMin, sourceMax));
+          }
+      }, {
+          key: 'isIn',
+          value: function isIn(x, min, max) {
+              return x >= min && x <= max;
+          }
+      }, {
+          key: 'isOut',
+          value: function isOut(x, min, max) {
+              return x < min || x > max;
+          }
+      }]);
+
+      return Utils;
+  }();
+
+  var Trigonometry = function () {
+      function Trigonometry() {
+          _classCallCheck$2(this, Trigonometry);
+      }
+
+      _createClass$2(Trigonometry, null, [{
+          key: 'init',
+          value: function init() {
+              Trigonometry.createRoundedPis();
+              Trigonometry.createFactorialArray();
+          }
+      }, {
+          key: 'createRoundedPis',
+          value: function createRoundedPis() {
+              var decimals = 2;
+              this.pi = Utils.round(Math.PI, decimals);
+              this.twopi = Utils.round(Math.PI * 2, decimals);
+              this.halfpi = Utils.round(Math.PI * 0.5, decimals);
+          }
+      }, {
+          key: 'createFactorialArray',
+          value: function createFactorialArray() {
+              var maxSin = this.sineLoops[this.sineLoops.length - 1] * 3;
+              var maxCos = this.cosineLoops[this.cosineLoops.length - 1] * 2;
+              for (var i = 1, f = 1; i <= Math.max(maxSin, maxCos); i++) {
+                  f *= this.factorial(i);
+                  this.factorialArray.push(f);
+              }
+          }
+      }, {
+          key: 'factorial',
+          value: function factorial(i) {
+              return i > 1 ? i - 1 : 1;
+          }
+      }, {
+          key: 'setSinePrecision',
+          value: function setSinePrecision(value) {
+              if (value >= 0 && value <= this.maxDecimals) {
+                  this.sineDecimals = value;
+                  return value;
+              }
+              return this.sineDecimals = this.maxDecimals;
+          }
+      }, {
+          key: 'setCosinePrecision',
+          value: function setCosinePrecision(value) {
+              if (value >= 0 && value <= this.maxDecimals) {
+                  this.cosineDecimals = value;
+                  return value;
+              }
+              return this.cosineDecimals = this.maxDecimals;
+          }
+      }, {
+          key: 'setArctanPrecision',
+          value: function setArctanPrecision(value) {
+              if (value >= 0 && value <= this.maxDecimals) {
+                  this.arctanDecimals = value;
+                  return value;
+              }
+              return this.arctanDecimals = this.maxDecimals;
+          }
+      }, {
+          key: 'degreeToRadian',
+          value: function degreeToRadian(degree) {
+              return degree * this.pi / 180;
+          }
+      }, {
+          key: 'radianToDegree',
+          value: function radianToDegree(radian) {
+              return radian * 180 / this.pi;
+          }
+      }, {
+          key: 'normalizeRadian',
+          value: function normalizeRadian(angle) {
+              if (angle > this.pi || angle < -this.pi) {
+                  return angle - this.twopi * Math.floor((angle + this.pi) / this.twopi);
+              }
+              return angle;
+          }
+      }, {
+          key: 'sine',
+          value: function sine(angle) {
+              angle = this.normalizeRadian(angle);
+              if (Trigonometry.sineDecimals <= 2 && angle < 0.28 && angle > -0.28) {
+                  return angle;
+              } else {
+                  return this.taylorSerie(3, Trigonometry.sineLoops[this.sineDecimals], angle, angle, true);
+              }
+          }
+      }, {
+          key: 'cosine',
+          value: function cosine(angle) {
+              angle = this.normalizeRadian(angle);
+              var squaredAngle = angle * angle;
+              if (this.cosineDecimals <= 2 && angle <= 0.5 && angle >= -0.5) {
+                  return 1 - squaredAngle * 0.5;
+              } else {
+                  return this.taylorSerie(2, Trigonometry.cosineLoops[this.cosineDecimals], 1, angle, true);
+              }
+          }
+      }, {
+          key: 'arctan2',
+          value: function arctan2(x, y) {
+              var angle = y / x;
+              if (x > 0) {
+                  return this.arctan(angle);
+              } else if (x < 0) {
+                  if (y < 0) {
+                      return this.arctan(angle) - this.pi;
+                  } else {
+                      return this.arctan(angle) + this.pi;
+                  }
+              } else {
+                  if (y < 0) {
+                      return -this.halfpi;
+                  } else if (y > 0) {
+                      return this.halfpi;
+                  } else {
+                      return false;
+                  }
+              }
+          }
+      }, {
+          key: 'arctan',
+          value: function arctan(angle) {
+              var loops = Trigonometry.arctanLoops[this.arctanDecimals];
+              if (angle < 1 && angle > -1) {
+                  return this.taylorSerie(3, loops, angle, angle, false);
+              } else {
+                  if (angle >= 1) {
+                      angle = 1 / angle;
+                      return -(this.taylorSerie(3, loops, angle, angle, false) - this.halfpi);
+                  } else {
+                      angle = -1 / angle;
+                      return this.taylorSerie(3, loops, angle, angle, false) - this.halfpi;
+                  }
+              }
+          }
+      }, {
+          key: 'sineEquation',
+          value: function sineEquation(amplitude, period, shiftX, shiftY) {
+              return amplitude * this.sine(period + shiftX) + shiftY;
+          }
+      }, {
+          key: 'cosineEquation',
+          value: function cosineEquation(amplitude, period, shiftX, shiftY) {
+              return amplitude * this.cosine(period + shiftX) + shiftY;
+          }
+      }, {
+          key: 'arctanEquation',
+          value: function arctanEquation(amplitude, period, shiftX, shiftY) {
+              return amplitude * this.arctan(period + shiftX) + shiftY;
+          }
+      }, {
+          key: 'taylorSerie',
+          value: function taylorSerie(start, max, x, angle, needFactorial) {
+              var squaredAngle = angle * angle;
+              var result = x;
+              var denominator = 0;
+              var sign = -1;
+              for (var i = 0; start <= max; start += 2, i++) {
+                  x *= squaredAngle;
+                  denominator = needFactorial ? this.factorialArray[start] : start;
+                  result += x / denominator * sign;
+                  sign = Utils.opposite(sign);
+              }
+              return result;
+          }
+      }]);
+
+      return Trigonometry;
+  }();
+
+  Trigonometry.sineLoops = [9, 11, 13, 15, 17, 18, 19, 21, 23];
+  Trigonometry.cosineLoops = [6, 8, 10, 12, 14, 16, 18, 20, 22];
+  Trigonometry.arctanLoops = [17, 19, 21, 23, 25, 27, 29, 31, 33];
+  Trigonometry.sineDecimals = 2;
+  Trigonometry.cosineDecimals = 2;
+  Trigonometry.arctanDecimals = 2;
+  Trigonometry.maxDecimals = 8;
+  Trigonometry.factorialArray = [];
+  Trigonometry.init();
+
+  var Time = function () {
+      function Time() {
+          _classCallCheck$2(this, Time);
+      }
+
+      _createClass$2(Time, null, [{
+          key: 'millisecToSec',
+          value: function millisecToSec(millisecond) {
+              return millisecond * 0.001;
+          }
+      }, {
+          key: 'secToMillisec',
+          value: function secToMillisec(second) {
+              return second * 1000;
+          }
+      }, {
+          key: 'millisecToFps',
+          value: function millisecToFps(millisecond) {
+              return 1000 / millisecond;
+          }
+      }, {
+          key: 'fpsToMillisec',
+          value: function fpsToMillisec(refreshRate) {
+              return 1000 / refreshRate;
+          }
+      }]);
+
+      return Time;
+  }();
+
+  var Random = function () {
+      function Random() {
+          _classCallCheck$2(this, Random);
+      }
+
+      _createClass$2(Random, null, [{
+          key: 'float',
+          value: function float(min, max) {
+              return min + Math.random() * (max - min);
+          }
+      }, {
+          key: 'integer',
+          value: function integer(min, max) {
+              return Math.floor(min + Math.random() * (max - min + 1));
+          }
+      }, {
+          key: 'distribution',
+          value: function distribution(min, max, iterations) {
+              var total = 0;
+              for (var i = 0; i < iterations; i++) {
+                  total += this.float(min, max);
+              }
+              return total / iterations;
+          }
+      }, {
+          key: 'pick',
+          value: function pick(value1, value2) {
+              return Math.random() < 0.5 ? value1 : value2;
+          }
+      }]);
+
+      return Random;
+  }();
+
+  var NumArray = function () {
+      function NumArray() {
+          _classCallCheck$2(this, NumArray);
+      }
+
+      _createClass$2(NumArray, null, [{
+          key: 'min',
+          value: function min(array) {
+              return Math.min.apply(Math, _toConsumableArray(array));
+          }
+      }, {
+          key: 'max',
+          value: function max(array) {
+              return Math.max.apply(Math, _toConsumableArray(array));
+          }
+      }, {
+          key: 'sum',
+          value: function sum(array) {
+              return array.reduce(function (a, b) {
+                  return a + b;
+              }, 0);
+          }
+      }, {
+          key: 'multiply',
+          value: function multiply(array) {
+              return array.reduce(function (a, b) {
+                  return a * b;
+              }, 0);
+          }
+      }, {
+          key: 'average',
+          value: function average(array, length) {
+              return NumArray.sum(array) / length;
+          }
+      }]);
+
+      return NumArray;
+  }();
+
+  var Bezier = function () {
+      function Bezier() {
+          _classCallCheck$2(this, Bezier);
+      }
+
+      _createClass$2(Bezier, null, [{
+          key: 'quadratic',
+          value: function quadratic(p0, p1, p2, t) {
+              var oneMinusT = 1 - t;
+              return Math.pow(oneMinusT, 2) * p0 + oneMinusT * 2 * t * p1 + t * t * p2;
+          }
+      }, {
+          key: 'cubic',
+          value: function cubic(p0, p1, p2, p3, t) {
+              var oneMinusT = 1 - t;
+              var tByT = t * t;
+              return Math.pow(oneMinusT, 3) * p0 + Math.pow(oneMinusT, 2) * 3 * t * p1 + oneMinusT * 3 * tByT * p2 + tByT * t * p3;
+          }
+      }]);
+
+      return Bezier;
+  }();
+
+  var Vector2 = function () {
+      function Vector2(x, y) {
+          _classCallCheck$2(this, Vector2);
+
+          this.x = x || 0.0;
+          this.y = y || 0.0;
+      }
+
+      _createClass$2(Vector2, [{
+          key: 'isOrigin',
+          value: function isOrigin() {
+              return this.x === 0 && this.y === 0 ? true : false;
+          }
+      }, {
+          key: 'isPositive',
+          value: function isPositive() {
+              return this.x >= 0 && this.y >= 0 ? true : false;
+          }
+      }, {
+          key: 'setFromArray',
+          value: function setFromArray(array, offset) {
+              if (offset === undefined) {
+                  offset = 0;
+              }
+              this.x = array[offset];
+              this.y = array[offset + 1];
+              return this;
+          }
+      }, {
+          key: 'toArray',
+          value: function toArray() {
+              return [this.x, this.y];
+          }
+      }, {
+          key: 'toString',
+          value: function toString() {
+              return '(x = ' + this.x + '; y = ' + this.y + ')';
+          }
+      }, {
+          key: 'set',
+          value: function set(x, y) {
+              this.x = x;
+              this.y = y;
+              return this;
+          }
+      }, {
+          key: 'clone',
+          value: function clone() {
+              return new Vector2(this.x, this.y);
+          }
+      }, {
+          key: 'copy',
+          value: function copy(v) {
+              this.x = v.x;
+              this.y = v.y;
+              return this;
+          }
+      }, {
+          key: 'origin',
+          value: function origin() {
+              this.x = 0.0;
+              this.y = 0.0;
+              return this;
+          }
+      }, {
+          key: 'setFromAngle',
+          value: function setFromAngle(angle) {
+              if (angle) {
+                  var length = this.getMagnitude();
+                  this.x = Trigonometry.cosine(angle) * length;
+                  this.y = Trigonometry.sine(angle) * length;
+              }
+              return this;
+          }
+      }, {
+          key: 'getAngle',
+          value: function getAngle() {
+              return Math.atan2(this.y, this.x);
+          }
+      }, {
+          key: 'getMagnitude',
+          value: function getMagnitude() {
+              var square = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+              return square ? this.getSquaredMagnitude() : Math.sqrt(this.getSquaredMagnitude());
+          }
+      }, {
+          key: 'getSquaredMagnitude',
+          value: function getSquaredMagnitude() {
+              return this.x * this.x + this.y * this.y;
+          }
+      }, {
+          key: 'getDistance',
+          value: function getDistance(v) {
+              var square = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+              this.subtract(v);
+              var magnitude = this.getMagnitude(square);
+              this.add(v);
+              return magnitude;
+          }
+      }, {
+          key: 'quadraticBezier',
+          value: function quadraticBezier(p0, p1, p2, t) {
+              this.x = Bezier.quadratic(p0.x, p1.x, p2.x, t);
+              this.y = Bezier.quadratic(p0.y, p1.y, p2.y, t);
+              return this;
+          }
+      }, {
+          key: 'cubicBezier',
+          value: function cubicBezier(p0, p1, p2, p3, t) {
+              this.x = Bezier.cubic(p0.x, p1.x, p2.x, p3.x, t);
+              this.y = Bezier.cubic(p0.y, p1.y, p2.y, p3.y, t);
+              return this;
+          }
+      }, {
+          key: 'add',
+          value: function add(v) {
+              this.x += v.x;
+              this.y += v.y;
+              return this;
+          }
+      }, {
+          key: 'addScalar',
+          value: function addScalar(scalar) {
+              this.x += scalar;
+              this.y += scalar;
+              return this;
+          }
+      }, {
+          key: 'addScaledVector',
+          value: function addScaledVector(v, scalar) {
+              this.x += v.x * scalar;
+              this.y += v.y * scalar;
+              return this;
+          }
+      }, {
+          key: 'subtract',
+          value: function subtract(v) {
+              this.x -= v.x;
+              this.y -= v.y;
+              return this;
+          }
+      }, {
+          key: 'subtractScalar',
+          value: function subtractScalar(scalar) {
+              this.x -= scalar;
+              this.y -= scalar;
+              return this;
+          }
+      }, {
+          key: 'subtractScaledVector',
+          value: function subtractScaledVector(v, scalar) {
+              this.x -= v.x * scalar;
+              this.y -= v.y * scalar;
+              return this;
+          }
+      }, {
+          key: 'scale',
+          value: function scale(value) {
+              this.x *= value;
+              this.y *= value;
+              return this;
+          }
+      }, {
+          key: 'multiply',
+          value: function multiply(v) {
+              this.x *= v.x;
+              this.y *= v.y;
+              return this;
+          }
+      }, {
+          key: 'multiplyScaledVector',
+          value: function multiplyScaledVector(v, scalar) {
+              this.x *= v.x * scalar;
+              this.y *= v.y * scalar;
+              return this;
+          }
+      }, {
+          key: 'divide',
+          value: function divide(v) {
+              this.x /= v.x;
+              this.y /= v.y;
+              return this;
+          }
+      }, {
+          key: 'divideScaledVector',
+          value: function divideScaledVector(v, scalar) {
+              this.x /= v.x * scalar;
+              this.y /= v.y * scalar;
+              return this;
+          }
+      }, {
+          key: 'halve',
+          value: function halve() {
+              this.x *= 0.5;
+              this.y *= 0.5;
+              return this;
+          }
+      }, {
+          key: 'max',
+          value: function max(v) {
+              this.x = Math.max(this.x, v.x);
+              this.y = Math.max(this.y, v.y);
+              return this;
+          }
+      }, {
+          key: 'min',
+          value: function min(v) {
+              this.x = Math.min(this.x, v.x);
+              this.y = Math.min(this.y, v.y);
+              return this;
+          }
+      }, {
+          key: 'maxScalar',
+          value: function maxScalar(scalar) {
+              this.x = Math.max(this.x, scalar);
+              this.y = Math.max(this.y, scalar);
+              return this;
+          }
+      }, {
+          key: 'minScalar',
+          value: function minScalar(scalar) {
+              this.x = Math.min(this.x, scalar);
+              this.y = Math.min(this.y, scalar);
+              return this;
+          }
+      }, {
+          key: 'getMaxAxis',
+          value: function getMaxAxis() {
+              return this.y > this.x ? 'y' : 'x';
+          }
+      }, {
+          key: 'getMinAxis',
+          value: function getMinAxis() {
+              return this.y < this.x ? 'y' : 'x';
+          }
+      }, {
+          key: 'setOppositeAxis',
+          value: function setOppositeAxis(axis, value) {
+              if (axis === 'y') {
+                  this.x = value;
+              } else {
+                  this.y = value;
+              }
+              return this;
+          }
+      }, {
+          key: 'normalize',
+          value: function normalize() {
+              var length = this.getMagnitude();
+              if (length && length != 1) {
+                  this.scale(1 / length);
+              }
+              return this;
+          }
+      }, {
+          key: 'absolute',
+          value: function absolute() {
+              this.x = Math.abs(this.x);
+              this.y = Math.abs(this.y);
+              return this;
+          }
+      }, {
+          key: 'opposite',
+          value: function opposite() {
+              this.x = -this.x;
+              this.y = -this.y;
+              return this;
+          }
+      }, {
+          key: 'clamp',
+          value: function clamp(rectangle) {
+              this.x = Utils.clamp(this.x, rectangle.topLeftCorner.x, rectangle.bottomRightCorner.x);
+              this.y = Utils.clamp(this.y, rectangle.topLeftCorner.y, rectangle.bottomRightCorner.y);
+              return this;
+          }
+      }, {
+          key: 'lerp',
+          value: function lerp(min, max, amount) {
+              this.x = Utils.lerp(min.x, max.x, amount);
+              this.y = Utils.lerp(min.y, max.y, amount);
+              return this;
+          }
+      }, {
+          key: 'dotProduct',
+          value: function dotProduct(v) {
+              return this.x * v.x + this.y * v.y;
+          }
+      }]);
+
+      return Vector2;
+  }();
+
+  var Circle = function () {
+      function Circle(positionX, positionY, radius) {
+          _classCallCheck$2(this, Circle);
+
+          this.shape = 'circle';
+          this._radius = 0.0;
+          this._diameter = 0.0;
+          this.position = new Vector2(positionX, positionY);
+          this.radius = radius;
+      }
+
+      _createClass$2(Circle, [{
+          key: 'clone',
+          value: function clone() {
+              return new Circle(this.position.x, this.position.y, this.radius);
+          }
+      }, {
+          key: 'copy',
+          value: function copy(circle) {
+              this.position.copy(circle.position);
+              this.radius = circle.radius;
+              return this;
+          }
+      }, {
+          key: 'set',
+          value: function set(positionX, positionY, radius) {
+              this.position.set(positionX, positionY);
+              this.radius = radius;
+              return this;
+          }
+      }, {
+          key: 'setPositionXY',
+          value: function setPositionXY(positionX, positionY) {
+              this.position.set(positionX, positionY);
+              return this;
+          }
+      }, {
+          key: 'setPositionFromVector',
+          value: function setPositionFromVector(position) {
+              this.position.copy(position);
+              return this;
+          }
+      }, {
+          key: 'scale',
+          value: function scale(scalar) {
+              this.radius *= scalar;
+              return this;
+          }
+      }, {
+          key: 'isIn',
+          value: function isIn(v) {
+              return v.getDistance(this.position, true) <= this.radius * this.radius;
+          }
+      }, {
+          key: 'draw',
+          value: function draw(context, fillColor, strokeColor, strokeWidth) {
+              context.beginPath();
+              context.arc(this.position.x, this.position.y, this.radius, 0, Trigonometry.twopi, false);
+              if (fillColor) {
+                  context.fillStyle = fillColor;
+                  context.fill();
+              }
+              if (strokeColor) {
+                  context.strokeStyle = strokeColor;
+                  context.lineWidth = strokeWidth;
+                  context.stroke();
+              }
+          }
+      }, {
+          key: 'radius',
+          set: function set(radius) {
+              this._radius = radius;
+              this._diameter = this._radius * 2;
+          },
+          get: function get() {
+              return this._radius;
+          }
+      }, {
+          key: 'diameter',
+          set: function set(diameter) {
+              this._diameter = diameter;
+              this._radius = this._diameter * 0.5;
+          },
+          get: function get() {
+              return this._diameter;
+          }
+      }]);
+
+      return Circle;
+  }();
+
+  var Rectangle = function () {
+      function Rectangle(positionX, positionY, sizeX, sizeY) {
+          _classCallCheck$2(this, Rectangle);
+
+          this.shape = 'aabb';
+          this.size = new Vector2(sizeX, sizeY);
+          this.halfSize = new Vector2();
+          this.setHalfSize();
+          this.position = new Vector2(positionX, positionY);
+          this.topLeftCorner = new Vector2(positionX - this.halfSize.x, positionY - this.halfSize.y);
+          this.bottomRightCorner = new Vector2(positionX + this.halfSize.x, positionY + this.halfSize.y);
+      }
+
+      _createClass$2(Rectangle, [{
+          key: 'clone',
+          value: function clone() {
+              return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
+          }
+      }, {
+          key: 'copy',
+          value: function copy(rectangle) {
+              this.setSizeFromVector(rectangle.size);
+              this.setPositionFromVector(rectangle.position);
+              return this;
+          }
+      }, {
+          key: 'set',
+          value: function set(positionX, positionY, sizeX, sizeY) {
+              this.setSizeXY(sizeX, sizeY);
+              this.setPositionXY(positionX, positionY);
+              return this;
+          }
+      }, {
+          key: 'setPositionX',
+          value: function setPositionX(x) {
+              this.setPosition('x', x);
+              return this;
+          }
+      }, {
+          key: 'setPositionY',
+          value: function setPositionY(y) {
+              this.setPosition('y', y);
+              return this;
+          }
+      }, {
+          key: 'setPosition',
+          value: function setPosition(property, value) {
+              this.position[property] = value;
+              this.topLeftCorner[property] = value - this.halfSize[property];
+              this.bottomRightCorner[property] = value + this.halfSize[property];
+          }
+      }, {
+          key: 'setPositionXY',
+          value: function setPositionXY(positionX, positionY) {
+              this.position.set(positionX, positionY);
+              this.setCorners();
+              return this;
+          }
+      }, {
+          key: 'setPositionFromVector',
+          value: function setPositionFromVector(position) {
+              this.position.copy(position);
+              this.setCorners();
+              return this;
+          }
+      }, {
+          key: 'setSizeX',
+          value: function setSizeX(width) {
+              this.setSize('x', width);
+              return this;
+          }
+      }, {
+          key: 'setSizeY',
+          value: function setSizeY(height) {
+              this.setSize('y', height);
+              return this;
+          }
+      }, {
+          key: 'setSize',
+          value: function setSize(property, value) {
+              this.size[property] = value;
+              this.setHalfSize();
+              this.topLeftCorner[property] = this.position[property] - this.halfSize[property];
+              this.bottomRightCorner[property] = this.position[property] + this.halfSize[property];
+          }
+      }, {
+          key: 'setSizeXY',
+          value: function setSizeXY(width, height) {
+              this.size.set(width, height);
+              this.setHalfSize();
+              this.setCorners();
+              return this;
+          }
+      }, {
+          key: 'setSizeFromVector',
+          value: function setSizeFromVector(size) {
+              this.size.copy(size);
+              this.setHalfSize();
+              this.setCorners();
+              return this;
+          }
+      }, {
+          key: 'setCorners',
+          value: function setCorners() {
+              this.topLeftCorner.set(this.position.x - this.halfSize.x, this.position.y - this.halfSize.y);
+              this.bottomRightCorner.set(this.position.x + this.halfSize.x, this.position.y + this.halfSize.y);
+          }
+      }, {
+          key: 'setHalfSize',
+          value: function setHalfSize() {
+              this.halfSize.copy(this.size);
+              this.halfSize.halve();
+          }
+      }, {
+          key: 'isIn',
+          value: function isIn(vector) {
+              return Utils.isIn(vector.x, this.topLeftCorner.x, this.bottomRightCorner.x) && Utils.isIn(vector.y, this.topLeftCorner.y, this.bottomRightCorner.y);
+          }
+      }, {
+          key: 'draw',
+          value: function draw(context, fillColor, strokeColor, strokeWidth) {
+              context.beginPath();
+              context.rect(this.topLeftCorner.x, this.topLeftCorner.y, this.size.x, this.size.y);
+              if (fillColor) {
+                  context.fillStyle = fillColor;
+                  context.fill();
+              }
+              if (strokeColor) {
+                  context.strokeStyle = strokeColor;
+                  context.lineWidth = strokeWidth;
+                  context.stroke();
+              }
+          }
+      }]);
+
+      return Rectangle;
+  }();
+
+  var Vector3 = function () {
+      function Vector3(x, y, z) {
+          _classCallCheck$2(this, Vector3);
+
+          this.x = x || 0.0;
+          this.y = y || 0.0;
+          this.z = z || 0.0;
+      }
+
+      _createClass$2(Vector3, [{
+          key: 'isOrigin',
+          value: function isOrigin() {
+              return this.x === 0 && this.y === 0 && this.z === 0 ? true : false;
+          }
+      }, {
+          key: 'isPositive',
+          value: function isPositive() {
+              return this.x >= 0 && this.y >= 0 && this.z >= 0 ? true : false;
+          }
+      }, {
+          key: 'setFromArray',
+          value: function setFromArray(array, offset) {
+              if (offset === undefined) {
+                  offset = 0;
+              }
+              this.x = array[offset];
+              this.y = array[offset + 1];
+              this.z = array[offset + 2];
+              return this;
+          }
+      }, {
+          key: 'toArray',
+          value: function toArray() {
+              return [this.x, this.y, this.z];
+          }
+      }, {
+          key: 'toString',
+          value: function toString() {
+              return '(x = ' + this.x + '; y = ' + this.y + '; z = ' + this.z + ')';
+          }
+      }, {
+          key: 'set',
+          value: function set(x, y, z) {
+              this.x = x;
+              this.y = y;
+              this.z = z;
+              return this;
+          }
+      }, {
+          key: 'clone',
+          value: function clone() {
+              return new Vector3(this.x, this.y, this.z);
+          }
+      }, {
+          key: 'copy',
+          value: function copy(v) {
+              this.x = v.x;
+              this.y = v.y;
+              this.z = v.z;
+              return this;
+          }
+      }, {
+          key: 'origin',
+          value: function origin() {
+              this.x = 0.0;
+              this.y = 0.0;
+              this.z = 0.0;
+              return this;
+          }
+      }, {
+          key: 'getMagnitude',
+          value: function getMagnitude() {
+              var square = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+              return square ? this.getSquaredMagnitude() : Math.sqrt(this.getSquaredMagnitude());
+          }
+      }, {
+          key: 'getSquaredMagnitude',
+          value: function getSquaredMagnitude() {
+              return this.x * this.x + this.y * this.y + this.z * this.z;
+          }
+      }, {
+          key: 'getDistance',
+          value: function getDistance(v) {
+              var square = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+              this.subtract(v);
+              var magnitude = this.getMagnitude(square);
+              this.add(v);
+              return magnitude;
+          }
+      }, {
+          key: 'add',
+          value: function add(v) {
+              this.x += v.x;
+              this.y += v.y;
+              this.z += v.z;
+              return this;
+          }
+      }, {
+          key: 'addScalar',
+          value: function addScalar(scalar) {
+              this.x += scalar;
+              this.y += scalar;
+              this.z += scalar;
+              return this;
+          }
+      }, {
+          key: 'addScaledVector',
+          value: function addScaledVector(v, scalar) {
+              this.x += v.x * scalar;
+              this.y += v.y * scalar;
+              this.z += v.z * scalar;
+              return this;
+          }
+      }, {
+          key: 'subtract',
+          value: function subtract(v) {
+              this.x -= v.x;
+              this.y -= v.y;
+              this.z -= v.z;
+              return this;
+          }
+      }, {
+          key: 'subtractScalar',
+          value: function subtractScalar(scalar) {
+              this.x -= scalar;
+              this.y -= scalar;
+              this.z -= scalar;
+              return this;
+          }
+      }, {
+          key: 'subtractScaledVector',
+          value: function subtractScaledVector(v, scalar) {
+              this.x -= v.x * scalar;
+              this.y -= v.y * scalar;
+              this.z -= v.z * scalar;
+              return this;
+          }
+      }, {
+          key: 'scale',
+          value: function scale(value) {
+              this.x *= value;
+              this.y *= value;
+              this.z *= value;
+              return this;
+          }
+      }, {
+          key: 'multiply',
+          value: function multiply(v) {
+              this.x *= v.x;
+              this.y *= v.y;
+              this.z *= v.z;
+              return this;
+          }
+      }, {
+          key: 'multiplyScaledVector',
+          value: function multiplyScaledVector(v, scalar) {
+              this.x *= v.x * scalar;
+              this.y *= v.y * scalar;
+              this.z *= v.z * scalar;
+              return this;
+          }
+      }, {
+          key: 'divide',
+          value: function divide(v) {
+              this.x /= v.x;
+              this.y /= v.y;
+              this.z /= v.z;
+              return this;
+          }
+      }, {
+          key: 'divideScaledVector',
+          value: function divideScaledVector(v, scalar) {
+              this.x /= v.x * scalar;
+              this.y /= v.y * scalar;
+              this.z /= v.z * scalar;
+              return this;
+          }
+      }, {
+          key: 'halve',
+          value: function halve() {
+              this.x *= 0.5;
+              this.y *= 0.5;
+              this.z *= 0.5;
+              return this;
+          }
+      }, {
+          key: 'max',
+          value: function max(v) {
+              this.x = Math.max(this.x, v.x);
+              this.y = Math.max(this.y, v.y);
+              this.z = Math.max(this.z, v.z);
+              return this;
+          }
+      }, {
+          key: 'min',
+          value: function min(v) {
+              this.x = Math.min(this.x, v.x);
+              this.y = Math.min(this.y, v.y);
+              this.z = Math.min(this.z, v.z);
+              return this;
+          }
+      }, {
+          key: 'maxScalar',
+          value: function maxScalar(scalar) {
+              this.x = Math.max(this.x, scalar);
+              this.y = Math.max(this.y, scalar);
+              this.z = Math.max(this.z, scalar);
+              return this;
+          }
+      }, {
+          key: 'minScalar',
+          value: function minScalar(scalar) {
+              this.x = Math.min(this.x, scalar);
+              this.y = Math.min(this.y, scalar);
+              this.z = Math.min(this.z, scalar);
+              return this;
+          }
+      }, {
+          key: 'normalize',
+          value: function normalize() {
+              var length = this.getMagnitude();
+              if (length && length != 1) {
+                  this.scale(1 / length);
+              }
+              return this;
+          }
+      }, {
+          key: 'absolute',
+          value: function absolute() {
+              this.x = Math.abs(this.x);
+              this.y = Math.abs(this.y);
+              this.z = Math.abs(this.z);
+              return this;
+          }
+      }, {
+          key: 'opposite',
+          value: function opposite() {
+              this.x = -this.x;
+              this.y = -this.y;
+              this.z = -this.z;
+              return this;
+          }
+      }, {
+          key: 'dotProduct',
+          value: function dotProduct(v) {
+              return this.x * v.x + this.y * v.y + this.z * v.z;
+          }
+      }, {
+          key: 'cross',
+          value: function cross(v) {
+              var x = this.x,
+                  y = this.y,
+                  z = this.z;
+              this.x = y * v.z - z * v.y;
+              this.y = z * v.x - x * v.z;
+              this.z = x * v.y - y * v.x;
+              return this;
+          }
+      }]);
+
+      return Vector3;
+  }();
+
+  var Matrix3x3 = function () {
+      function Matrix3x3(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
+          _classCallCheck$2(this, Matrix3x3);
+
+          this.m = new Float32Array(9);
+          this.make(x1, x2, x3, y1, y2, y3, t1, t2, t3);
+      }
+
+      _createClass$2(Matrix3x3, [{
+          key: 'make',
+          value: function make(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
+              this.m[0] = x1 || 0.0;
+              this.m[1] = x2 || 0.0;
+              this.m[2] = x3 || 0.0;
+              this.m[3] = y1 || 0.0;
+              this.m[4] = y2 || 0.0;
+              this.m[5] = y3 || 0.0;
+              this.m[6] = t1 || 0.0;
+              this.m[7] = t2 || 0.0;
+              this.m[8] = t3 || 0.0;
+          }
+      }, {
+          key: 'copy',
+          value: function copy(matrix3x3) {
+              var m = matrix3x3.m;
+              this.make(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]);
+              return this;
+          }
+      }, {
+          key: 'toArray',
+          value: function toArray() {
+              return this.m;
+          }
+      }, {
+          key: 'toString',
+          value: function toString() {
+              return '(' + this.m[0] + ',' + this.m[1] + ',' + this.m[2] + ';' + this.m[3] + ',' + this.m[4] + ',' + this.m[5] + ';' + this.m[6] + ',' + this.m[7] + ',' + this.m[8] + ')';
+          }
+      }, {
+          key: 'identity',
+          value: function identity() {
+              this.make(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'scale',
+          value: function scale(vector2) {
+              this.make(vector2.x, 0.0, 0.0, 0.0, vector2.y, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'rotate',
+          value: function rotate(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(cos, sin, 0.0, -sin, cos, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'translate',
+          value: function translate(vector2) {
+              this.make(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, vector2.x, vector2.y, 1.0);
+              return this;
+          }
+      }, {
+          key: 'multiply',
+          value: function multiply(matrix3x3) {
+              var m1 = this.m;
+              var m2 = matrix3x3.m;
+              this.make(m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2], m1[0] * m2[3] + m1[3] * m2[4] + m1[6] * m2[5], m1[1] * m2[3] + m1[4] * m2[4] + m1[7] * m2[5], m1[2] * m2[3] + m1[5] * m2[4] + m1[8] * m2[5], m1[0] * m2[6] + m1[3] * m2[7] + m1[6] * m2[8], m1[1] * m2[6] + m1[4] * m2[7] + m1[7] * m2[8], m1[2] * m2[6] + m1[5] * m2[7] + m1[8] * m2[8]);
+              return this;
+          }
+      }]);
+
+      return Matrix3x3;
+  }();
+
+  var Matrix4x3 = function () {
+      function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
+          _classCallCheck$2(this, Matrix4x3);
+
+          this.m = new Float32Array(16);
+          this.xAxis = new Vector3();
+          this.yAxis = new Vector3();
+          this.zAxis = new Vector3();
+          this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
+      }
+
+      _createClass$2(Matrix4x3, [{
+          key: 'make',
+          value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
+              this.m[0] = x1 || 0.0;
+              this.m[1] = x2 || 0.0;
+              this.m[2] = x3 || 0.0;
+              this.m[3] = 0.0;
+              this.m[4] = y1 || 0.0;
+              this.m[5] = y2 || 0.0;
+              this.m[6] = y3 || 0.0;
+              this.m[7] = 0.0;
+              this.m[8] = z1 || 0.0;
+              this.m[9] = z2 || 0.0;
+              this.m[10] = z3 || 0.0;
+              this.m[11] = 0.0;
+              this.m[12] = t1 || 0.0;
+              this.m[13] = t2 || 0.0;
+              this.m[14] = t3 || 0.0;
+              this.m[15] = 1.0;
+          }
+      }, {
+          key: 'copy',
+          value: function copy(matrix4x3) {
+              var m = matrix4x3.m;
+              this.make(m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10], m[12], m[13], m[14]);
+              return this;
+          }
+      }, {
+          key: 'toArray',
+          value: function toArray() {
+              return this.m;
+          }
+      }, {
+          key: 'toString',
+          value: function toString() {
+              return '(' + this.m[0] + ',' + this.m[1] + ',' + this.m[2] + ',' + this.m[3] + ';' + this.m[4] + ',' + this.m[5] + ',' + this.m[6] + ',' + this.m[7] + ';' + this.m[8] + ',' + this.m[9] + ',' + this.m[10] + ',' + this.m[11] + ';' + this.m[12] + ',' + this.m[13] + ',' + this.m[14] + ',' + this.m[15] + ')';
+          }
+      }, {
+          key: 'identity',
+          value: function identity() {
+              this.make(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+              return this;
+          }
+      }, {
+          key: 'scale',
+          value: function scale(vector3) {
+              this.make(vector3.x, 0.0, 0.0, 0.0, vector3.y, 0.0, 0.0, 0.0, vector3.z, 0.0, 0.0, 0.0);
+              return this;
+          }
+      }, {
+          key: 'rotateX',
+          value: function rotateX(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(1.0, 0.0, 0.0, 0.0, cos, sin, 0.0, -sin, cos, 0.0, 0.0, 0.0);
+              return this;
+          }
+      }, {
+          key: 'rotateY',
+          value: function rotateY(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(cos, 0.0, -sin, 0.0, 1.0, 0.0, sin, 0.0, cos, 0.0, 0.0, 0.0);
+              return this;
+          }
+      }, {
+          key: 'rotateZ',
+          value: function rotateZ(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(cos, sin, 0.0, -sin, cos, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+              return this;
+          }
+      }, {
+          key: 'translate',
+          value: function translate(vector3) {
+              this.make(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, vector3.x, vector3.y, vector3.z);
+              return this;
+          }
+      }, {
+          key: 'multiply',
+          value: function multiply(matrix4x3) {
+              var m1 = this.m;
+              var m2 = matrix4x3.m;
+              this.make(m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2], m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6], m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6], m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6], m1[0] * m2[8] + m1[4] * m2[9] + m1[8] * m2[10], m1[1] * m2[8] + m1[5] * m2[9] + m1[9] * m2[10], m1[2] * m2[8] + m1[6] * m2[9] + m1[10] * m2[10], m1[0] * m2[12] + m1[4] * m2[13] + m1[8] * m2[14] + m1[12], m1[1] * m2[12] + m1[5] * m2[13] + m1[9] * m2[14] + m1[13], m1[2] * m2[12] + m1[6] * m2[13] + m1[10] * m2[14] + m1[14]);
+              return this;
+          }
+      }, {
+          key: 'lookAtRH',
+          value: function lookAtRH(eye, target, up) {
+              this.zAxis.copy(eye).subtract(target).normalize();
+              this.xAxis.copy(up).cross(this.zAxis).normalize();
+              this.yAxis.copy(this.zAxis).cross(this.xAxis);
+              this.make(this.xAxis.x, this.yAxis.x, this.zAxis.x, this.xAxis.y, this.yAxis.y, this.zAxis.y, this.xAxis.z, this.yAxis.z, this.zAxis.z, -this.xAxis.dotProduct(eye), -this.yAxis.dotProduct(eye), -this.zAxis.dotProduct(eye));
+              return this;
+          }
+      }]);
+
+      return Matrix4x3;
+  }();
+
+  var Matrix4x4 = function () {
+      function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
+          _classCallCheck$2(this, Matrix4x4);
+
+          this.m = new Float32Array(16);
+          this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
+      }
+
+      _createClass$2(Matrix4x4, [{
+          key: 'make',
+          value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
+              this.m[0] = x1 || 0.0;
+              this.m[1] = x2 || 0.0;
+              this.m[2] = x3 || 0.0;
+              this.m[3] = x4 || 0.0;
+              this.m[4] = y1 || 0.0;
+              this.m[5] = y2 || 0.0;
+              this.m[6] = y3 || 0.0;
+              this.m[7] = y4 || 0.0;
+              this.m[8] = z1 || 0.0;
+              this.m[9] = z2 || 0.0;
+              this.m[10] = z3 || 0.0;
+              this.m[11] = z4 || 0.0;
+              this.m[12] = t1 || 0.0;
+              this.m[13] = t2 || 0.0;
+              this.m[14] = t3 || 0.0;
+              this.m[15] = t4 || 0.0;
+          }
+      }, {
+          key: 'copy',
+          value: function copy(matrix4x4) {
+              var m = matrix4x4.m;
+              this.make(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
+              return this;
+          }
+      }, {
+          key: 'toArray',
+          value: function toArray() {
+              return this.m;
+          }
+      }, {
+          key: 'toString',
+          value: function toString() {
+              return '(' + this.m[0] + ',' + this.m[1] + ',' + this.m[2] + ',' + this.m[3] + ';' + this.m[4] + ',' + this.m[5] + ',' + this.m[6] + ',' + this.m[7] + ';' + this.m[8] + ',' + this.m[9] + ',' + this.m[10] + ',' + this.m[11] + ';' + this.m[12] + ',' + this.m[13] + ',' + this.m[14] + ',' + this.m[15] + ')';
+          }
+      }, {
+          key: 'identity',
+          value: function identity() {
+              this.make(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'scale',
+          value: function scale(vector3) {
+              this.make(vector3.x, 0.0, 0.0, 0.0, 0.0, vector3.y, 0.0, 0.0, 0.0, 0.0, vector3.z, 0.0, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'rotateX',
+          value: function rotateX(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(1.0, 0.0, 0.0, 0.0, 0.0, cos, sin, 0.0, 0.0, -sin, cos, 0.0, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'rotateY',
+          value: function rotateY(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(cos, 0.0, -sin, 0.0, 0.0, 1.0, 0.0, 0.0, sin, 0.0, cos, 0.0, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'rotateZ',
+          value: function rotateZ(angle) {
+              var cos = Trigonometry.cosine(angle);
+              var sin = Trigonometry.sine(angle);
+              this.make(cos, sin, 0.0, 0.0, -sin, cos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+              return this;
+          }
+      }, {
+          key: 'translate',
+          value: function translate(vector3) {
+              this.make(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, vector3.x, vector3.y, vector3.z, 1.0);
+              return this;
+          }
+      }, {
+          key: 'multiply',
+          value: function multiply(matrix4x4) {
+              var m1 = this.m;
+              var m2 = matrix4x4.m;
+              this.make(m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2], 0.0, m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6], m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6], m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6], 0.0, m1[0] * m2[8] + m1[4] * m2[9] + m1[8] * m2[10], m1[1] * m2[8] + m1[5] * m2[9] + m1[9] * m2[10], m1[2] * m2[8] + m1[6] * m2[9] + m1[10] * m2[10], 0.0, m1[0] * m2[12] + m1[4] * m2[13] + m1[8] * m2[14] + m1[12], m1[1] * m2[12] + m1[5] * m2[13] + m1[9] * m2[14] + m1[13], m1[2] * m2[12] + m1[6] * m2[13] + m1[10] * m2[14] + m1[14], 1.0);
+              return this;
+          }
+      }, {
+          key: 'perspective',
+          value: function perspective(fovy, aspect, znear, zfar) {
+              var f = Math.tan(Trigonometry.halfpi - 0.5 * fovy * Trigonometry.pi / 180);
+              var rangeInv = 1.0 / (znear - zfar);
+              this.make(f / aspect, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, 0.0, 0.0, (znear + zfar) * rangeInv, -1.0, 0.0, 0.0, znear * zfar * rangeInv * 2, 0.0);
+              return this;
+          }
+      }, {
+          key: 'orthographic',
+          value: function orthographic(left, right, top, bottom, near, far) {
+              var w = right - left;
+              var h = top - bottom;
+              var p = far - near;
+              var x = (right + left) / w;
+              var y = (top + bottom) / h;
+              var z = (far + near) / p;
+              this.make(2 / w, 0.0, 0.0, 0.0, 0.0, 2 / h, 0.0, 0.0, 0.0, 0.0, -2 / p, 0.0, -x, -y, -z, 1.0);
+              return this;
+          }
+      }]);
+
+      return Matrix4x4;
+  }();
+
+  var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _toConsumableArray$1(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+  function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  /** MIT License
+  * 
+  * Copyright (c) 2011 Ludovic CLUBER 
+  * 
+  * Permission is hereby granted, free of charge, to any person obtaining a copy
+  * of this software and associated documentation files (the "Software"), to deal
+  * in the Software without restriction, including without limitation the rights
+  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  * copies of the Software, and to permit persons to whom the Software is
+  * furnished to do so, subject to the following conditions:
+  *
+  * The above copyright notice and this permission notice shall be included in all
+  * copies or substantial portions of the Software.
+  *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  * SOFTWARE.
+  *
+  * http://type6js.lcluber.com
+  */
+
+  var Utils$1 = function () {
+      function Utils() {
+          _classCallCheck$3(this, Utils);
+      }
+
+      _createClass$3(Utils, null, [{
+          key: 'round',
+          value: function round(x, decimals) {
+              decimals = Math.pow(10, decimals);
+              return Math.round(x * decimals) / decimals;
+          }
+      }, {
+          key: 'floor',
+          value: function floor(x, decimals) {
+              decimals = Math.pow(10, decimals);
+              return Math.floor(x * decimals) / decimals;
+          }
+      }, {
+          key: 'ceil',
+          value: function ceil(x, decimals) {
+              decimals = Math.pow(10, decimals);
+              return Math.ceil(x * decimals) / decimals;
+          }
+      }, {
+          key: 'trunc',
+          value: function trunc(x, decimals) {
+              decimals = Math.pow(10, decimals);
+              var v = +x * decimals;
+              if (!isFinite(v)) {
+                  return v;
+              }
+              return (v - v % 1) / decimals || (v < 0 ? -0 : v === 0 ? v : 0);
+          }
+      }, {
+          key: 'roundToNearest',
+          value: function roundToNearest(x, nearest) {
+              return Math.round(x / nearest) * nearest;
+          }
+      }, {
+          key: 'mix',
+          value: function mix(x, y, ratio) {
+              return (1 - ratio) * x + ratio * y;
+          }
+      }, {
           key: 'sign',
           value: function sign(x) {
               return x ? x < 0 ? -1 : 1 : 0;
@@ -778,12 +2303,12 @@ var Orbis = (function (exports) {
       return Utils;
   }();
 
-  var Trigonometry = function () {
+  var Trigonometry$1 = function () {
       function Trigonometry() {
-          _classCallCheck$2(this, Trigonometry);
+          _classCallCheck$3(this, Trigonometry);
       }
 
-      _createClass$2(Trigonometry, null, [{
+      _createClass$3(Trigonometry, null, [{
           key: 'init',
           value: function init() {
               Trigonometry.createRoundedPis();
@@ -793,9 +2318,9 @@ var Orbis = (function (exports) {
           key: 'createRoundedPis',
           value: function createRoundedPis() {
               var decimals = 2;
-              this.pi = Utils.round(Math.PI, decimals);
-              this.twopi = Utils.round(Math.PI * 2, decimals);
-              this.halfpi = Utils.round(Math.PI * 0.5, decimals);
+              this.pi = Utils$1.round(Math.PI, decimals);
+              this.twopi = Utils$1.round(Math.PI * 2, decimals);
+              this.halfpi = Utils$1.round(Math.PI * 0.5, decimals);
           }
       }, {
           key: 'createFactorialArray',
@@ -950,7 +2475,7 @@ var Orbis = (function (exports) {
                   x *= squaredAngle;
                   denominator = needFactorial ? this.factorialArray[start] : start;
                   result += x / denominator * sign;
-                  sign = Utils.opposite(sign);
+                  sign = Utils$1.opposite(sign);
               }
               return result;
           }
@@ -959,21 +2484,21 @@ var Orbis = (function (exports) {
       return Trigonometry;
   }();
 
-  Trigonometry.sineLoops = [9, 11, 13, 15, 17, 18, 19, 21, 23];
-  Trigonometry.cosineLoops = [6, 8, 10, 12, 14, 16, 18, 20, 22];
-  Trigonometry.arctanLoops = [17, 19, 21, 23, 25, 27, 29, 31, 33];
-  Trigonometry.sineDecimals = 2;
-  Trigonometry.cosineDecimals = 2;
-  Trigonometry.arctanDecimals = 2;
-  Trigonometry.factorialArray = [];
-  Trigonometry.init();
+  Trigonometry$1.sineLoops = [9, 11, 13, 15, 17, 18, 19, 21, 23];
+  Trigonometry$1.cosineLoops = [6, 8, 10, 12, 14, 16, 18, 20, 22];
+  Trigonometry$1.arctanLoops = [17, 19, 21, 23, 25, 27, 29, 31, 33];
+  Trigonometry$1.sineDecimals = 2;
+  Trigonometry$1.cosineDecimals = 2;
+  Trigonometry$1.arctanDecimals = 2;
+  Trigonometry$1.factorialArray = [];
+  Trigonometry$1.init();
 
-  var Time = function () {
+  var Time$1 = function () {
       function Time() {
-          _classCallCheck$2(this, Time);
+          _classCallCheck$3(this, Time);
       }
 
-      _createClass$2(Time, null, [{
+      _createClass$3(Time, null, [{
           key: 'millisecondToSecond',
           value: function millisecondToSecond(millisecond) {
               return millisecond * 0.001;
@@ -998,12 +2523,12 @@ var Orbis = (function (exports) {
       return Time;
   }();
 
-  var Random = function () {
+  var Random$1 = function () {
       function Random() {
-          _classCallCheck$2(this, Random);
+          _classCallCheck$3(this, Random);
       }
 
-      _createClass$2(Random, null, [{
+      _createClass$3(Random, null, [{
           key: 'float',
           value: function float(min, max) {
               return min + Math.random() * (max - min);
@@ -1032,20 +2557,20 @@ var Orbis = (function (exports) {
       return Random;
   }();
 
-  var NumArray = function () {
+  var NumArray$1 = function () {
       function NumArray() {
-          _classCallCheck$2(this, NumArray);
+          _classCallCheck$3(this, NumArray);
       }
 
-      _createClass$2(NumArray, null, [{
+      _createClass$3(NumArray, null, [{
           key: 'min',
           value: function min(array) {
-              return Math.min.apply(Math, _toConsumableArray(array));
+              return Math.min.apply(Math, _toConsumableArray$1(array));
           }
       }, {
           key: 'max',
           value: function max(array) {
-              return Math.max.apply(Math, _toConsumableArray(array));
+              return Math.max.apply(Math, _toConsumableArray$1(array));
           }
       }, {
           key: 'sum',
@@ -1071,12 +2596,12 @@ var Orbis = (function (exports) {
       return NumArray;
   }();
 
-  var Bezier = function () {
+  var Bezier$1 = function () {
       function Bezier() {
-          _classCallCheck$2(this, Bezier);
+          _classCallCheck$3(this, Bezier);
       }
 
-      _createClass$2(Bezier, null, [{
+      _createClass$3(Bezier, null, [{
           key: 'quadratic',
           value: function quadratic(p0, p1, p2, t) {
               var oneMinusT = 1 - t;
@@ -1094,33 +2619,33 @@ var Orbis = (function (exports) {
       return Bezier;
   }();
 
-  var Vector2 = function () {
+  var Vector2$1 = function () {
       function Vector2(x, y) {
-          _classCallCheck$2(this, Vector2);
+          _classCallCheck$3(this, Vector2);
 
           this.x = x || 0.0;
           this.y = y || 0.0;
       }
 
-      _createClass$2(Vector2, [{
+      _createClass$3(Vector2, [{
           key: 'isOrigin',
           value: function isOrigin() {
-              return Utils.isOrigin(this.x) && Utils.isOrigin(this.y) ? true : false;
+              return Utils$1.isOrigin(this.x) && Utils$1.isOrigin(this.y) ? true : false;
           }
       }, {
           key: 'isNotOrigin',
           value: function isNotOrigin() {
-              return !Utils.isOrigin(this.x) || !Utils.isOrigin(this.y) ? true : false;
+              return !Utils$1.isOrigin(this.x) || !Utils$1.isOrigin(this.y) ? true : false;
           }
       }, {
           key: 'isPositive',
           value: function isPositive() {
-              return Utils.isPositive(this.x) && Utils.isPositive(this.y) ? true : false;
+              return Utils$1.isPositive(this.x) && Utils$1.isPositive(this.y) ? true : false;
           }
       }, {
           key: 'isNegative',
           value: function isNegative() {
-              return Utils.isNegative(this.x) && Utils.isNegative(this.y) ? true : false;
+              return Utils$1.isNegative(this.x) && Utils$1.isNegative(this.y) ? true : false;
           }
       }, {
           key: 'fromArray',
@@ -1173,8 +2698,8 @@ var Orbis = (function (exports) {
           value: function setAngle(angle) {
               if (angle) {
                   var length = this.getMagnitude();
-                  this.x = Trigonometry.cosine(angle) * length;
-                  this.y = Trigonometry.sine(angle) * length;
+                  this.x = Trigonometry$1.cosine(angle) * length;
+                  this.y = Trigonometry$1.sine(angle) * length;
               }
               return this;
           }
@@ -1212,15 +2737,15 @@ var Orbis = (function (exports) {
       }, {
           key: 'quadraticBezier',
           value: function quadraticBezier(p0, p1, p2, t) {
-              this.x = Bezier.quadratic(p0.x, p1.x, p2.x, t);
-              this.y = Bezier.quadratic(p0.y, p1.y, p2.y, t);
+              this.x = Bezier$1.quadratic(p0.x, p1.x, p2.x, t);
+              this.y = Bezier$1.quadratic(p0.y, p1.y, p2.y, t);
               return this;
           }
       }, {
           key: 'cubicBezier',
           value: function cubicBezier(p0, p1, p2, p3, t) {
-              this.x = Bezier.cubic(p0.x, p1.x, p2.x, p3.x, t);
-              this.y = Bezier.cubic(p0.y, p1.y, p2.y, p3.y, t);
+              this.x = Bezier$1.cubic(p0.x, p1.x, p2.x, p3.x, t);
+              this.y = Bezier$1.cubic(p0.y, p1.y, p2.y, p3.y, t);
               return this;
           }
       }, {
@@ -1436,15 +2961,15 @@ var Orbis = (function (exports) {
       }, {
           key: 'clamp',
           value: function clamp(rectangle) {
-              this.x = Utils.clamp(this.x, rectangle.topLeftCorner.x, rectangle.bottomRightCorner.x);
-              this.y = Utils.clamp(this.y, rectangle.topLeftCorner.y, rectangle.bottomRightCorner.y);
+              this.x = Utils$1.clamp(this.x, rectangle.topLeftCorner.x, rectangle.bottomRightCorner.x);
+              this.y = Utils$1.clamp(this.y, rectangle.topLeftCorner.y, rectangle.bottomRightCorner.y);
               return this;
           }
       }, {
           key: 'lerp',
           value: function lerp(normal, min, max) {
-              this.x = Utils.lerp(normal, min.x, max.x);
-              this.y = Utils.lerp(normal, min.y, max.y);
+              this.x = Utils$1.lerp(normal, min.x, max.x);
+              this.y = Utils$1.lerp(normal, min.y, max.y);
               return this;
           }
       }, {
@@ -1457,18 +2982,18 @@ var Orbis = (function (exports) {
       return Vector2;
   }();
 
-  var Circle = function () {
+  var Circle$1 = function () {
       function Circle(positionX, positionY, radius) {
-          _classCallCheck$2(this, Circle);
+          _classCallCheck$3(this, Circle);
 
           this.shape = 'circle';
           this._radius = 0.0;
           this._diameter = 0.0;
-          this.position = new Vector2(positionX, positionY);
+          this.position = new Vector2$1(positionX, positionY);
           this.radius = radius;
       }
 
-      _createClass$2(Circle, [{
+      _createClass$3(Circle, [{
           key: 'clone',
           value: function clone() {
               return new Circle(this.position.x, this.position.y, this.radius);
@@ -1509,7 +3034,7 @@ var Orbis = (function (exports) {
           key: 'draw',
           value: function draw(context, fillColor, strokeColor, strokeWidth) {
               context.beginPath();
-              context.arc(this.position.x, this.position.y, this.radius, 0, Trigonometry.twopi, false);
+              context.arc(this.position.x, this.position.y, this.radius, 0, Trigonometry$1.twopi, false);
               if (fillColor) {
                   context.fillStyle = fillColor;
                   context.fill();
@@ -1543,20 +3068,20 @@ var Orbis = (function (exports) {
       return Circle;
   }();
 
-  var Rectangle = function () {
+  var Rectangle$1 = function () {
       function Rectangle(positionX, positionY, sizeX, sizeY) {
-          _classCallCheck$2(this, Rectangle);
+          _classCallCheck$3(this, Rectangle);
 
           this.shape = 'aabb';
-          this.size = new Vector2(sizeX, sizeY);
-          this.halfSize = new Vector2();
+          this.size = new Vector2$1(sizeX, sizeY);
+          this.halfSize = new Vector2$1();
           this.setHalfSize();
-          this.position = new Vector2(positionX, positionY);
-          this.topLeftCorner = new Vector2(positionX - this.halfSize.x, positionY - this.halfSize.y);
-          this.bottomRightCorner = new Vector2(positionX + this.halfSize.x, positionY + this.halfSize.y);
+          this.position = new Vector2$1(positionX, positionY);
+          this.topLeftCorner = new Vector2$1(positionX - this.halfSize.x, positionY - this.halfSize.y);
+          this.bottomRightCorner = new Vector2$1(positionX + this.halfSize.x, positionY + this.halfSize.y);
       }
 
-      _createClass$2(Rectangle, [{
+      _createClass$3(Rectangle, [{
           key: 'clone',
           value: function clone() {
               return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -1649,7 +3174,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'contains',
           value: function contains(vector) {
-              return Utils.contains(vector.x, this.topLeftCorner.x, this.bottomRightCorner.x) && Utils.contains(vector.y, this.topLeftCorner.y, this.bottomRightCorner.y);
+              return Utils$1.contains(vector.x, this.topLeftCorner.x, this.bottomRightCorner.x) && Utils$1.contains(vector.y, this.topLeftCorner.y, this.bottomRightCorner.y);
           }
       }, {
           key: 'draw',
@@ -1671,16 +3196,16 @@ var Orbis = (function (exports) {
       return Rectangle;
   }();
 
-  var Vector3 = function () {
+  var Vector3$1 = function () {
       function Vector3(x, y, z) {
-          _classCallCheck$2(this, Vector3);
+          _classCallCheck$3(this, Vector3);
 
           this.x = x || 0.0;
           this.y = y || 0.0;
           this.z = z || 0.0;
       }
 
-      _createClass$2(Vector3, [{
+      _createClass$3(Vector3, [{
           key: 'fromArray',
           value: function fromArray(array, offset) {
               if (offset === undefined) {
@@ -1960,18 +3485,18 @@ var Orbis = (function (exports) {
       return Vector3;
   }();
 
-  var Matrix4x3 = function () {
+  var Matrix4x3$1 = function () {
       function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
-          _classCallCheck$2(this, Matrix4x3);
+          _classCallCheck$3(this, Matrix4x3);
 
           this.m = new Float32Array(16);
-          this.xAxis = new Vector3();
-          this.yAxis = new Vector3();
-          this.zAxis = new Vector3();
+          this.xAxis = new Vector3$1();
+          this.yAxis = new Vector3$1();
+          this.zAxis = new Vector3$1();
           this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
       }
 
-      _createClass$2(Matrix4x3, [{
+      _createClass$3(Matrix4x3, [{
           key: 'make',
           value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
               this.m[0] = x1 || 0.0;
@@ -2023,24 +3548,24 @@ var Orbis = (function (exports) {
       }, {
           key: 'rotateX',
           value: function rotateX(angle) {
-              var cos = Trigonometry.cosine(angle);
-              var sin = Trigonometry.sine(angle);
+              var cos = Trigonometry$1.cosine(angle);
+              var sin = Trigonometry$1.sine(angle);
               this.make(1.0, 0.0, 0.0, 0.0, cos, sin, 0.0, -sin, cos, 0.0, 0.0, 0.0);
               return this;
           }
       }, {
           key: 'rotateY',
           value: function rotateY(angle) {
-              var cos = Trigonometry.cosine(angle);
-              var sin = Trigonometry.sine(angle);
+              var cos = Trigonometry$1.cosine(angle);
+              var sin = Trigonometry$1.sine(angle);
               this.make(cos, 0.0, -sin, 0.0, 1.0, 0.0, sin, 0.0, cos, 0.0, 0.0, 0.0);
               return this;
           }
       }, {
           key: 'rotateZ',
           value: function rotateZ(angle) {
-              var cos = Trigonometry.cosine(angle);
-              var sin = Trigonometry.sine(angle);
+              var cos = Trigonometry$1.cosine(angle);
+              var sin = Trigonometry$1.sine(angle);
               this.make(cos, sin, 0.0, -sin, cos, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
               return this;
           }
@@ -2072,15 +3597,15 @@ var Orbis = (function (exports) {
       return Matrix4x3;
   }();
 
-  var Matrix4x4 = function () {
+  var Matrix4x4$1 = function () {
       function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
-          _classCallCheck$2(this, Matrix4x4);
+          _classCallCheck$3(this, Matrix4x4);
 
           this.m = new Float32Array(16);
           this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
       }
 
-      _createClass$2(Matrix4x4, [{
+      _createClass$3(Matrix4x4, [{
           key: 'make',
           value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
               this.m[0] = x1 || 0.0;
@@ -2132,24 +3657,24 @@ var Orbis = (function (exports) {
       }, {
           key: 'rotateX',
           value: function rotateX(angle) {
-              var cos = Trigonometry.cosine(angle);
-              var sin = Trigonometry.sine(angle);
+              var cos = Trigonometry$1.cosine(angle);
+              var sin = Trigonometry$1.sine(angle);
               this.make(1.0, 0.0, 0.0, 0.0, 0.0, cos, sin, 0.0, 0.0, -sin, cos, 0.0, 0.0, 0.0, 0.0, 1.0);
               return this;
           }
       }, {
           key: 'rotateY',
           value: function rotateY(angle) {
-              var cos = Trigonometry.cosine(angle);
-              var sin = Trigonometry.sine(angle);
+              var cos = Trigonometry$1.cosine(angle);
+              var sin = Trigonometry$1.sine(angle);
               this.make(cos, 0.0, -sin, 0.0, 0.0, 1.0, 0.0, 0.0, sin, 0.0, cos, 0.0, 0.0, 0.0, 0.0, 1.0);
               return this;
           }
       }, {
           key: 'rotateZ',
           value: function rotateZ(angle) {
-              var cos = Trigonometry.cosine(angle);
-              var sin = Trigonometry.sine(angle);
+              var cos = Trigonometry$1.cosine(angle);
+              var sin = Trigonometry$1.sine(angle);
               this.make(cos, sin, 0.0, 0.0, -sin, cos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
               return this;
           }
@@ -2170,7 +3695,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'perspective',
           value: function perspective(fovy, aspect, znear, zfar) {
-              var f = Math.tan(Trigonometry.halfpi - 0.5 * fovy * Trigonometry.pi / 180);
+              var f = Math.tan(Trigonometry$1.halfpi - 0.5 * fovy * Trigonometry$1.pi / 180);
               var rangeInv = 1.0 / (znear - zfar);
               this.make(f / aspect, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, 0.0, 0.0, (znear + zfar) * rangeInv, -1.0, 0.0, 0.0, znear * zfar * rangeInv * 2, 0.0);
               return this;
@@ -2192,9 +3717,9 @@ var Orbis = (function (exports) {
       return Matrix4x4;
   }();
 
-  var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -2241,7 +3766,7 @@ var Orbis = (function (exports) {
 
   var Message$1 = function () {
       function Message(level, content) {
-          _classCallCheck$3(this, Message);
+          _classCallCheck$4(this, Message);
 
           this.id = level.id;
           this.name = level.name;
@@ -2250,7 +3775,7 @@ var Orbis = (function (exports) {
           this.date = formatDate$1();
       }
 
-      _createClass$3(Message, [{
+      _createClass$4(Message, [{
           key: 'display',
           value: function display(groupName) {
               console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
@@ -2262,7 +3787,7 @@ var Orbis = (function (exports) {
 
   var Group$1 = function () {
       function Group(name, level) {
-          _classCallCheck$3(this, Group);
+          _classCallCheck$4(this, Group);
 
           this.messages = [];
           this.name = name;
@@ -2270,7 +3795,7 @@ var Orbis = (function (exports) {
           this._level = level;
       }
 
-      _createClass$3(Group, [{
+      _createClass$4(Group, [{
           key: 'info',
           value: function info(message) {
               this.log(LEVELS$1.info, message);
@@ -2314,10 +3839,10 @@ var Orbis = (function (exports) {
 
   var Logger$1 = function () {
       function Logger() {
-          _classCallCheck$3(this, Logger);
+          _classCallCheck$4(this, Logger);
       }
 
-      _createClass$3(Logger, null, [{
+      _createClass$4(Logger, null, [{
           key: 'setLevel',
           value: function setLevel(name) {
               Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
@@ -2403,7 +3928,7 @@ var Orbis = (function (exports) {
   Logger$1.level = LEVELS$1.error;
   Logger$1.groups = [];
 
-  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -2433,7 +3958,7 @@ var Orbis = (function (exports) {
   var FSM = function FSM(events) {
       var _this = this;
 
-      _classCallCheck$4(this, FSM);
+      _classCallCheck$5(this, FSM);
 
       this.state = events[0].from;
       this.log = Logger$1.addGroup('Taipan');
@@ -2494,9 +4019,9 @@ var Orbis = (function (exports) {
       return isInteger$1(number) || isFloat$1(number);
   }
 
-  var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -2525,14 +4050,14 @@ var Orbis = (function (exports) {
 
   var Clock = function () {
       function Clock() {
-          _classCallCheck$5(this, Clock);
+          _classCallCheck$6(this, Clock);
 
           this.fpsArrayLength = 60;
           this.fpsArray = Array(this.fpsArrayLength);
           this.reset();
       }
 
-      _createClass$4(Clock, [{
+      _createClass$5(Clock, [{
           key: 'reset',
           value: function reset() {
               this.now = 0;
@@ -2551,7 +4076,7 @@ var Orbis = (function (exports) {
           value: function tick(now) {
               this.now = now;
               this.total += this.delta;
-              this.fpsArray[this.ticks % 60] = Time.millisecondToFramePerSecond(this.delta);
+              this.fpsArray[this.ticks % 60] = Time$1.millisecondToFramePerSecond(this.delta);
               this.ticks++;
           }
       }, {
@@ -2562,7 +4087,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'computeAverageFPS',
           value: function computeAverageFPS() {
-              return NumArray.average(this.fpsArray, this.fpsArrayLength);
+              return NumArray$1.average(this.fpsArray, this.fpsArrayLength);
           }
       }]);
 
@@ -2571,7 +4096,7 @@ var Orbis = (function (exports) {
 
   var Player = function () {
       function Player(callback) {
-          _classCallCheck$5(this, Player);
+          _classCallCheck$6(this, Player);
 
           this.frameId = 0;
           this.minDelta = 0;
@@ -2580,20 +4105,20 @@ var Orbis = (function (exports) {
           this.fsm = new FSM([{ name: 'play', from: false, to: true }, { name: 'stop', from: true, to: false }]);
       }
 
-      _createClass$4(Player, [{
+      _createClass$5(Player, [{
           key: 'setMaxRefreshRate',
           value: function setMaxRefreshRate(maxFPS) {
-              this.minDelta = isNumber$1(maxFPS) ? Time.framePerSecondToMillisecond(maxFPS) : this.minDelta;
+              this.minDelta = isNumber$1(maxFPS) ? Time$1.framePerSecondToMillisecond(maxFPS) : this.minDelta;
           }
       }, {
           key: 'getDelta',
           value: function getDelta() {
-              return Time.millisecondToSecond(this.clock.delta);
+              return Time$1.millisecondToSecond(this.clock.delta);
           }
       }, {
           key: 'getTotal',
           value: function getTotal() {
-              return Time.millisecondToSecond(this.clock.total);
+              return Time$1.millisecondToSecond(this.clock.total);
           }
       }, {
           key: 'getFPS',
@@ -2752,7 +4277,7 @@ var Orbis = (function (exports) {
       return Progress;
   }();
 
-  function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -2782,7 +4307,7 @@ var Orbis = (function (exports) {
   var FSM$1 = function FSM(events) {
       var _this = this;
 
-      _classCallCheck$6(this, FSM);
+      _classCallCheck$7(this, FSM);
 
       this.state = events[0].from;
       this.log = Logger.addGroup('Taipan');
@@ -5499,68 +7024,334 @@ var Orbis = (function (exports) {
 
   /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 
-  var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  /**
+   * @this {Promise}
+   */
+  function finallyConstructor(callback) {
+    var constructor = this.constructor;
+    return this.then(function (value) {
+      // @ts-ignore
+      return constructor.resolve(callback()).then(function () {
+        return value;
+      });
+    }, function (reason) {
+      // @ts-ignore
+      return constructor.resolve(callback()).then(function () {
+        // @ts-ignore
+        return constructor.reject(reason);
+      });
+    });
+  }
 
-  function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var _typeof$8 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-  /** MIT License
-  * 
-  * Copyright (c) 2010 Ludovic CLUBER 
-  * 
-  * Permission is hereby granted, free of charge, to any person obtaining a copy
-  * of this software and associated documentation files (the "Software"), to deal
-  * in the Software without restriction, including without limitation the rights
-  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  * copies of the Software, and to permit persons to whom the Software is
-  * furnished to do so, subject to the following conditions:
-  *
-  * The above copyright notice and this permission notice shall be included in all
-  * copies or substantial portions of the Software.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  *
-  * https://github.com/LCluber/Aias.js
-  */
+  // Store setTimeout reference so promise-polyfill will be unaffected by
+  // other code modifying setTimeout (like sinon.useFakeTimers())
+  var setTimeoutFunc = setTimeout;
 
-  var AudioContext = window.AudioContext || window.webkitAudioContext || false;
+  function isArray$4(x) {
+    return Boolean(x && typeof x.length !== 'undefined');
+  }
 
-  var Method = function () {
-      function Method(method, defaultHeaders) {
-          _classCallCheck$7(this, Method);
+  function noop$1() {}
 
-          this.log = Logger.addGroup("Aias");
-          this.method = method;
-          this.async = true;
-          this.noCache = false;
-          this.headers = defaultHeaders;
+  // Polyfill for Function.prototype.bind
+  function bind(fn, thisArg) {
+    return function () {
+      fn.apply(thisArg, arguments);
+    };
+  }
+
+  /**
+   * @constructor
+   * @param {Function} fn
+   */
+  function Promise$1(fn) {
+    if (!(this instanceof Promise$1)) throw new TypeError('Promises must be constructed via new');
+    if (typeof fn !== 'function') throw new TypeError('not a function');
+    /** @type {!number} */
+    this._state = 0;
+    /** @type {!boolean} */
+    this._handled = false;
+    /** @type {Promise|undefined} */
+    this._value = undefined;
+    /** @type {!Array<!Function>} */
+    this._deferreds = [];
+
+    doResolve(fn, this);
+  }
+
+  function handle(self, deferred) {
+    while (self._state === 3) {
+      self = self._value;
+    }
+    if (self._state === 0) {
+      self._deferreds.push(deferred);
+      return;
+    }
+    self._handled = true;
+    Promise$1._immediateFn(function () {
+      var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected;
+      if (cb === null) {
+        (self._state === 1 ? resolve : reject)(deferred.promise, self._value);
+        return;
+      }
+      var ret;
+      try {
+        ret = cb(self._value);
+      } catch (e) {
+        reject(deferred.promise, e);
+        return;
+      }
+      resolve(deferred.promise, ret);
+    });
+  }
+
+  function resolve(self, newValue) {
+    try {
+      // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+      if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.');
+      if (newValue && ((typeof newValue === 'undefined' ? 'undefined' : _typeof$8(newValue)) === 'object' || typeof newValue === 'function')) {
+        var then = newValue.then;
+        if (newValue instanceof Promise$1) {
+          self._state = 3;
+          self._value = newValue;
+          finale(self);
+          return;
+        } else if (typeof then === 'function') {
+          doResolve(bind(then, newValue), self);
+          return;
+        }
+      }
+      self._state = 1;
+      self._value = newValue;
+      finale(self);
+    } catch (e) {
+      reject(self, e);
+    }
+  }
+
+  function reject(self, newValue) {
+    self._state = 2;
+    self._value = newValue;
+    finale(self);
+  }
+
+  function finale(self) {
+    if (self._state === 2 && self._deferreds.length === 0) {
+      Promise$1._immediateFn(function () {
+        if (!self._handled) {
+          Promise$1._unhandledRejectionFn(self._value);
+        }
+      });
+    }
+
+    for (var i = 0, len = self._deferreds.length; i < len; i++) {
+      handle(self, self._deferreds[i]);
+    }
+    self._deferreds = null;
+  }
+
+  /**
+   * @constructor
+   */
+  function Handler(onFulfilled, onRejected, promise) {
+    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+    this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+    this.promise = promise;
+  }
+
+  /**
+   * Take a potentially misbehaving resolver function and make sure
+   * onFulfilled and onRejected are only called once.
+   *
+   * Makes no guarantees about asynchrony.
+   */
+  function doResolve(fn, self) {
+    var done = false;
+    try {
+      fn(function (value) {
+        if (done) return;
+        done = true;
+        resolve(self, value);
+      }, function (reason) {
+        if (done) return;
+        done = true;
+        reject(self, reason);
+      });
+    } catch (ex) {
+      if (done) return;
+      done = true;
+      reject(self, ex);
+    }
+  }
+
+  Promise$1.prototype['catch'] = function (onRejected) {
+    return this.then(null, onRejected);
+  };
+
+  Promise$1.prototype.then = function (onFulfilled, onRejected) {
+    // @ts-ignore
+    var prom = new this.constructor(noop$1);
+
+    handle(this, new Handler(onFulfilled, onRejected, prom));
+    return prom;
+  };
+
+  Promise$1.prototype['finally'] = finallyConstructor;
+
+  Promise$1.all = function (arr) {
+    return new Promise$1(function (resolve, reject) {
+      if (!isArray$4(arr)) {
+        return reject(new TypeError('Promise.all accepts an array'));
       }
 
-      _createClass$5(Method, [{
-          key: 'setHeaders',
-          value: function setHeaders(headers) {
-              for (var property in headers) {
-                  if (headers.hasOwnProperty(property)) {
-                      this.headers[property] = headers[property];
-                  }
-              }
+      var args = Array.prototype.slice.call(arr);
+      if (args.length === 0) return resolve([]);
+      var remaining = args.length;
+
+      function res(i, val) {
+        try {
+          if (val && ((typeof val === 'undefined' ? 'undefined' : _typeof$8(val)) === 'object' || typeof val === 'function')) {
+            var then = val.then;
+            if (typeof then === 'function') {
+              then.call(val, function (val) {
+                res(i, val);
+              }, reject);
+              return;
+            }
           }
-      }, {
-          key: 'getHeaders',
-          value: function getHeaders() {
-              return this.headers;
+          args[i] = val;
+          if (--remaining === 0) {
+            resolve(args);
+          }
+        } catch (ex) {
+          reject(ex);
+        }
+      }
+
+      for (var i = 0; i < args.length; i++) {
+        res(i, args[i]);
+      }
+    });
+  };
+
+  Promise$1.resolve = function (value) {
+    if (value && (typeof value === 'undefined' ? 'undefined' : _typeof$8(value)) === 'object' && value.constructor === Promise$1) {
+      return value;
+    }
+
+    return new Promise$1(function (resolve) {
+      resolve(value);
+    });
+  };
+
+  Promise$1.reject = function (value) {
+    return new Promise$1(function (resolve, reject) {
+      reject(value);
+    });
+  };
+
+  Promise$1.race = function (arr) {
+    return new Promise$1(function (resolve, reject) {
+      if (!isArray$4(arr)) {
+        return reject(new TypeError('Promise.race accepts an array'));
+      }
+
+      for (var i = 0, len = arr.length; i < len; i++) {
+        Promise$1.resolve(arr[i]).then(resolve, reject);
+      }
+    });
+  };
+
+  // Use polyfill for setImmediate for performance gains
+  Promise$1._immediateFn =
+  // @ts-ignore
+  typeof setImmediate === 'function' && function (fn) {
+    // @ts-ignore
+    setImmediate(fn);
+  } || function (fn) {
+    setTimeoutFunc(fn, 0);
+  };
+
+  Promise$1._unhandledRejectionFn = function _unhandledRejectionFn(err) {
+    if (typeof console !== 'undefined' && console) {
+      console.warn('Possible Unhandled Promise Rejection:', err); // eslint-disable-line no-console
+    }
+  };
+
+  Array.prototype.includes || Object.defineProperty(Array.prototype, "includes", { value: function value(r, e) {
+      if (null == this) throw new TypeError('"this" is null or not defined');var t = Object(this),
+          n = t.length >>> 0;if (0 === n) return !1;for (var i = 0 | e, o = Math.max(i >= 0 ? i : n - Math.abs(i), 0); o < n;) {
+        if (function (r, e) {
+          return r === e || "number" == typeof r && "number" == typeof e && isNaN(r) && isNaN(e);
+        }(t[o], r)) return !0;o++;
+      }return !1;
+    } });
+
+  var _createClass$6 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  /** MIT License
+   *
+   * Copyright (c) 2010 Ludovic CLUBER
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a copy
+   * of this software and associated documentation files (the "Software"), to deal
+   * in the Software without restriction, including without limitation the rights
+   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   * copies of the Software, and to permit persons to whom the Software is
+   * furnished to do so, subject to the following conditions:
+   *
+   * The above copyright notice and this permission notice (including the next
+   * paragraph) shall be included in all copies or substantial portions of the
+   * Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   * SOFTWARE.
+   *
+   * https://github.com/LCluber/Aias.js
+   */
+  var AudioContext = window.AudioContext || window.webkitAudioContext || false;
+
+  var Request = function () {
+      function Request(method, url, responseType, headers, eventType, data) {
+          _classCallCheck$8(this, Request);
+
+          this.eventType = "promise";
+          this.log = Logger.addGroup("Aias");
+          this.method = method;
+          this.url = url;
+          this.responseType = responseType;
+          this.async = true;
+          this.noCache = false;
+          this.headers = headers;
+          this.eventType = eventType || this.eventType;
+          this.data = data || null;
+      }
+
+      _createClass$6(Request, [{
+          key: 'call',
+          value: function call() {
+              switch (this.eventType) {
+                  case "observable":
+                      return this.useObservable(this.url, this.responseType, this.data);
+                  default:
+                      return this.usePromise(this.url, this.responseType, this.data);
+              }
           }
       }, {
           key: 'usePromise',
           value: function usePromise(url, responseType, data) {
               var _this = this;
 
-              return new Promise(function (resolve, reject) {
+              return new Promise$1(function (resolve, reject) {
                   var http = new XMLHttpRequest();
                   url += _this.noCache ? "?cache=" + new Date().getTime() : "";
                   http.open(_this.method, url, _this.async);
@@ -5736,17 +7527,6 @@ var Orbis = (function (exports) {
               });
           }
       }, {
-          key: 'call',
-          value: function call(url, responseType, eventType, data) {
-              switch (eventType) {
-                  case "observable":
-                      return this.useObservable(url, responseType, data);
-                      break;
-                  default:
-                      return this.usePromise(url, responseType, data);
-              }
-          }
-      }, {
           key: 'setRequestHeaders',
           value: function setRequestHeaders(http) {
               for (var property in this.headers) {
@@ -5767,23 +7547,97 @@ var Orbis = (function (exports) {
           }
       }]);
 
-      return Method;
+      return Request;
   }();
+
+  var HTTPHeaders = function HTTPHeaders() {
+      _classCallCheck$8(this, HTTPHeaders);
+  };
+
+  var METHODS = {
+      GET: {
+          type: "GET",
+          defaultHeaders: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          headers: {},
+          data: false
+      },
+      HEAD: {
+          type: "HEAD",
+          defaultHeaders: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          headers: {},
+          data: false
+      },
+      POST: {
+          type: "POST",
+          defaultHeaders: {
+              "Content-Type": "application/json"
+          },
+          headers: {},
+          data: true
+      },
+      PUT: {
+          type: "PUT",
+          defaultHeaders: {
+              "Content-Type": "application/json"
+          },
+          headers: {},
+          data: true
+      },
+      DELETE: {
+          type: "DELETE",
+          defaultHeaders: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          headers: {},
+          data: false
+      },
+      CONNECT: {
+          type: "CONNECT",
+          defaultHeaders: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          headers: {},
+          data: false
+      },
+      OPTIONS: {
+          type: "OPTIONS",
+          defaultHeaders: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          headers: {},
+          data: false
+      },
+      TRACE: {
+          type: "TRACE",
+          defaultHeaders: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          headers: {},
+          data: false
+      },
+      PATCH: {
+          type: "PATCH",
+          defaultHeaders: {
+              "Content-Type": "application/json"
+          },
+          headers: {},
+          data: false
+      }
+  };
 
   var HTTP = function () {
       function HTTP() {
-          _classCallCheck$7(this, HTTP);
+          _classCallCheck$8(this, HTTP);
       }
 
-      _createClass$5(HTTP, null, [{
+      _createClass$6(HTTP, null, [{
           key: 'setEventType',
           value: function setEventType(eventType) {
               this.eventType = this.isOfTypeEventType(eventType) ? eventType : "promise";
-          }
-      }, {
-          key: 'isOfTypeEventType',
-          value: function isOfTypeEventType(eventType) {
-              return ["promise", "observable"].includes(eventType);
           }
       }, {
           key: 'setLogLevel',
@@ -5794,6 +7648,17 @@ var Orbis = (function (exports) {
           key: 'getLogLevel',
           value: function getLogLevel() {
               return this.log.getLevel();
+          }
+      }, {
+          key: 'setHeaders',
+          value: function setHeaders(method, headers) {
+              if (METHODS.hasOwnProperty(method)) {
+                  for (var property in headers) {
+                      if (headers.hasOwnProperty(property) && HTTPHeaders.hasOwnProperty(property)) {
+                          METHODS[method].headers[property] = headers[property];
+                      }
+                  }
+              }
           }
       }, {
           key: 'setMockup',
@@ -5820,13 +7685,67 @@ var Orbis = (function (exports) {
                               }
                           }, _this3.mockup.delay);
                       });
-                      break;
                   default:
                       return this.promiseTimeout().then(function () {
-                          return new Promise(function (resolve, reject) {
+                          return new Promise$1(function (resolve, reject) {
                               _this3.mockup.data ? resolve(_this3.mockup.data) : reject(null);
                           });
                       });
+              }
+          }
+      }, {
+          key: 'get',
+          value: function get(url, responseType) {
+              return this.request(METHODS.GET.type, url, responseType, METHODS.GET.headers || METHODS.GET.defaultHeaders, null);
+          }
+      }, {
+          key: 'head',
+          value: function head(url, responseType) {
+              return this.request(METHODS.HEAD.type, url, responseType, METHODS.HEAD.headers || METHODS.HEAD.defaultHeaders, null);
+          }
+      }, {
+          key: 'post',
+          value: function post(url, responseType, data) {
+              return this.request(METHODS.POST.type, url, responseType, METHODS.POST.headers || METHODS.POST.defaultHeaders, data);
+          }
+      }, {
+          key: 'put',
+          value: function put(url, responseType, data) {
+              return this.request(METHODS.PUT.type, url, responseType, METHODS.PUT.headers || METHODS.PUT.defaultHeaders, data);
+          }
+      }, {
+          key: 'delete',
+          value: function _delete(url, responseType) {
+              return this.request(METHODS.DELETE.type, url, responseType, METHODS.DELETE.headers || METHODS.DELETE.defaultHeaders, null);
+          }
+      }, {
+          key: 'connect',
+          value: function connect(url, responseType) {
+              return this.request(METHODS.CONNECT.type, url, responseType, METHODS.CONNECT.headers || METHODS.CONNECT.defaultHeaders, null);
+          }
+      }, {
+          key: 'options',
+          value: function options(url, responseType) {
+              return this.request(METHODS.OPTIONS.type, url, responseType, METHODS.OPTIONS.headers || METHODS.OPTIONS.defaultHeaders, null);
+          }
+      }, {
+          key: 'trace',
+          value: function trace(url, responseType) {
+              return this.request(METHODS.TRACE.type, url, responseType, METHODS.TRACE.headers || METHODS.TRACE.defaultHeaders, null);
+          }
+      }, {
+          key: 'patch',
+          value: function patch(url, responseType, data) {
+              return this.request(METHODS.PATCH.type, url, responseType, METHODS.PATCH.headers || METHODS.PATCH.defaultHeaders, data);
+          }
+      }, {
+          key: 'request',
+          value: function request(type, url, responseType, headers, data) {
+              if (this.mockup.data) {
+                  return this.getMockupData();
+              } else {
+                  var request = new Request(type, url, responseType, headers, this.eventType, data || null);
+                  return request.call();
               }
           }
       }, {
@@ -5834,54 +7753,14 @@ var Orbis = (function (exports) {
           value: function promiseTimeout() {
               var _this4 = this;
 
-              return new Promise(function (resolve) {
+              return new Promise$1(function (resolve) {
                   return setTimeout(resolve, _this4.mockup.delay);
               });
           }
       }, {
-          key: 'GET',
-          value: function GET(url, responseType) {
-              return this.mockup.data ? this.getMockupData() : this.get.call(url, responseType, this.eventType);
-          }
-      }, {
-          key: 'HEAD',
-          value: function HEAD(url, responseType) {
-              return this.mockup.data ? this.getMockupData() : this.head.call(url, responseType, this.eventType);
-          }
-      }, {
-          key: 'POST',
-          value: function POST(url, responseType, data) {
-              return this.mockup.data ? this.getMockupData() : this.post.call(url, responseType, this.eventType, data);
-          }
-      }, {
-          key: 'PUT',
-          value: function PUT(url, responseType, data) {
-              return this.mockup.data ? this.getMockupData() : this.put.call(url, responseType, this.eventType, data);
-          }
-      }, {
-          key: 'DELETE',
-          value: function DELETE(url, responseType) {
-              return this.mockup.data ? this.getMockupData() : this.delete.call(url, responseType, this.eventType);
-          }
-      }, {
-          key: 'CONNECT',
-          value: function CONNECT(url, responseType) {
-              return this.mockup.data ? this.getMockupData() : this.connect.call(url, responseType, this.eventType);
-          }
-      }, {
-          key: 'OPTIONS',
-          value: function OPTIONS(url, responseType) {
-              return this.mockup.data ? this.getMockupData() : this.options.call(url, responseType, this.eventType);
-          }
-      }, {
-          key: 'TRACE',
-          value: function TRACE(url, responseType) {
-              return this.mockup.data ? this.getMockupData() : this.trace.call(url, responseType, this.eventType);
-          }
-      }, {
-          key: 'PATCH',
-          value: function PATCH(url, responseType, data) {
-              return this.mockup.data ? this.getMockupData() : this.patch.call(url, responseType, this.eventType, data);
+          key: 'isOfTypeEventType',
+          value: function isOfTypeEventType(eventType) {
+              return ["promise", "observable"].includes(eventType);
           }
       }]);
 
@@ -5894,43 +7773,16 @@ var Orbis = (function (exports) {
       data: null,
       delay: 200
   };
-  HTTP.get = new Method("GET", {
-      "Content-Type": "application/x-www-form-urlencoded"
-  });
-  HTTP.head = new Method("HEAD", {
-      "Content-Type": "application/x-www-form-urlencoded"
-  });
-  HTTP.post = new Method("POST", {
-      "Content-Type": "application/json"
-  });
-  HTTP.put = new Method("PUT", {
-      "Content-Type": "application/json"
-  });
-  HTTP.delete = new Method("DELETE", {
-      "Content-Type": "application/x-www-form-urlencoded"
-  });
-  HTTP.connect = new Method("CONNECT", {
-      "Content-Type": "application/x-www-form-urlencoded"
-  });
-  HTTP.options = new Method("OPTIONS", {
-      "Content-Type": "application/x-www-form-urlencoded"
-  });
-  HTTP.trace = new Method("TRACE", {
-      "Content-Type": "application/x-www-form-urlencoded"
-  });
-  HTTP.patch = new Method("PATCH", {
-      "Content-Type": "application/json"
-  });
 
   function loadSound(path) {
-      return HTTP.GET(path, "audiobuffer");
+      return HTTP.get(path, "audiobuffer");
   }
 
   function loadFile(path) {
-      return HTTP.GET(path, "text");
+      return HTTP.get(path, "text");
   }
 
-  var Request = function () {
+  var Request$1 = function () {
       function Request() {
           this.fsm = new FSM$1([{ name: "send", from: "idle", to: "pending" }, { name: "success", from: "pending", to: "success" }, { name: "error", from: "pending", to: "error" }]);
           this.ajax = {
@@ -5963,7 +7815,7 @@ var Orbis = (function (exports) {
           this.path = path;
           this.extension = extension;
           this.type = type;
-          this.request = new Request();
+          this.request = new Request$1();
           this.response = null;
       }
       XHR.prototype.sendRequest = function (fileName) {

@@ -1,94 +1,86 @@
-## [1.0.6](https://github.com/LCluber/Orbis.js/compare/v1.0.5...v1.0.6) (2020-01-04)
+## Version 1.0.7 (June 19th 2020)
 
+- Update Aias.js to version 2.7.1
+- Update Type6.js to version 2.0.1
+
+## [1.0.6](https://github.com/LCluber/Orbis.js/compare/v1.0.5...v1.0.6) (2020-01-04)
 
 ### Bug Fixes
 
-* **dependencies:** update @cluber/* dependencies ([34bd901](https://github.com/LCluber/Orbis.js/commit/34bd90102ddcd1cce460cc1481bce91b6e235325))
+- **dependencies:** update @cluber/\* dependencies ([34bd901](https://github.com/LCluber/Orbis.js/commit/34bd90102ddcd1cce460cc1481bce91b6e235325))
 
 ## [1.0.5](https://github.com/LCluber/Orbis.js/compare/v1.0.4...v1.0.5) (2020-01-04)
 
-
 ### Bug Fixes
 
-* **typings:** fix Loader assets list typings ([3a66425](https://github.com/LCluber/Orbis.js/commit/3a66425cb6b4b678304b754cbb9eb9b3e88e2422))
+- **typings:** fix Loader assets list typings ([3a66425](https://github.com/LCluber/Orbis.js/commit/3a66425cb6b4b678304b754cbb9eb9b3e88e2422))
 
 ## [1.0.4](https://github.com/LCluber/Orbis.js/compare/v1.0.3...v1.0.4) (2020-01-03)
 
-
 ### Bug Fixes
 
-* **declaration:** fix declaration file imports ([2a0ae51](https://github.com/LCluber/Orbis.js/commit/2a0ae513b3a516eeff6c188812c66f7132d77d9a))
+- **declaration:** fix declaration file imports ([2a0ae51](https://github.com/LCluber/Orbis.js/commit/2a0ae513b3a516eeff6c188812c66f7132d77d9a))
 
 ## [1.0.3](https://github.com/LCluber/Orbis.js/compare/v1.0.2...v1.0.3) (2020-01-02)
 
-
 ### Bug Fixes
 
-* **readme:** update readme.md with improved angular service example ([ab066d9](https://github.com/LCluber/Orbis.js/commit/ab066d97f0b7016b0e11513c71e8b5a6c8cc5f48))
+- **readme:** update readme.md with improved angular service example ([ab066d9](https://github.com/LCluber/Orbis.js/commit/ab066d97f0b7016b0e11513c71e8b5a6c8cc5f48))
 
 ## [1.0.2](https://github.com/LCluber/Orbis.js/compare/v1.0.1...v1.0.2) (2020-01-02)
 
-
 ### Bug Fixes
 
-* **typing:** improve typing with better interfaces for Angular ([181f728](https://github.com/LCluber/Orbis.js/commit/181f728fca642a309b1e795b9f8e6ce1f71dd4ab))
+- **typing:** improve typing with better interfaces for Angular ([181f728](https://github.com/LCluber/Orbis.js/commit/181f728fca642a309b1e795b9f8e6ce1f71dd4ab))
 
 ## [1.0.1](https://github.com/LCluber/Orbis.js/compare/v1.0.0...v1.0.1) (2020-01-01)
 
-
 ### Bug Fixes
 
-* **asset:** fix optional parameters of Asset type ([cd21bc7](https://github.com/LCluber/Orbis.js/commit/cd21bc7a62ee5cbfb854e73978f13289ed9d4350))
+- **asset:** fix optional parameters of Asset type ([cd21bc7](https://github.com/LCluber/Orbis.js/commit/cd21bc7a62ee5cbfb854e73978f13289ed9d4350))
 
 # [1.0.0](https://github.com/LCluber/Orbis.js/compare/v0.9.2...v1.0.0) (2020-01-01)
 
-
 ### Features
 
-* **loader:** add getContent() method ([daa1bc2](https://github.com/LCluber/Orbis.js/commit/daa1bc2efbc5fda6ec1f3264d1c7a0010a6356c2))
-
+- **loader:** add getContent() method ([daa1bc2](https://github.com/LCluber/Orbis.js/commit/daa1bc2efbc5fda6ec1f3264d1c7a0010a6356c2))
 
 ### BREAKING CHANGES
 
-* **loader:** change Loader.launch() to Loader.start()
+- **loader:** change Loader.launch() to Loader.start()
 
 ## [0.9.2](https://github.com/LCluber/Orbis.js/compare/v0.9.1...v0.9.2) (2019-10-05)
 
-
 ### Bug Fixes
 
-* **aiasjs:** updated aias.js library for better audio context handling ([5abf7e4](https://github.com/LCluber/Orbis.js/commit/5abf7e4))
+- **aiasjs:** updated aias.js library for better audio context handling ([5abf7e4](https://github.com/LCluber/Orbis.js/commit/5abf7e4))
 
 ## [0.9.1](https://github.com/LCluber/Orbis.js/compare/v0.9.0...v0.9.1) (2019-10-05)
 
-
 ### Bug Fixes
 
-* **audiobuffer:** can load audio buffer on safari ([0c65244](https://github.com/LCluber/Orbis.js/commit/0c65244))
+- **audiobuffer:** can load audio buffer on safari ([0c65244](https://github.com/LCluber/Orbis.js/commit/0c65244))
 
 # [0.9.0](https://github.com/LCluber/Orbis.js/compare/v0.8.2...v0.9.0) (2019-09-29)
 
-
 ### Features
 
-* **asset:** improved asset structure ([3b8ee35](https://github.com/LCluber/Orbis.js/commit/3b8ee35))
-* **errors:** better error handling for sound loader ([1297cb2](https://github.com/LCluber/Orbis.js/commit/1297cb2))
-* **logger:** added setloglevel and getloglevel methods ([e190541](https://github.com/LCluber/Orbis.js/commit/e190541))
-* **sound:** load sound as audiobuffer instead of audioelement ([fa064b7](https://github.com/LCluber/Orbis.js/commit/fa064b7))
+- **asset:** improved asset structure ([3b8ee35](https://github.com/LCluber/Orbis.js/commit/3b8ee35))
+- **errors:** better error handling for sound loader ([1297cb2](https://github.com/LCluber/Orbis.js/commit/1297cb2))
+- **logger:** added setloglevel and getloglevel methods ([e190541](https://github.com/LCluber/Orbis.js/commit/e190541))
+- **sound:** load sound as audiobuffer instead of audioelement ([fa064b7](https://github.com/LCluber/Orbis.js/commit/fa064b7))
 
 ## [0.8.2](https://github.com/LCluber/Orbis.js/compare/v0.8.1...v0.8.2) (2019-08-31)
 
-
 ### Bug Fixes
 
-* **sound:** added stalled event listener to sound loader ([facd150](https://github.com/LCluber/Orbis.js/commit/facd150))
+- **sound:** added stalled event listener to sound loader ([facd150](https://github.com/LCluber/Orbis.js/commit/facd150))
 
 ## [0.8.1](https://github.com/LCluber/Orbis.js/compare/v0.8.0...v0.8.1) (2019-08-18)
 
-
 ### Bug Fixes
 
-* **dist:** fixed dist forlder ([708766d](https://github.com/LCluber/Orbis.js/commit/708766d))
+- **dist:** fixed dist forlder ([708766d](https://github.com/LCluber/Orbis.js/commit/708766d))
 
 ## Version 0.8.0 (August 17th 2019)
 

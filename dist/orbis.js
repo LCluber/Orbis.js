@@ -131,11 +131,11 @@ function getName(path) {
 }
 
 function loadSound(path) {
-    return HTTP.GET(path, "audiobuffer");
+    return HTTP.get(path, "audiobuffer");
 }
 
 function loadFile(path) {
-    return HTTP.GET(path, "text");
+    return HTTP.get(path, "text");
 }
 
 class Request {
