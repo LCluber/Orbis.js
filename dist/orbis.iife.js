@@ -26,222 +26,6 @@
 var Orbis = (function (exports) {
   'use strict';
 
-  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  /** MIT License
-  * 
-  * Copyright (c) 2015 Ludovic CLUBER 
-  * 
-  * Permission is hereby granted, free of charge, to any person obtaining a copy
-  * of this software and associated documentation files (the "Software"), to deal
-  * in the Software without restriction, including without limitation the rights
-  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  * copies of the Software, and to permit persons to whom the Software is
-  * furnished to do so, subject to the following conditions:
-  *
-  * The above copyright notice and this permission notice shall be included in all
-  * copies or substantial portions of the Software.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  *
-  * http://mouettejs.lcluber.com
-  */
-
-  var LEVELS = {
-      info: { id: 1, name: "info", color: "#28a745" },
-      trace: { id: 2, name: "trace", color: "#17a2b8" },
-      warn: { id: 3, name: "warn", color: "#ffc107" },
-      error: { id: 4, name: "error", color: "#dc3545" },
-      off: { id: 99, name: "off", color: null }
-  };
-
-  function addZero(value) {
-      return value < 10 ? "0" + value : value;
-  }
-  function formatDate() {
-      var now = new Date();
-      var date = [addZero(now.getMonth() + 1), addZero(now.getDate()), now.getFullYear().toString().substr(-2)];
-      var time = [addZero(now.getHours()), addZero(now.getMinutes()), addZero(now.getSeconds())];
-      return date.join("/") + " " + time.join(":");
-  }
-
-  var Message = function () {
-      function Message(level, content) {
-          _classCallCheck(this, Message);
-
-          this.id = level.id;
-          this.name = level.name;
-          this.color = level.color;
-          this.content = content;
-          this.date = formatDate();
-      }
-
-      _createClass(Message, [{
-          key: "display",
-          value: function display(groupName) {
-              console[this.name]("%c[" + groupName + "] " + this.date + " : ", "color:" + this.color + ";", this.content);
-          }
-      }]);
-
-      return Message;
-  }();
-
-  var Group = function () {
-      function Group(name, level) {
-          _classCallCheck(this, Group);
-
-          this.messages = [];
-          this.name = name;
-          this.messages = [];
-          this.level = level;
-      }
-
-      _createClass(Group, [{
-          key: "setLevel",
-          value: function setLevel(name) {
-              this.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this.level;
-              return this.getLevel();
-          }
-      }, {
-          key: "getLevel",
-          value: function getLevel() {
-              return this.level.name;
-          }
-      }, {
-          key: "info",
-          value: function info(message) {
-              this.log(LEVELS.info, message);
-          }
-      }, {
-          key: "trace",
-          value: function trace(message) {
-              this.log(LEVELS.trace, message);
-          }
-      }, {
-          key: "warn",
-          value: function warn(message) {
-              this.log(LEVELS.warn, message);
-          }
-      }, {
-          key: "error",
-          value: function error(message) {
-              this.log(LEVELS.error, message);
-          }
-      }, {
-          key: "log",
-          value: function log(level, messageContent) {
-              var message = new Message(level, messageContent);
-              this.messages.push(message);
-              if (this.level.id <= message.id) {
-                  message.display(this.name);
-              }
-          }
-      }]);
-
-      return Group;
-  }();
-
-  var Logger = function () {
-      function Logger() {
-          _classCallCheck(this, Logger);
-      }
-
-      _createClass(Logger, null, [{
-          key: "setLevel",
-          value: function setLevel(name) {
-              Logger.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : Logger.level;
-              var _iteratorNormalCompletion = true;
-              var _didIteratorError = false;
-              var _iteratorError = undefined;
-
-              try {
-                  for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                      var group = _step.value;
-
-                      group.setLevel(Logger.level.name);
-                  }
-              } catch (err) {
-                  _didIteratorError = true;
-                  _iteratorError = err;
-              } finally {
-                  try {
-                      if (!_iteratorNormalCompletion && _iterator.return) {
-                          _iterator.return();
-                      }
-                  } finally {
-                      if (_didIteratorError) {
-                          throw _iteratorError;
-                      }
-                  }
-              }
-
-              return Logger.getLevel();
-          }
-      }, {
-          key: "getLevel",
-          value: function getLevel() {
-              return Logger.level.name;
-          }
-      }, {
-          key: "getGroup",
-          value: function getGroup(name) {
-              var _iteratorNormalCompletion2 = true;
-              var _didIteratorError2 = false;
-              var _iteratorError2 = undefined;
-
-              try {
-                  for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                      var group = _step2.value;
-
-                      if (group.name === name) {
-                          return group;
-                      }
-                  }
-              } catch (err) {
-                  _didIteratorError2 = true;
-                  _iteratorError2 = err;
-              } finally {
-                  try {
-                      if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                          _iterator2.return();
-                      }
-                  } finally {
-                      if (_didIteratorError2) {
-                          throw _iteratorError2;
-                      }
-                  }
-              }
-
-              return null;
-          }
-      }, {
-          key: "addGroup",
-          value: function addGroup(name) {
-              return this.getGroup(name) || this.pushGroup(name);
-          }
-      }, {
-          key: "pushGroup",
-          value: function pushGroup(name) {
-              var group = new Group(name, Logger.level);
-              Logger.groups.push(group);
-              return group;
-          }
-      }]);
-
-      return Logger;
-  }();
-
-  Logger.level = LEVELS.error;
-  Logger.groups = [];
-
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
   function isArray(array) {
@@ -336,9 +120,9 @@ var Orbis = (function (exports) {
       }
   }
 
-  var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -367,10 +151,10 @@ var Orbis = (function (exports) {
 
   var Dom = function () {
       function Dom() {
-          _classCallCheck$1(this, Dom);
+          _classCallCheck(this, Dom);
       }
 
-      _createClass$1(Dom, null, [{
+      _createClass(Dom, null, [{
           key: "scrollToBottom",
           value: function scrollToBottom(HtmlElement) {
               HtmlElement.scrollTop = HtmlElement.scrollHeight;
@@ -504,7 +288,7 @@ var Orbis = (function (exports) {
 
   var Binding = function () {
       function Binding(element, property, value) {
-          _classCallCheck$1(this, Binding);
+          _classCallCheck(this, Binding);
 
           this._value = "";
           this.elements = this.getElements(element);
@@ -518,7 +302,7 @@ var Orbis = (function (exports) {
           this.value = value;
       }
 
-      _createClass$1(Binding, [{
+      _createClass(Binding, [{
           key: "addPropertyToElement",
           value: function addPropertyToElement() {
               if (this.elements) {
@@ -639,11 +423,11 @@ var Orbis = (function (exports) {
       return Binding;
   }();
 
-  var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
   function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-  function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -672,10 +456,10 @@ var Orbis = (function (exports) {
 
   var Utils = function () {
       function Utils() {
-          _classCallCheck$2(this, Utils);
+          _classCallCheck$1(this, Utils);
       }
 
-      _createClass$2(Utils, null, [{
+      _createClass$1(Utils, null, [{
           key: 'round',
           value: function round(x, decimals) {
               decimals = Math.pow(10, decimals);
@@ -760,10 +544,10 @@ var Orbis = (function (exports) {
 
   var Trigonometry = function () {
       function Trigonometry() {
-          _classCallCheck$2(this, Trigonometry);
+          _classCallCheck$1(this, Trigonometry);
       }
 
-      _createClass$2(Trigonometry, null, [{
+      _createClass$1(Trigonometry, null, [{
           key: 'init',
           value: function init() {
               Trigonometry.createRoundedPis();
@@ -943,10 +727,10 @@ var Orbis = (function (exports) {
 
   var Time = function () {
       function Time() {
-          _classCallCheck$2(this, Time);
+          _classCallCheck$1(this, Time);
       }
 
-      _createClass$2(Time, null, [{
+      _createClass$1(Time, null, [{
           key: 'millisecToSec',
           value: function millisecToSec(millisecond) {
               return millisecond * 0.001;
@@ -973,10 +757,10 @@ var Orbis = (function (exports) {
 
   var Random = function () {
       function Random() {
-          _classCallCheck$2(this, Random);
+          _classCallCheck$1(this, Random);
       }
 
-      _createClass$2(Random, null, [{
+      _createClass$1(Random, null, [{
           key: 'float',
           value: function float(min, max) {
               return min + Math.random() * (max - min);
@@ -1007,10 +791,10 @@ var Orbis = (function (exports) {
 
   var NumArray = function () {
       function NumArray() {
-          _classCallCheck$2(this, NumArray);
+          _classCallCheck$1(this, NumArray);
       }
 
-      _createClass$2(NumArray, null, [{
+      _createClass$1(NumArray, null, [{
           key: 'min',
           value: function min(array) {
               return Math.min.apply(Math, _toConsumableArray(array));
@@ -1046,10 +830,10 @@ var Orbis = (function (exports) {
 
   var Bezier = function () {
       function Bezier() {
-          _classCallCheck$2(this, Bezier);
+          _classCallCheck$1(this, Bezier);
       }
 
-      _createClass$2(Bezier, null, [{
+      _createClass$1(Bezier, null, [{
           key: 'quadratic',
           value: function quadratic(p0, p1, p2, t) {
               var oneMinusT = 1 - t;
@@ -1069,13 +853,13 @@ var Orbis = (function (exports) {
 
   var Vector2 = function () {
       function Vector2(x, y) {
-          _classCallCheck$2(this, Vector2);
+          _classCallCheck$1(this, Vector2);
 
           this.x = x || 0.0;
           this.y = y || 0.0;
       }
 
-      _createClass$2(Vector2, [{
+      _createClass$1(Vector2, [{
           key: 'isOrigin',
           value: function isOrigin() {
               return this.x === 0 && this.y === 0 ? true : false;
@@ -1363,7 +1147,7 @@ var Orbis = (function (exports) {
 
   var Circle = function () {
       function Circle(positionX, positionY, radius) {
-          _classCallCheck$2(this, Circle);
+          _classCallCheck$1(this, Circle);
 
           this.shape = 'circle';
           this._radius = 0.0;
@@ -1372,7 +1156,7 @@ var Orbis = (function (exports) {
           this.radius = radius;
       }
 
-      _createClass$2(Circle, [{
+      _createClass$1(Circle, [{
           key: 'clone',
           value: function clone() {
               return new Circle(this.position.x, this.position.y, this.radius);
@@ -1454,7 +1238,7 @@ var Orbis = (function (exports) {
 
   var Rectangle = function () {
       function Rectangle(positionX, positionY, sizeX, sizeY) {
-          _classCallCheck$2(this, Rectangle);
+          _classCallCheck$1(this, Rectangle);
 
           this.shape = 'aabb';
           this.size = new Vector2(sizeX, sizeY);
@@ -1465,7 +1249,7 @@ var Orbis = (function (exports) {
           this.bottomRightCorner = new Vector2(positionX + this.halfSize.x, positionY + this.halfSize.y);
       }
 
-      _createClass$2(Rectangle, [{
+      _createClass$1(Rectangle, [{
           key: 'clone',
           value: function clone() {
               return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -1592,14 +1376,14 @@ var Orbis = (function (exports) {
 
   var Vector3 = function () {
       function Vector3(x, y, z) {
-          _classCallCheck$2(this, Vector3);
+          _classCallCheck$1(this, Vector3);
 
           this.x = x || 0.0;
           this.y = y || 0.0;
           this.z = z || 0.0;
       }
 
-      _createClass$2(Vector3, [{
+      _createClass$1(Vector3, [{
           key: 'isOrigin',
           value: function isOrigin() {
               return this.x === 0 && this.y === 0 && this.z === 0 ? true : false;
@@ -1857,13 +1641,13 @@ var Orbis = (function (exports) {
 
   var Matrix3x3 = function () {
       function Matrix3x3(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
-          _classCallCheck$2(this, Matrix3x3);
+          _classCallCheck$1(this, Matrix3x3);
 
           this.m = new Float32Array(9);
           this.make(x1, x2, x3, y1, y2, y3, t1, t2, t3);
       }
 
-      _createClass$2(Matrix3x3, [{
+      _createClass$1(Matrix3x3, [{
           key: 'make',
           value: function make(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
               this.m[0] = x1 || 0.0;
@@ -1934,7 +1718,7 @@ var Orbis = (function (exports) {
 
   var Matrix4x3 = function () {
       function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
-          _classCallCheck$2(this, Matrix4x3);
+          _classCallCheck$1(this, Matrix4x3);
 
           this.m = new Float32Array(16);
           this.xAxis = new Vector3();
@@ -1943,7 +1727,7 @@ var Orbis = (function (exports) {
           this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
       }
 
-      _createClass$2(Matrix4x3, [{
+      _createClass$1(Matrix4x3, [{
           key: 'make',
           value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
               this.m[0] = x1 || 0.0;
@@ -2046,13 +1830,13 @@ var Orbis = (function (exports) {
 
   var Matrix4x4 = function () {
       function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
-          _classCallCheck$2(this, Matrix4x4);
+          _classCallCheck$1(this, Matrix4x4);
 
           this.m = new Float32Array(16);
           this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
       }
 
-      _createClass$2(Matrix4x4, [{
+      _createClass$1(Matrix4x4, [{
           key: 'make',
           value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
               this.m[0] = x1 || 0.0;
@@ -2164,11 +1948,11 @@ var Orbis = (function (exports) {
       return Matrix4x4;
   }();
 
-  var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
   function _toConsumableArray$1(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-  function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -2197,10 +1981,10 @@ var Orbis = (function (exports) {
 
   var Utils$1 = function () {
       function Utils() {
-          _classCallCheck$3(this, Utils);
+          _classCallCheck$2(this, Utils);
       }
 
-      _createClass$3(Utils, null, [{
+      _createClass$2(Utils, null, [{
           key: 'round',
           value: function round(x, decimals) {
               decimals = Math.pow(10, decimals);
@@ -2305,10 +2089,10 @@ var Orbis = (function (exports) {
 
   var Trigonometry$1 = function () {
       function Trigonometry() {
-          _classCallCheck$3(this, Trigonometry);
+          _classCallCheck$2(this, Trigonometry);
       }
 
-      _createClass$3(Trigonometry, null, [{
+      _createClass$2(Trigonometry, null, [{
           key: 'init',
           value: function init() {
               Trigonometry.createRoundedPis();
@@ -2495,10 +2279,10 @@ var Orbis = (function (exports) {
 
   var Time$1 = function () {
       function Time() {
-          _classCallCheck$3(this, Time);
+          _classCallCheck$2(this, Time);
       }
 
-      _createClass$3(Time, null, [{
+      _createClass$2(Time, null, [{
           key: 'millisecondToSecond',
           value: function millisecondToSecond(millisecond) {
               return millisecond * 0.001;
@@ -2525,10 +2309,10 @@ var Orbis = (function (exports) {
 
   var Random$1 = function () {
       function Random() {
-          _classCallCheck$3(this, Random);
+          _classCallCheck$2(this, Random);
       }
 
-      _createClass$3(Random, null, [{
+      _createClass$2(Random, null, [{
           key: 'float',
           value: function float(min, max) {
               return min + Math.random() * (max - min);
@@ -2559,10 +2343,10 @@ var Orbis = (function (exports) {
 
   var NumArray$1 = function () {
       function NumArray() {
-          _classCallCheck$3(this, NumArray);
+          _classCallCheck$2(this, NumArray);
       }
 
-      _createClass$3(NumArray, null, [{
+      _createClass$2(NumArray, null, [{
           key: 'min',
           value: function min(array) {
               return Math.min.apply(Math, _toConsumableArray$1(array));
@@ -2598,10 +2382,10 @@ var Orbis = (function (exports) {
 
   var Bezier$1 = function () {
       function Bezier() {
-          _classCallCheck$3(this, Bezier);
+          _classCallCheck$2(this, Bezier);
       }
 
-      _createClass$3(Bezier, null, [{
+      _createClass$2(Bezier, null, [{
           key: 'quadratic',
           value: function quadratic(p0, p1, p2, t) {
               var oneMinusT = 1 - t;
@@ -2621,13 +2405,13 @@ var Orbis = (function (exports) {
 
   var Vector2$1 = function () {
       function Vector2(x, y) {
-          _classCallCheck$3(this, Vector2);
+          _classCallCheck$2(this, Vector2);
 
           this.x = x || 0.0;
           this.y = y || 0.0;
       }
 
-      _createClass$3(Vector2, [{
+      _createClass$2(Vector2, [{
           key: 'isOrigin',
           value: function isOrigin() {
               return Utils$1.isOrigin(this.x) && Utils$1.isOrigin(this.y) ? true : false;
@@ -2984,7 +2768,7 @@ var Orbis = (function (exports) {
 
   var Circle$1 = function () {
       function Circle(positionX, positionY, radius) {
-          _classCallCheck$3(this, Circle);
+          _classCallCheck$2(this, Circle);
 
           this.shape = 'circle';
           this._radius = 0.0;
@@ -2993,7 +2777,7 @@ var Orbis = (function (exports) {
           this.radius = radius;
       }
 
-      _createClass$3(Circle, [{
+      _createClass$2(Circle, [{
           key: 'clone',
           value: function clone() {
               return new Circle(this.position.x, this.position.y, this.radius);
@@ -3070,7 +2854,7 @@ var Orbis = (function (exports) {
 
   var Rectangle$1 = function () {
       function Rectangle(positionX, positionY, sizeX, sizeY) {
-          _classCallCheck$3(this, Rectangle);
+          _classCallCheck$2(this, Rectangle);
 
           this.shape = 'aabb';
           this.size = new Vector2$1(sizeX, sizeY);
@@ -3081,7 +2865,7 @@ var Orbis = (function (exports) {
           this.bottomRightCorner = new Vector2$1(positionX + this.halfSize.x, positionY + this.halfSize.y);
       }
 
-      _createClass$3(Rectangle, [{
+      _createClass$2(Rectangle, [{
           key: 'clone',
           value: function clone() {
               return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -3198,14 +2982,14 @@ var Orbis = (function (exports) {
 
   var Vector3$1 = function () {
       function Vector3(x, y, z) {
-          _classCallCheck$3(this, Vector3);
+          _classCallCheck$2(this, Vector3);
 
           this.x = x || 0.0;
           this.y = y || 0.0;
           this.z = z || 0.0;
       }
 
-      _createClass$3(Vector3, [{
+      _createClass$2(Vector3, [{
           key: 'fromArray',
           value: function fromArray(array, offset) {
               if (offset === undefined) {
@@ -3487,7 +3271,7 @@ var Orbis = (function (exports) {
 
   var Matrix4x3$1 = function () {
       function Matrix4x3(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
-          _classCallCheck$3(this, Matrix4x3);
+          _classCallCheck$2(this, Matrix4x3);
 
           this.m = new Float32Array(16);
           this.xAxis = new Vector3$1();
@@ -3496,7 +3280,7 @@ var Orbis = (function (exports) {
           this.make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3);
       }
 
-      _createClass$3(Matrix4x3, [{
+      _createClass$2(Matrix4x3, [{
           key: 'make',
           value: function make(x1, x2, x3, y1, y2, y3, z1, z2, z3, t1, t2, t3) {
               this.m[0] = x1 || 0.0;
@@ -3599,13 +3383,13 @@ var Orbis = (function (exports) {
 
   var Matrix4x4$1 = function () {
       function Matrix4x4(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
-          _classCallCheck$3(this, Matrix4x4);
+          _classCallCheck$2(this, Matrix4x4);
 
           this.m = new Float32Array(16);
           this.make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4);
       }
 
-      _createClass$3(Matrix4x4, [{
+      _createClass$2(Matrix4x4, [{
           key: 'make',
           value: function make(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, t1, t2, t3, t4) {
               this.m[0] = x1 || 0.0;
@@ -3717,9 +3501,9 @@ var Orbis = (function (exports) {
       return Matrix4x4;
   }();
 
-  var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -3746,7 +3530,7 @@ var Orbis = (function (exports) {
   * http://mouettejs.lcluber.com
   */
 
-  var LEVELS$1 = {
+  var LEVELS = {
       info: { id: 1, name: 'info', color: '#28a745' },
       trace: { id: 2, name: 'trace', color: '#17a2b8' },
       warn: { id: 3, name: 'warn', color: '#ffc107' },
@@ -3754,28 +3538,28 @@ var Orbis = (function (exports) {
       off: { id: 99, name: 'off', color: null }
   };
 
-  function addZero$1(value) {
+  function addZero(value) {
       return value < 10 ? '0' + value : value;
   }
-  function formatDate$1() {
+  function formatDate() {
       var now = new Date();
-      var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
-      var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
+      var date = [addZero(now.getMonth() + 1), addZero(now.getDate()), now.getFullYear().toString().substr(-2)];
+      var time = [addZero(now.getHours()), addZero(now.getMinutes()), addZero(now.getSeconds())];
       return date.join("/") + " " + time.join(":");
   }
 
-  var Message$1 = function () {
+  var Message = function () {
       function Message(level, content) {
-          _classCallCheck$4(this, Message);
+          _classCallCheck$3(this, Message);
 
           this.id = level.id;
           this.name = level.name;
           this.color = level.color;
           this.content = content;
-          this.date = formatDate$1();
+          this.date = formatDate();
       }
 
-      _createClass$4(Message, [{
+      _createClass$3(Message, [{
           key: 'display',
           value: function display(groupName) {
               console[this.name]('%c[' + groupName + '] ' + this.date + ' : ', 'color:' + this.color + ';', this.content);
@@ -3785,9 +3569,9 @@ var Orbis = (function (exports) {
       return Message;
   }();
 
-  var Group$1 = function () {
+  var Group = function () {
       function Group(name, level) {
-          _classCallCheck$4(this, Group);
+          _classCallCheck$3(this, Group);
 
           this.messages = [];
           this.name = name;
@@ -3795,30 +3579,30 @@ var Orbis = (function (exports) {
           this._level = level;
       }
 
-      _createClass$4(Group, [{
+      _createClass$3(Group, [{
           key: 'info',
           value: function info(message) {
-              this.log(LEVELS$1.info, message);
+              this.log(LEVELS.info, message);
           }
       }, {
           key: 'trace',
           value: function trace(message) {
-              this.log(LEVELS$1.trace, message);
+              this.log(LEVELS.trace, message);
           }
       }, {
           key: 'warn',
           value: function warn(message) {
-              this.log(LEVELS$1.warn, message);
+              this.log(LEVELS.warn, message);
           }
       }, {
           key: 'error',
           value: function error(message) {
-              this.log(LEVELS$1.error, message);
+              this.log(LEVELS.error, message);
           }
       }, {
           key: 'log',
           value: function log(level, messageContent) {
-              var message = new Message$1(level, messageContent);
+              var message = new Message(level, messageContent);
               this.messages.push(message);
               if (this._level.id <= message.id) {
                   message.display(this.name);
@@ -3827,7 +3611,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'level',
           set: function set(name) {
-              this._level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this._level;
+              this._level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : this._level;
           },
           get: function get() {
               return this._level.name;
@@ -3837,15 +3621,15 @@ var Orbis = (function (exports) {
       return Group;
   }();
 
-  var Logger$1 = function () {
+  var Logger = function () {
       function Logger() {
-          _classCallCheck$4(this, Logger);
+          _classCallCheck$3(this, Logger);
       }
 
-      _createClass$4(Logger, null, [{
+      _createClass$3(Logger, null, [{
           key: 'setLevel',
           value: function setLevel(name) {
-              Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
+              Logger.level = LEVELS.hasOwnProperty(name) ? LEVELS[name] : Logger.level;
               var _iteratorNormalCompletion = true;
               var _didIteratorError = false;
               var _iteratorError = undefined;
@@ -3916,7 +3700,7 @@ var Orbis = (function (exports) {
       }, {
           key: 'pushGroup',
           value: function pushGroup(name) {
-              var group = new Group$1(name, Logger.level);
+              var group = new Group(name, Logger.level);
               Logger.groups.push(group);
               return group;
           }
@@ -3925,10 +3709,10 @@ var Orbis = (function (exports) {
       return Logger;
   }();
 
-  Logger$1.level = LEVELS$1.error;
-  Logger$1.groups = [];
+  Logger.level = LEVELS.error;
+  Logger.groups = [];
 
-  function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -3958,10 +3742,10 @@ var Orbis = (function (exports) {
   var FSM = function FSM(events) {
       var _this = this;
 
-      _classCallCheck$5(this, FSM);
+      _classCallCheck$4(this, FSM);
 
       this.state = events[0].from;
-      this.log = Logger$1.addGroup('Taipan');
+      this.log = Logger.addGroup('Taipan');
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -4019,9 +3803,9 @@ var Orbis = (function (exports) {
       return isInteger$1(number) || isFloat$1(number);
   }
 
-  var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   /** MIT License
   * 
@@ -4050,14 +3834,14 @@ var Orbis = (function (exports) {
 
   var Clock = function () {
       function Clock() {
-          _classCallCheck$6(this, Clock);
+          _classCallCheck$5(this, Clock);
 
           this.fpsArrayLength = 60;
           this.fpsArray = Array(this.fpsArrayLength);
           this.reset();
       }
 
-      _createClass$5(Clock, [{
+      _createClass$4(Clock, [{
           key: 'reset',
           value: function reset() {
               this.now = 0;
@@ -4096,7 +3880,7 @@ var Orbis = (function (exports) {
 
   var Player = function () {
       function Player(callback) {
-          _classCallCheck$6(this, Player);
+          _classCallCheck$5(this, Player);
 
           this.frameId = 0;
           this.minDelta = 0;
@@ -4105,7 +3889,7 @@ var Orbis = (function (exports) {
           this.fsm = new FSM([{ name: 'play', from: false, to: true }, { name: 'stop', from: true, to: false }]);
       }
 
-      _createClass$5(Player, [{
+      _createClass$4(Player, [{
           key: 'setMaxRefreshRate',
           value: function setMaxRefreshRate(maxFPS) {
               this.minDelta = isNumber$1(maxFPS) ? Time$1.framePerSecondToMillisecond(maxFPS) : this.minDelta;
@@ -4213,7 +3997,8 @@ var Orbis = (function (exports) {
           this.running = false;
           this.bar = null;
           this.number = null;
-          this.animation = null;
+          this.animation = new Player(this.animateBar);
+          this.animation.setScope(this);
           if (barId) {
               var bar = Dom.findById(barId);
               if (bar) {
@@ -4222,8 +4007,6 @@ var Orbis = (function (exports) {
                   this.bar = percentBar ? new Binding(percentBar, "style.width", "0px") : null;
                   var number = bar.children[0];
                   this.number = number ? new Binding(number, "", 0) : null;
-                  this.animation = new Player(this.animateBar);
-                  this.animation.setScope(this);
               }
           }
           this.text = textId ? new Binding(textId, "", "Loading") : null;
@@ -4232,9 +4015,7 @@ var Orbis = (function (exports) {
           return this.running = this.animation ? this.updateBar(this.animation.getDelta()) : false;
       };
       Progress.prototype.start = function () {
-          if (this.animation) {
-              this.animation.play();
-          }
+          this.animation.play();
       };
       Progress.prototype.reset = function () {
           this.running = false;
@@ -4251,11 +4032,14 @@ var Orbis = (function (exports) {
               this.text.update(text);
           }
       };
-      Progress.prototype.updateBar = function (delta) {
+      Progress.prototype.updatePercentage = function (delta) {
           this.percentage += this.speed * delta;
           if (this.percentage >= this.target) {
               this.percentage = this.target;
           }
+      };
+      Progress.prototype.updateBar = function (delta) {
+          this.updatePercentage(delta);
           var flooredPercentage = Utils.floor(this.percentage, 0);
           if (this.bar) {
               this.bar.update(Utils.map(this.percentage, 0, 100, 0, this.barWidth) + "px");
@@ -4276,6 +4060,222 @@ var Orbis = (function (exports) {
       };
       return Progress;
   }();
+
+  var _createClass$5 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  /** MIT License
+  * 
+  * Copyright (c) 2015 Ludovic CLUBER 
+  * 
+  * Permission is hereby granted, free of charge, to any person obtaining a copy
+  * of this software and associated documentation files (the "Software"), to deal
+  * in the Software without restriction, including without limitation the rights
+  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  * copies of the Software, and to permit persons to whom the Software is
+  * furnished to do so, subject to the following conditions:
+  *
+  * The above copyright notice and this permission notice shall be included in all
+  * copies or substantial portions of the Software.
+  *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  * SOFTWARE.
+  *
+  * http://mouettejs.lcluber.com
+  */
+
+  var LEVELS$1 = {
+      info: { id: 1, name: "info", color: "#28a745" },
+      trace: { id: 2, name: "trace", color: "#17a2b8" },
+      warn: { id: 3, name: "warn", color: "#ffc107" },
+      error: { id: 4, name: "error", color: "#dc3545" },
+      off: { id: 99, name: "off", color: null }
+  };
+
+  function addZero$1(value) {
+      return value < 10 ? "0" + value : value;
+  }
+  function formatDate$1() {
+      var now = new Date();
+      var date = [addZero$1(now.getMonth() + 1), addZero$1(now.getDate()), now.getFullYear().toString().substr(-2)];
+      var time = [addZero$1(now.getHours()), addZero$1(now.getMinutes()), addZero$1(now.getSeconds())];
+      return date.join("/") + " " + time.join(":");
+  }
+
+  var Message$1 = function () {
+      function Message(level, content) {
+          _classCallCheck$6(this, Message);
+
+          this.id = level.id;
+          this.name = level.name;
+          this.color = level.color;
+          this.content = content;
+          this.date = formatDate$1();
+      }
+
+      _createClass$5(Message, [{
+          key: "display",
+          value: function display(groupName) {
+              console[this.name]("%c[" + groupName + "] " + this.date + " : ", "color:" + this.color + ";", this.content);
+          }
+      }]);
+
+      return Message;
+  }();
+
+  var Group$1 = function () {
+      function Group(name, level) {
+          _classCallCheck$6(this, Group);
+
+          this.messages = [];
+          this.name = name;
+          this.messages = [];
+          this.level = level;
+      }
+
+      _createClass$5(Group, [{
+          key: "setLevel",
+          value: function setLevel(name) {
+              this.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : this.level;
+              return this.getLevel();
+          }
+      }, {
+          key: "getLevel",
+          value: function getLevel() {
+              return this.level.name;
+          }
+      }, {
+          key: "info",
+          value: function info(message) {
+              this.log(LEVELS$1.info, message);
+          }
+      }, {
+          key: "trace",
+          value: function trace(message) {
+              this.log(LEVELS$1.trace, message);
+          }
+      }, {
+          key: "warn",
+          value: function warn(message) {
+              this.log(LEVELS$1.warn, message);
+          }
+      }, {
+          key: "error",
+          value: function error(message) {
+              this.log(LEVELS$1.error, message);
+          }
+      }, {
+          key: "log",
+          value: function log(level, messageContent) {
+              var message = new Message$1(level, messageContent);
+              this.messages.push(message);
+              if (this.level.id <= message.id) {
+                  message.display(this.name);
+              }
+          }
+      }]);
+
+      return Group;
+  }();
+
+  var Logger$1 = function () {
+      function Logger() {
+          _classCallCheck$6(this, Logger);
+      }
+
+      _createClass$5(Logger, null, [{
+          key: "setLevel",
+          value: function setLevel(name) {
+              Logger.level = LEVELS$1.hasOwnProperty(name) ? LEVELS$1[name] : Logger.level;
+              var _iteratorNormalCompletion = true;
+              var _didIteratorError = false;
+              var _iteratorError = undefined;
+
+              try {
+                  for (var _iterator = Logger.groups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                      var group = _step.value;
+
+                      group.setLevel(Logger.level.name);
+                  }
+              } catch (err) {
+                  _didIteratorError = true;
+                  _iteratorError = err;
+              } finally {
+                  try {
+                      if (!_iteratorNormalCompletion && _iterator.return) {
+                          _iterator.return();
+                      }
+                  } finally {
+                      if (_didIteratorError) {
+                          throw _iteratorError;
+                      }
+                  }
+              }
+
+              return Logger.getLevel();
+          }
+      }, {
+          key: "getLevel",
+          value: function getLevel() {
+              return Logger.level.name;
+          }
+      }, {
+          key: "getGroup",
+          value: function getGroup(name) {
+              var _iteratorNormalCompletion2 = true;
+              var _didIteratorError2 = false;
+              var _iteratorError2 = undefined;
+
+              try {
+                  for (var _iterator2 = Logger.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                      var group = _step2.value;
+
+                      if (group.name === name) {
+                          return group;
+                      }
+                  }
+              } catch (err) {
+                  _didIteratorError2 = true;
+                  _iteratorError2 = err;
+              } finally {
+                  try {
+                      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                          _iterator2.return();
+                      }
+                  } finally {
+                      if (_didIteratorError2) {
+                          throw _iteratorError2;
+                      }
+                  }
+              }
+
+              return null;
+          }
+      }, {
+          key: "addGroup",
+          value: function addGroup(name) {
+              return this.getGroup(name) || this.pushGroup(name);
+          }
+      }, {
+          key: "pushGroup",
+          value: function pushGroup(name) {
+              var group = new Group$1(name, Logger.level);
+              Logger.groups.push(group);
+              return group;
+          }
+      }]);
+
+      return Logger;
+  }();
+
+  Logger$1.level = LEVELS$1.error;
+  Logger$1.groups = [];
 
   function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4310,7 +4310,7 @@ var Orbis = (function (exports) {
       _classCallCheck$7(this, FSM);
 
       this.state = events[0].from;
-      this.log = Logger.addGroup('Taipan');
+      this.log = Logger$1.addGroup('Taipan');
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -4353,18 +4353,14 @@ var Orbis = (function (exports) {
   };
 
   function loadImage(path) {
-      var log = Logger.addGroup("Orbis");
       return new Promise(function (resolve, reject) {
           var img = new Image();
           img.src = path;
           img.name = getName(path);
-          log.info("xhr processing starting (" + path + ")");
           img.addEventListener("load", function () {
-              log.info("xhr (" + path + ") done");
               resolve(img);
           });
           img.addEventListener("error", function () {
-              log.error("xhr (" + path + ") failed");
               reject(new Error("xhr (" + path + ") failed"));
           });
       });
@@ -7325,7 +7321,7 @@ var Orbis = (function (exports) {
           _classCallCheck$8(this, Request);
 
           this.eventType = "promise";
-          this.log = Logger.addGroup("Aias");
+          this.log = Logger$1.addGroup("Aias");
           this.method = method;
           this.url = url;
           this.responseType = responseType;
@@ -7767,7 +7763,7 @@ var Orbis = (function (exports) {
       return HTTP;
   }();
 
-  HTTP.log = Logger.addGroup("Aias");
+  HTTP.log = Logger$1.addGroup("Aias");
   HTTP.eventType = "promise";
   HTTP.mockup = {
       data: null,
@@ -7910,15 +7906,8 @@ var Orbis = (function (exports) {
           this.tick = this.default.tick;
           this.maxPendingRequests = this.default.maxPending;
           this.progress = new Progress(progressBarId, progressTextId);
-          this.log = Logger.addGroup("Orbis");
           this.createAssets();
       }
-      Loader.prototype.setLogLevel = function (name) {
-          return this.log.setLevel(name);
-      };
-      Loader.prototype.getLogLevel = function () {
-          return this.log.getLevel();
-      };
       Loader.prototype.getAsset = function (name) {
           for (var property in this.assets) {
               if (this.assets.hasOwnProperty(property)) {
@@ -7954,10 +7943,14 @@ var Orbis = (function (exports) {
                       _this.sendRequest();
                       if (!_this.progress.running) {
                           clearInterval(intervalID_1);
-                          resolve({
-                              success: true,
-                              message: _this.progress.total + " assets loaded"
-                          });
+                          if (_this.progress.total) {
+                              resolve({
+                                  success: true,
+                                  message: _this.progress.total + " assets loaded"
+                              });
+                          } else {
+                              reject({ success: false, message: "!! " + _this.progress.total + " assets loaded" });
+                          }
                       }
                   }, _this.tick);
               } else {

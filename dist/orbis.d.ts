@@ -72,7 +72,6 @@ export interface IResponse {
 export interface IParams {
     [key: string]: string | number | boolean | Array<string | number | boolean>;
 }
-import { Group, LevelName } from "@lcluber/mouettejs";
 
 
 
@@ -84,10 +83,7 @@ export declare class Loader {
     tick: number;
     maxPendingRequests: number;
     default: IDefault;
-    log: Group;
     constructor(assets: IAssets, assetsPath: string, progressBarId?: string, progressTextId?: string);
-    setLogLevel(name: LevelName): LevelName;
-    getLogLevel(): LevelName;
     getAsset(name: string): Asset | false;
     getContent(name: string): Object | HTMLImageElement | AudioBuffer | string | null | false;
     getList(type: string): Asset[] | false;
@@ -116,6 +112,7 @@ export declare class Progress {
     start(): void;
     reset(): void;
     update(text: string): void;
+    private updatePercentage;
     private updateBar;
 }
 import { FSM } from "@lcluber/taipanjs";

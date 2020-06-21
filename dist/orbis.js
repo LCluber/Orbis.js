@@ -23,7 +23,6 @@
 * http://orbisjs.lcluber.com
 */
 
-import { Logger } from '@lcluber/mouettejs';
 import { Binding, Dom } from '@lcluber/weejs';
 import { Utils } from '@lcluber/type6js';
 import { Player } from '@lcluber/frameratjs';
@@ -42,7 +41,8 @@ class Progress {
         this.running = false;
         this.bar = null;
         this.number = null;
-        this.animation = null;
+        this.animation = new Player(this.animateBar);
+        this.animation.setScope(this);
         if (barId) {
             let bar = Dom.findById(barId);
             if (bar) {
@@ -53,8 +53,6 @@ class Progress {
                     : null;
                 let number = bar.children[0];
                 this.number = number ? new Binding(number, "", 0) : null;
-                this.animation = new Player(this.animateBar);
-                this.animation.setScope(this);
             }
         }
         this.text = textId ? new Binding(textId, "", "Loading") : null;
@@ -65,9 +63,7 @@ class Progress {
             : false);
     }
     start() {
-        if (this.animation) {
-            this.animation.play();
-        }
+        this.animation.play();
     }
     reset() {
         this.running = false;
@@ -84,11 +80,14 @@ class Progress {
             this.text.update(text);
         }
     }
-    updateBar(delta) {
+    updatePercentage(delta) {
         this.percentage += this.speed * delta;
         if (this.percentage >= this.target) {
             this.percentage = this.target;
         }
+    }
+    updateBar(delta) {
+        this.updatePercentage(delta);
         const flooredPercentage = Utils.floor(this.percentage, 0);
         if (this.bar) {
             this.bar.update(Utils.map(this.percentage, 0, 100, 0, this.barWidth) + "px");
@@ -110,18 +109,14 @@ class Progress {
 }
 
 function loadImage(path) {
-    let log = Logger.addGroup("Orbis");
     return new Promise((resolve, reject) => {
         let img = new Image();
         img.src = path;
         img.name = getName(path);
-        log.info("xhr processing starting (" + path + ")");
         img.addEventListener("load", () => {
-            log.info("xhr (" + path + ") done");
             resolve(img);
         });
         img.addEventListener("error", () => {
-            log.error("xhr (" + path + ") failed");
             reject(new Error("xhr (" + path + ") failed"));
         });
     });
@@ -267,14 +262,7 @@ class Loader {
         this.tick = this.default.tick;
         this.maxPendingRequests = this.default.maxPending;
         this.progress = new Progress(progressBarId, progressTextId);
-        this.log = Logger.addGroup("Orbis");
         this.createAssets();
-    }
-    setLogLevel(name) {
-        return this.log.setLevel(name);
-    }
-    getLogLevel() {
-        return this.log.getLevel();
     }
     getAsset(name) {
         for (let property in this.assets) {
@@ -309,10 +297,15 @@ class Loader {
                     this.sendRequest();
                     if (!this.progress.running) {
                         clearInterval(intervalID);
-                        resolve({
-                            success: true,
-                            message: `${this.progress.total} assets loaded`
-                        });
+                        if (this.progress.total) {
+                            resolve({
+                                success: true,
+                                message: `${this.progress.total} assets loaded`
+                            });
+                        }
+                        else {
+                            reject({ success: false, message: `!! ${this.progress.total} assets loaded` });
+                        }
                     }
                 }, this.tick);
             }

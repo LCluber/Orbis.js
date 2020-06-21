@@ -1,3 +1,7 @@
+## Version 1.0.8 (June 21th 2020)
+
+- fix loader progress when not using a progress bar
+
 ## Version 1.0.7 (June 19th 2020)
 
 - Update Aias.js to version 2.7.1

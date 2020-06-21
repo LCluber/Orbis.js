@@ -1,4 +1,4 @@
-import { Logger, Group, LevelName } from "@lcluber/mouettejs";
+// import { Logger, Group, LevelName } from "@lcluber/mouettejs";
 import { XHR } from "./xhr";
 import { Progress } from "./progress";
 import { IAssets, IDefault, IResponse } from "./interfaces";
@@ -14,7 +14,7 @@ export class Loader {
   maxPendingRequests: number;
   default: IDefault;
 
-  log: Group;
+  // log: Group;
 
   constructor(
     assets: IAssets,
@@ -33,7 +33,7 @@ export class Loader {
     this.tick = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
     this.progress = new Progress(progressBarId, progressTextId);
-    this.log = Logger.addGroup("Orbis");
+    // this.log = Logger.addGroup("Orbis");
     this.createAssets();
   }
 
@@ -45,13 +45,13 @@ export class Loader {
   //   this.maxPendingRequests = maxPendingRequests;
   // }
 
-  public setLogLevel(name: LevelName): LevelName {
-    return this.log.setLevel(name);
-  }
+  // public setLogLevel(name: LevelName): LevelName {
+  //   return this.log.setLevel(name);
+  // }
 
-  public getLogLevel(): LevelName {
-    return this.log.getLevel();
-  }
+  // public getLogLevel(): LevelName {
+  //   return this.log.getLevel();
+  // }
 
   public getAsset(name: string): Asset | false {
     for (let property in this.assets) {
@@ -91,10 +91,17 @@ export class Loader {
           this.sendRequest();
           if (!this.progress.running) {
             clearInterval(intervalID);
-            resolve({
-              success: true,
-              message: `${this.progress.total} assets loaded`
-            });
+            if (this.progress.total) {
+              resolve({
+                success: true,
+                message: `${this.progress.total} assets loaded`
+              });
+            } else {
+              reject({
+                success: false,
+                message: `!! ${this.progress.total} assets loaded`
+              });
+            }
           }
         }, this.tick);
       } else {

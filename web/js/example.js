@@ -121,11 +121,12 @@ var button = Wee.Dom.findById("launcher");
 
 function loadAssets() {
   button.disabled = true;
-  loader.start().then(function() {
+  loader.start().then(function(response) {
     console.log("complete");
+    console.log(response);
     console.log(loader.getList("sounds"));
-    console.log(loader.getAsset("sound3.mp3"));
-    console.log(loader.getContent("sound3.mp3"));
+    console.log(loader.getAsset("shader1.txt"));
+    console.log(loader.getContent("shader1.txt"));
     button.disabled = false;
   });
 }

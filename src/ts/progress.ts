@@ -16,7 +16,7 @@ export class Progress {
   private number: Binding | null;
   private text: Binding | null;
 
-  private animation: Player | null;
+  private animation: Player;
   public running: boolean;
 
   constructor(barId?: string | null, textId?: string | null) {
@@ -30,7 +30,8 @@ export class Progress {
     this.running = false;
     this.bar = null;
     this.number = null;
-    this.animation = null;
+    this.animation = new Player(this.animateBar);
+    this.animation.setScope(this);
     if (barId) {
       let bar = Dom.findById(barId);
       if (bar) {
@@ -41,8 +42,6 @@ export class Progress {
           : null;
         let number = bar.children[0];
         this.number = number ? new Binding(number as HTMLElement, "", 0) : null;
-        this.animation = new Player(this.animateBar);
-        this.animation.setScope(this);
       }
     }
     this.text = textId ? new Binding(textId, "", "Loading") : null;
@@ -55,9 +54,7 @@ export class Progress {
   }
 
   public start() {
-    if (this.animation) {
-      this.animation.play();
-    }
+    this.animation.play();
   }
 
   public reset() {
@@ -77,11 +74,15 @@ export class Progress {
     }
   }
 
-  private updateBar(delta: number): boolean {
+  private updatePercentage(delta: number): void {
     this.percentage += this.speed * delta;
     if (this.percentage >= this.target) {
       this.percentage = this.target;
     }
+  }
+
+  private updateBar(delta: number): boolean {
+    this.updatePercentage(delta);
     const flooredPercentage = Utils.floor(this.percentage, 0);
     if (this.bar) {
       this.bar.update(
