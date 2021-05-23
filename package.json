@@ -46,7 +46,7 @@
     "i18next-express-middleware": "1.1.1",
     "i18next-node-fs-backend": "1.0.0",
     "morgan": "1.9.0",
-    "pug": "2.0.3",
+    "pug": "3.0.1",
     "serve-favicon": "2.5.0"
   },
   "devDependencies": {
