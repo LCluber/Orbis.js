@@ -7949,7 +7949,10 @@ var Orbis = (function (exports) {
                                   message: _this.progress.total + " assets loaded"
                               });
                           } else {
-                              reject({ success: false, message: "!! " + _this.progress.total + " assets loaded" });
+                              reject({
+                                  success: false,
+                                  message: "!! " + _this.progress.total + " assets loaded"
+                              });
                           }
                       }
                   }, _this.tick);

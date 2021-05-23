@@ -1,3 +1,7 @@
+## Version 1.0.9 (May 23th 2021)
+
+- Delete logger dependency
+
 ## Version 1.0.8 (June 21th 2020)
 
 - fix loader progress when not using a progress bar

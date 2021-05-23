@@ -1,4 +1,3 @@
-// import { Logger, Group, LevelName } from "@lcluber/mouettejs";
 import { XHR } from "./xhr";
 import { Progress } from "./progress";
 import { IAssets, IDefault, IResponse } from "./interfaces";
@@ -33,7 +32,7 @@ export class Loader {
     this.tick = this.default.tick;
     this.maxPendingRequests = this.default.maxPending;
     this.progress = new Progress(progressBarId, progressTextId);
-    // this.log = Logger.addGroup("Orbis");
+
     this.createAssets();
   }
 
@@ -135,10 +134,6 @@ export class Loader {
         }
       }
     }
-    //   _this.logs.add(_this.requestsLength + ' requests to perform');
-    //   _this.sendRequest();
-    // }else
-    //   _this.logs.add('!! error during config file AJAX request');
   }
 
   private sendRequest(): boolean {

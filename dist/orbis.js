@@ -304,7 +304,10 @@ class Loader {
                             });
                         }
                         else {
-                            reject({ success: false, message: `!! ${this.progress.total} assets loaded` });
+                            reject({
+                                success: false,
+                                message: `!! ${this.progress.total} assets loaded`
+                            });
                         }
                     }
                 }, this.tick);
