@@ -79,7 +79,7 @@
     "pretty-quick": "1.11.1",
     "jquery": "3.2.1",
     "jquery-easing": "0.0.1",
-    "node-sass": "6.0.0",
+    "node-sass": "7.0.0",
     "time-grunt": "1.4.0",
     "tslint": "5.20.1",
     "typescript": "3.7.4"
